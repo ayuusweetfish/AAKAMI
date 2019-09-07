@@ -1,3 +1,5 @@
+local spritesheet = require 'spritesheet'
+
 local IS_DESKTOP = true
 
 local W = 320
@@ -6,7 +8,7 @@ local SCALE = 1
 
 if IS_DESKTOP then SCALE = 3 end
 
-local sidelen = 20
+local sidelen = 16
 
 local shader
 local canvas
@@ -18,6 +20,10 @@ function love.conf(t)
 end
 
 function love.load()
+    spritesheet.loadImage('images/ground1.png')
+    spritesheet.loadImage('images/ground2.png')
+    spritesheet.loadImage('images/ground3.png')
+
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -50,13 +56,17 @@ end
 function love.draw()
     love.graphics.setCanvas(canvas)
     love.graphics.clear(1, 1, 1)
-    love.graphics.setColor(0.8, 0.96, 0.92)
+    love.graphics.setColor(1, 1, 1)
     for x = 0, math.floor(W / sidelen) - 1 do
-        for y = x % 2, math.floor(H / sidelen), 2 do
-            love.graphics.rectangle('fill',
-                sidelen * x, sidelen * y, sidelen, sidelen)
+        for y = 0, math.floor(H / sidelen) do
+            if (x + y) % 2 == 0 then
+                spritesheet.draw('ground1', sidelen * x, sidelen * y)
+            else
+                spritesheet.draw('ground2', sidelen * x, sidelen * y)
+            end
         end
     end
+    spritesheet.flush()
 
     love.graphics.setCanvas(nil)
     love.graphics.setShader(shader)
