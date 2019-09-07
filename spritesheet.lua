@@ -37,7 +37,7 @@ print(splitPath('bb'))
 local loadImage = function (path)
     local _, name = splitPath(path)
     local img = love.graphics.newImage(path)
-    local batch = love.graphics.newSpriteBatch(img)
+    local batch = love.graphics.newSpriteBatch(img, nil, 'stream')
     local w, h = img:getPixelDimensions()
 
     batches[#batches + 1] = batch
@@ -60,11 +60,18 @@ end
 local flush = function ()
     for _, v in ipairs(batches) do
         love.graphics.draw(v, 0, 0)
+        -- TODO: Support static usage
+        v:clear()
     end
+end
+
+local clear = function ()
+    for _, v in ipairs(batches) do v:clear() end
 end
 
 return {
     loadImage = loadImage,
     draw = draw,
-    flush = flush
+    flush = flush,
+    clear = clear
 }
