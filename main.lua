@@ -25,14 +25,7 @@ function love.load()
         extern float T;
         vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
         {
-            vec2 p = texture_coords * 2 - vec2(1, 1);
-            float rsq = pow(dot(p, p), 2);
-            float ang = mod(atan(p.y, p.x) / 3.14159265 / 2 + 0.5 + (T + sin(T)) / 25, 1);
-            vec4 texcolor =
-                (rsq >= 0 && rsq <= 1 &&
-                 ang >= 0 && ang <= 1 ?
-                 Texel(tex, vec2(rsq, ang)) : vec4(0.8, 0.92, 1.0, 1.0));
-            return texcolor;
+            return Texel(tex, texture_coords);
         }
     ]]
     local vshadersrc = [[
@@ -66,7 +59,6 @@ function love.draw()
     end
 
     love.graphics.setCanvas(nil)
-    shader:send('T', T)
     love.graphics.setShader(shader)
     love.graphics.draw(canvas, 0, 0, 0, SCALE, SCALE)
     love.graphics.setShader(nil)
