@@ -23,6 +23,7 @@ function love.load()
     spritesheet.loadImage('images/ground1.png')
     spritesheet.loadImage('images/ground2.png')
     spritesheet.loadImage('images/ground3.png')
+    spritesheet.loadCrunch('images/quq.bin')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -65,6 +66,9 @@ function love.draw()
                 spritesheet.draw('ground2', sidelen * x, sidelen * y)
             end
         end
+    end
+    for i = 1, 4 do
+        spritesheet.draw('quq' .. tostring(i), W * 0.2 * i, H * 0.2)
     end
     spritesheet.flush()
 

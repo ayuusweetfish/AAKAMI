@@ -48,12 +48,64 @@ local loadImage = function (path)
     }
 end
 
+local loadCrunch = function (path)
+    local wd, name = splitPath(path)
+
+    local f = io.open(path, 'rb')
+    if f == nil then return nil end
+
+    local read_int16 = function ()
+        local l, h = f:read(2):byte(1, 2)
+        local x = h * 256 + l
+        if x >= 32768 then x = x - 65536 end
+        return x
+    end
+    local read_str = function ()
+        local s = {}
+        repeat
+            local ch = f:read(1)
+            if ch:byte(1) == 0 then break end
+            s[#s + 1] = ch
+        until false
+        return table.concat(s)
+    end
+
+    local texCount = read_int16()
+    for texId = 1, texCount do
+        local texName = read_str()
+        local img = love.graphics.newImage(wd .. texName .. '.png')
+        local batch = love.graphics.newSpriteBatch(img, nil, 'stream')
+        batches[#batches + 1] = batch
+
+        local sprCount = read_int16()
+        for sprId = 1, sprCount do
+            local name = read_str()
+            local spr = {}
+            spr.batch = batch
+            spr.sx = read_int16()
+            spr.sy = read_int16()
+            spr.sw = read_int16()
+            spr.sh = read_int16()
+            spr.tx = -read_int16()
+            spr.ty = -read_int16()
+            spr.w = read_int16()
+            spr.h = read_int16()
+            lookup[name] = spr
+        end
+    end
+
+    f:close()
+end
+
 -- (x, y) is the top-left corner
 local draw = function (name, x, y)
     local item = lookup[name]
     if item ~= nil then
-        -- Incomplete!
-        item.batch:add(x, y)
+        item.batch:add(love.graphics.newQuad(
+            item.sx, item.sy,
+            item.sw, item.sh,
+            item.batch:getTexture():getPixelDimensions()
+        ), x + item.tx, y + item.ty)
     end
 end
 
@@ -71,6 +123,7 @@ end
 
 return {
     loadImage = loadImage,
+    loadCrunch = loadCrunch,
     draw = draw,
     flush = flush,
     clear = clear
