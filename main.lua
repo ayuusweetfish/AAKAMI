@@ -48,8 +48,16 @@ function love.load()
 
     ecs.addEntity({
         dim = { sidelen * 2, sidelen * 2, sidelen, sidelen },
+        vel = { 0, 0 },
+        sprite = { name = 'quq1' },
+        player = {}
+    })
+    ecs.addEntity({
+        dim = { sidelen * 4, sidelen * 4, sidelen, sidelen },
         sprite = { name = 'quq1' }
     })
+    ecs.addSystem(1, require('ecs/sys_player')())
+    ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 

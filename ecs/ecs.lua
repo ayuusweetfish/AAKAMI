@@ -1,14 +1,13 @@
 local entities = {}
-local components = {}
+local components = {}   -- List of entities with a certain component
 local systems = { [1] = {}, [2] = {} }
 
 local addEntity = function (e)
     entities[#entities + 1] = e
     for k, v in pairs(e) do
-        v.entity = e
         local c = (components[k] or {})
         components[k] = c
-        c[#c + 1] = v
+        c[#c + 1] = e
     end
 end
 
