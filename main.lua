@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local ecs = require 'ecs/ecs'
 
 local IS_DESKTOP = true
 
@@ -44,6 +45,12 @@ function love.load()
     shader = love.graphics.newShader(fshadersrc, vshadersrc)
 
     canvas = love.graphics.newCanvas(W, H)
+
+    ecs.addEntity({
+        dim = { sidelen * 2, sidelen * 2, sidelen, sidelen },
+        sprite = { name = 'quq1' }
+    })
+    ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
 function love.update()
@@ -52,6 +59,8 @@ function love.update()
     if love.keyboard.isDown('escape') then
         love.event.quit()
     end
+
+    ecs.update(1)
 end
 
 function love.draw()
@@ -70,6 +79,7 @@ function love.draw()
     for i = 1, 4 do
         spritesheet.draw('quq' .. tostring(i), W * 0.2 * i, H * 0.2)
     end
+    ecs.update(2)
     spritesheet.flush()
 
     love.graphics.setCanvas(nil)
