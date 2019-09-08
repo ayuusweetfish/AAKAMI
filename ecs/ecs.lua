@@ -2,6 +2,8 @@ local entities = {}
 local components = {}   -- List of entities with a certain component
 local systems = { [1] = {}, [2] = {} }
 
+DT = 1.0 / 60
+
 local addEntity = function (e)
     entities[#entities + 1] = e
     for k, v in pairs(e) do
