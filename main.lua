@@ -50,7 +50,8 @@ function love.load()
         dim = { sidelen * 2, sidelen * 2, sidelen, sidelen },
         vel = { 0, 0 },
         sprite = { name = 'quq1' },
-        player = {}
+        player = {},
+        passiveCollide = true
     })
     ecs.addEntity({
         dim = { sidelen * 4, sidelen * 4, sidelen, sidelen },
@@ -58,6 +59,7 @@ function love.load()
     })
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_vel')())
+    ecs.addSystem(1, require('ecs/sys_colli')())
     ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
