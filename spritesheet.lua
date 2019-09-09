@@ -44,7 +44,8 @@ local loadImage = function (path)
     lookup[name] = {
         batch = batch,
         sx = 0, sy = 0, sw = w, sh = h,
-        tx = 0, ty = 0, w = w, h = h
+        tx = 0, ty = 0, w = w, h = h,
+        quad = love.graphics.newQuad(0, 0, w, h, img:getPixelDimensions())
     }
 end
 
@@ -90,6 +91,9 @@ local loadCrunch = function (path)
             spr.ty = -read_int16()
             spr.w = read_int16()
             spr.h = read_int16()
+            spr.quad = love.graphics.newQuad(
+                spr.sx, spr.sy, spr.sw, spr.sh,
+                img:getPixelDimensions())
             lookup[name] = spr
         end
     end
@@ -103,11 +107,7 @@ local draw = function (name, x, y, bottomAligned)
     local yAlignDelta = 0
     if bottomAligned then yAlignDelta = -item.h end
     if item ~= nil then
-        item.batch:add(love.graphics.newQuad(
-            item.sx, item.sy,
-            item.sw, item.sh,
-            item.batch:getTexture():getPixelDimensions()
-        ), x + item.tx, y + item.ty + yAlignDelta)
+        item.batch:add(item.quad, x + item.tx, y + item.ty + yAlignDelta)
     end
 end
 

@@ -57,7 +57,7 @@ function love.load()
             if ((x + y) % 2 == 0) then name = 'ground1' else name = 'ground2' end
             ecs.addEntity({
                 dim = { x * sidelen, y * sidelen, sidelen, sidelen },
-                sprite = { name = name }
+                sprite = { name = name, z = -1 }
             })
         end
     end
@@ -68,7 +68,7 @@ function love.load()
         vel = { 0, 0 },
         sprite = { name = 'quq1' },
         player = {},
-        passiveCollide = true
+        colli = { passive = true }
     })
 
     -- Obstacles
@@ -91,7 +91,16 @@ function love.load()
             ecs.addEntity({
                 dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
                 sprite = { name = 'quq' .. tostring(i) },
-                block = (i ~= 4)
+                colli = { block = (i ~= 4) }
+            })
+        end
+    end
+    for i = 14, 30 do
+        for j = 14, 30 do
+            ecs.addEntity({
+                dim = { sidelen * i, sidelen * j, sidelen, sidelen },
+                sprite = { name = 'quq1' },
+                colli = { block = true }
             })
         end
     end

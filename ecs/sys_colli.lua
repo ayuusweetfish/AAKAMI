@@ -37,7 +37,7 @@ print(rectIntsc({0, 0, 1, 1}, {0.5, -0.5, 1, 1}))   -- 38
 
 return function () return {
 
-component = 'dim',
+component = 'colli',
 update = function (self, es)
     -- TODO: Optimize if this becomes the bottleneck
 
@@ -46,7 +46,7 @@ update = function (self, es)
     local check = function (e1)
         local intsc = 0
         local x0, y0, xy0 = 0, 0, 0
-        for _, e2 in pairs(es) do if e2 ~= e1 and e2.block then
+        for _, e2 in pairs(es) do if e2 ~= e1 and e2.colli.block then
             local r, x1, y1 = rectIntsc(e1.dim, e2.dim)
             if r ~= nil then
                 intsc = bit.bor(intsc, r)
@@ -74,7 +74,7 @@ update = function (self, es)
         return x, y
     end
 
-    for _, e1 in pairs(es) do if e1.passiveCollide then
+    for _, e1 in pairs(es) do if e1.colli.passive then
         local x, y = check(e1)
         if x ~= nil then
             e1.dim[1] = e1.dim[1] + x
