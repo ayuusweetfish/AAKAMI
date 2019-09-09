@@ -53,7 +53,10 @@ local loadCrunch = function (path)
     local wd, name = splitPath(path)
 
     local f = io.open(path, 'rb')
-    if f == nil then return nil end
+    if f == nil then
+        print('> < Cannot load sprite sheet metadata ' .. path)
+        return nil
+    end
 
     local read_int16 = function ()
         local l, h = f:read(2):byte(1, 2)
@@ -104,6 +107,7 @@ end
 -- (x, y) is the top-left corner
 local draw = function (name, x, y, bottomAligned)
     local item = lookup[name]
+    if item == nil then print(name) end
     local yAlignDelta = 0
     if bottomAligned then yAlignDelta = -item.h end
     if item ~= nil then
