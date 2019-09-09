@@ -11,11 +11,13 @@ local addEntity = function (e)
         components[k] = c
         c[#c + 1] = e
     end
+    return e
 end
 
 local addSystem = function (pass, s)
     local ss = systems[pass]
     ss[#ss + 1] = s
+    return s
 end
 
 local update = function (pass)

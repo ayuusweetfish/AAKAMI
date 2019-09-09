@@ -17,6 +17,9 @@ local canvas
 local T = 0
 local ecs_update_count = 0
 
+local playerEntity
+local dispSystem
+
 function love.conf(t)
     t.window.physics = false
 end
@@ -47,13 +50,28 @@ function love.load()
 
     canvas = love.graphics.newCanvas(W, H)
 
-    ecs.addEntity({
+    -- Ground
+    for x = -10, 30 do
+        for y = -10, 30 do
+            local name
+            if ((x + y) % 2 == 0) then name = 'ground1' else name = 'ground2' end
+            ecs.addEntity({
+                dim = { x * sidelen, y * sidelen, sidelen, sidelen },
+                sprite = { name = name }
+            })
+        end
+    end
+
+    -- Player
+    playerEntity = ecs.addEntity({
         dim = { sidelen * 2, sidelen * 2, sidelen, sidelen },
         vel = { 0, 0 },
         sprite = { name = 'quq1' },
         player = {},
         passiveCollide = true
     })
+
+    -- Obstacles
     local walls = {{
         {4, 4}, {5, 4}, {6, 4}, {7, 4},
         {4, 5},                 {7, 5},
@@ -80,7 +98,7 @@ function love.load()
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_colli')())
-    ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
+    dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
 function love.update()
@@ -95,21 +113,23 @@ function love.update()
         ecs.update(1)
     end
     ecs_update_count = new_count
+
+    local camX, camY = dispSys.cam[1], dispSys.cam[2]
+    local camDX, camDY =
+        playerEntity.dim[1] + playerEntity.dim[3] - W / 2 - camX,
+        playerEntity.dim[2] + playerEntity.dim[4] - H / 2 - camY
+    local dsq = camDX * camDX + camDY * camDY
+    if dsq < 0.5 then
+        dispSys.cam[1], dispSys.cam[2] = camX + camDX, camY + camDY
+    else
+        dispSys.cam[1], dispSys.cam[2] = camX + camDX / 15, camY + camDY / 15
+    end
 end
 
 function love.draw()
     love.graphics.setCanvas(canvas)
     love.graphics.clear(1, 1, 1)
     love.graphics.setColor(1, 1, 1)
-    for x = 0, math.floor(W / sidelen) do
-        for y = 0, math.floor(H / sidelen) do
-            if ((x + y) % 2 == 0) then
-                spritesheet.draw('ground1', sidelen * x, sidelen * y)
-            else
-                spritesheet.draw('ground2', sidelen * x, sidelen * y)
-            end
-        end
-    end
     ecs.update(2)
     spritesheet.flush()
 
