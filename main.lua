@@ -53,26 +53,17 @@ function love.load()
         player = {},
         passiveCollide = true
     })
-    ecs.addEntity({
-        dim = { sidelen * 4, sidelen * 4, sidelen, sidelen },
-        sprite = { name = 'quq1' }
-    })
-    ecs.addEntity({
-        dim = { sidelen * 5, sidelen * 4, sidelen, sidelen },
-        sprite = { name = 'quq1' }
-    })
-    ecs.addEntity({
-        dim = { sidelen * 4, sidelen * 5, sidelen, sidelen },
-        sprite = { name = 'quq1' }
-    })
-    ecs.addEntity({
-        dim = { sidelen * 6, sidelen * 4, sidelen, sidelen },
-        sprite = { name = 'quq1' }
-    })
-    ecs.addEntity({
-        dim = { sidelen * 4, sidelen * 6, sidelen, sidelen },
-        sprite = { name = 'quq1' }
-    })
+    local walls = {
+        {4, 4}, {5, 4}, {6, 4}, {7, 4},
+        {4, 5},                 {7, 5},
+        {4, 6},                 {7, 6}
+    }
+    for _, wall in ipairs(walls) do
+        ecs.addEntity({
+            dim = { sidelen * wall[1], sidelen * wall[2], sidelen, sidelen },
+            sprite = { name = 'quq1' }
+        })
+    end
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_colli')())

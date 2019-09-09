@@ -60,11 +60,16 @@ update = function (self, es)
             end
         end end
         if intsc == 0 then return nil end
-        local x, y = 1e10, 1e10
-        if bit.band(intsc, 1) == 0 then x = x0 end
-        if bit.band(intsc, 2) == 0 then x = -x0 end
-        if bit.band(intsc, 4) == 0 and y0 < math.abs(x) then x, y = 0, y0 end
-        if bit.band(intsc, 8) == 0 and y0 < math.abs(x) then x, y = 0, -y0 end
+        local x, y, d = 1e10, 1e10, 1e10
+        if bit.band(intsc, 1) == 0 then x, y, d = -x0, 0, x0 end
+        if bit.band(intsc, 2) == 0 then x, y, d = x0, 0, x0 end
+        if bit.band(intsc, 4) == 0 and y0 < d then x, y, d = 0, -y0, y0 end
+        if bit.band(intsc, 8) == 0 and y0 < d then x, y, d = 0, y0, y0 end
+        if bit.band(intsc, 16) == 0 and xy0 * 2 < d then x, y, d = -xy0, -xy0, xy0 * 2 end
+        if bit.band(intsc, 32) == 0 and xy0 * 2 < d then x, y, d = xy0, -xy0, xy0 * 2 end
+        if bit.band(intsc, 64) == 0 and xy0 * 2 < d then x, y, d = -xy0, xy0, xy0 * 2 end
+        if bit.band(intsc, 128) == 0 and xy0 * 2 < d then x, y, d = xy0, xy0, xy0 * 2 end
+        if x ~= 0 and y ~= 0 then print(x, y, d, x0, y0, xy0) end
         return x, y
     end
 
@@ -72,6 +77,9 @@ update = function (self, es)
         local x, y = check(e1)
         if x ~= nil then
             e1.vel[1], e1.vel[2] = 0, 0 -- XXX: ...
+            print(x, y)
+            e1.dim[1] = e1.dim[1] + x
+            e1.dim[2] = e1.dim[2] + y
         end
     end end
 end
