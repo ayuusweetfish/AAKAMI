@@ -52,7 +52,7 @@ end
 local loadCrunch = function (path)
     local wd, name = splitPath(path)
 
-    local f = io.open(path, 'rb')
+    local f = io.open(love.filesystem.getSource() .. '/' .. path, 'rb')
     if f == nil then
         print('> < Cannot load sprite sheet metadata ' .. path)
         return nil
