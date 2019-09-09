@@ -53,16 +53,28 @@ function love.load()
         player = {},
         passiveCollide = true
     })
-    local walls = {
+    local walls = {{
         {4, 4}, {5, 4}, {6, 4}, {7, 4},
         {4, 5},                 {7, 5},
-        {4, 6},                 {7, 6}
-    }
-    for _, wall in ipairs(walls) do
-        ecs.addEntity({
-            dim = { sidelen * wall[1], sidelen * wall[2], sidelen, sidelen },
-            sprite = { name = 'quq1' }
-        })
+        {4, 6},                 {7, 6},
+                {5, 7}
+    }, {
+                {5, 10}
+    }, {
+                {6, 9}
+    }, {
+                {7, 10}
+    }}
+    for i = 1, 4 do
+        local h = sidelen
+        if i == 3 then h = sidelen * 2 end
+        for _, wall in ipairs(walls[i]) do
+            ecs.addEntity({
+                dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
+                sprite = { name = 'quq' .. tostring(i) },
+                block = (i ~= 4)
+            })
+        end
     end
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_vel')())
