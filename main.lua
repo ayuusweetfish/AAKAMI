@@ -105,9 +105,6 @@ function love.draw()
             end
         end
     end
-    for i = 1, 4 do
-        spritesheet.draw('quq' .. tostring(i), W * 0.2 * i, H * 0.2)
-    end
     ecs.update(2)
     spritesheet.flush()
 

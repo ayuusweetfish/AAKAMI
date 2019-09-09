@@ -63,7 +63,6 @@ update = function (self, es)
         if bit.band(intsc, 32) == 0 and xy0 * 2 < d then x, y, d = xy0, -xy0, xy0 * 2 end
         if bit.band(intsc, 64) == 0 and xy0 * 2 < d then x, y, d = -xy0, xy0, xy0 * 2 end
         if bit.band(intsc, 128) == 0 and xy0 * 2 < d then x, y, d = xy0, xy0, xy0 * 2 end
-        if x ~= 0 and y ~= 0 then print(x, y, d, x0, y0, xy0) end
         return x, y
     end
 
