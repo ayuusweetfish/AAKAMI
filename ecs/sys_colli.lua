@@ -24,12 +24,6 @@ local rectIntsc = function (a, b)
     if bit.band(r, 6) == 6 then r = bit.bor(r, 32) end
     if bit.band(r, 9) == 9 then r = bit.bor(r, 64) end
     if bit.band(r, 10) == 10 then r = bit.bor(r, 128) end
-    if r ~= 0 then
-        print(a[1], a[2], a[3], a[4])
-        print(b[1], b[2], b[3], b[4])
-        print(r)
-        print('---')
-    end
     return r, xIntsc, yIntsc
 end
 --[[
@@ -76,10 +70,10 @@ update = function (self, es)
     for _, e1 in pairs(es) do if e1.passiveCollide then
         local x, y = check(e1)
         if x ~= nil then
-            e1.vel[1], e1.vel[2] = 0, 0 -- XXX: ...
-            print(x, y)
             e1.dim[1] = e1.dim[1] + x
             e1.dim[2] = e1.dim[2] + y
+            if x ~= 0 then e1.vel[1] = 0 end
+            if y ~= 0 then e1.vel[2] = 0 end
         end
     end end
 end
