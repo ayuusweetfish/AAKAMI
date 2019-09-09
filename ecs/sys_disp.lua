@@ -14,7 +14,8 @@ update = function (self, es)
         self.spritesheet.draw(
             e.sprite.name,
             math.floor(e.dim[1] + 0.5),
-            math.floor(e.dim[2] + 0.5 + e.dim[4])
+            math.floor(e.dim[2] + e.dim[4] + 0.5),
+            true
         )
     end
 end

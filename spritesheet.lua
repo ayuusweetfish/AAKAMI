@@ -98,14 +98,16 @@ local loadCrunch = function (path)
 end
 
 -- (x, y) is the top-left corner
-local draw = function (name, x, y)
+local draw = function (name, x, y, bottomAligned)
     local item = lookup[name]
+    local yAlignDelta = 0
+    if bottomAligned then yAlignDelta = -item.h end
     if item ~= nil then
         item.batch:add(love.graphics.newQuad(
             item.sx, item.sy,
             item.sw, item.sh,
             item.batch:getTexture():getPixelDimensions()
-        ), x + item.tx, y + item.ty)
+        ), x + item.tx, y + item.ty + yAlignDelta)
     end
 end
 
