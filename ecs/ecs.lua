@@ -2,7 +2,7 @@ local entities = {}
 local components = {}   -- List of entities with a certain component
 local systems = { [1] = {}, [2] = {} }
 
-DT = 1.0 / 60
+DT = 1.0 / 300
 
 local addEntity = function (e)
     entities[#entities + 1] = e
@@ -25,6 +25,8 @@ local update = function (pass)
 end
 
 return {
+    dt = DT,
+
     entities = entities,
     components = components,
     systems = systems,

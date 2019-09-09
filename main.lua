@@ -15,6 +15,7 @@ local shader
 local canvas
 
 local T = 0
+local ecs_update_count = 0
 
 function love.conf(t)
     t.window.physics = false
@@ -89,7 +90,11 @@ function love.update()
         love.event.quit()
     end
 
-    ecs.update(1)
+    local new_count = math.floor(T / ecs.dt)
+    for i = 1, new_count - ecs_update_count do
+        ecs.update(1)
+    end
+    ecs_update_count = new_count
 end
 
 function love.draw()
