@@ -57,6 +57,22 @@ function love.load()
         dim = { sidelen * 4, sidelen * 4, sidelen, sidelen },
         sprite = { name = 'quq1' }
     })
+    ecs.addEntity({
+        dim = { sidelen * 5, sidelen * 4, sidelen, sidelen },
+        sprite = { name = 'quq1' }
+    })
+    ecs.addEntity({
+        dim = { sidelen * 4, sidelen * 5, sidelen, sidelen },
+        sprite = { name = 'quq1' }
+    })
+    ecs.addEntity({
+        dim = { sidelen * 6, sidelen * 4, sidelen, sidelen },
+        sprite = { name = 'quq1' }
+    })
+    ecs.addEntity({
+        dim = { sidelen * 4, sidelen * 6, sidelen, sidelen },
+        sprite = { name = 'quq1' }
+    })
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_colli')())
