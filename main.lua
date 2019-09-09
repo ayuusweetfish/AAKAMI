@@ -98,7 +98,7 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
     for x = 0, math.floor(W / sidelen) do
         for y = 0, math.floor(H / sidelen) do
-            if ((x + y) % 2 == 0) == (T % 2 < 1) then
+            if ((x + y) % 2 == 0) then
                 spritesheet.draw('ground1', sidelen * x, sidelen * y)
             else
                 spritesheet.draw('ground2', sidelen * x, sidelen * y)

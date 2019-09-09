@@ -2,8 +2,10 @@ local segIntscLen = function (l1, r1, l2, r2)
     return math.max(0, math.min(r1, r2) - math.max(l1, l2))
 end
 
-local inSeg = function (x, l, r)
-    return x >= l and x < r
+local D = 4 -- Maximum push-away distance
+
+local inSegFuzzy = function (x, l, r)
+    return x >= l - D and x < r + D
 end
 
 -- Returns bitmask of b's intersection on a
@@ -16,10 +18,10 @@ local rectIntsc = function (a, b)
     if xIntsc == 0 or yIntsc == 0 then return nil end
 
     local r = 0
-    if inSeg(a[1], b[1], b[1] + b[3]) then r = bit.bor(r, 1) end
-    if inSeg(a[1] + a[3], b[1], b[1] + b[3]) then r = bit.bor(r, 2) end
-    if inSeg(a[2], b[2], b[2] + b[4]) then r = bit.bor(r, 4) end
-    if inSeg(a[2] + a[4], b[2], b[2] + b[4]) then r = bit.bor(r, 8) end
+    if inSegFuzzy(a[1], b[1], b[1] + b[3]) then r = bit.bor(r, 1) end
+    if inSegFuzzy(a[1] + a[3], b[1], b[1] + b[3]) then r = bit.bor(r, 2) end
+    if inSegFuzzy(a[2], b[2], b[2] + b[4]) then r = bit.bor(r, 4) end
+    if inSegFuzzy(a[2] + a[4], b[2], b[2] + b[4]) then r = bit.bor(r, 8) end
     if bit.band(r, 5) == 5 then r = bit.bor(r, 16) end
     if bit.band(r, 6) == 6 then r = bit.bor(r, 32) end
     if bit.band(r, 9) == 9 then r = bit.bor(r, 64) end
@@ -55,14 +57,20 @@ update = function (self, es)
         end end
         if intsc == 0 then return nil end
         local x, y, d = 1e10, 1e10, 1e10
-        if bit.band(intsc, 1) == 0 then x, y, d = -x0, 0, x0 end
-        if bit.band(intsc, 2) == 0 then x, y, d = x0, 0, x0 end
-        if bit.band(intsc, 4) == 0 and y0 < d then x, y, d = 0, -y0, y0 end
-        if bit.band(intsc, 8) == 0 and y0 < d then x, y, d = 0, y0, y0 end
-        if bit.band(intsc, 16) == 0 and xy0 * 2 < d then x, y, d = -xy0, -xy0, xy0 * 2 end
-        if bit.band(intsc, 32) == 0 and xy0 * 2 < d then x, y, d = xy0, -xy0, xy0 * 2 end
-        if bit.band(intsc, 64) == 0 and xy0 * 2 < d then x, y, d = -xy0, xy0, xy0 * 2 end
-        if bit.band(intsc, 128) == 0 and xy0 * 2 < d then x, y, d = xy0, xy0, xy0 * 2 end
+        if x0 < D then
+            if bit.band(intsc, 1) == 0 then x, y, d = -x0, 0, x0 end
+            if bit.band(intsc, 2) == 0 then x, y, d = x0, 0, x0 end
+        end
+        if y0 < D and y0 < d then
+            if bit.band(intsc, 4) == 0 then x, y, d = 0, -y0, y0 end
+            if bit.band(intsc, 8) == 0 then x, y, d = 0, y0, y0 end
+        end
+        if xy0 * 2 < D and xy0 * 2 < d then
+            if bit.band(intsc, 16) == 0 then x, y, d = -xy0, -xy0, xy0 * 2 end
+            if bit.band(intsc, 32) == 0 then x, y, d = xy0, -xy0, xy0 * 2 end
+            if bit.band(intsc, 64) == 0 then x, y, d = -xy0, xy0, xy0 * 2 end
+            if bit.band(intsc, 128) == 0 then x, y, d = xy0, xy0, xy0 * 2 end
+        end
         return x, y
     end
 
