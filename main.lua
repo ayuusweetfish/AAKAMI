@@ -71,6 +71,15 @@ function love.load()
         colli = { passive = true }
     })
 
+    -- Enemy
+    ecs.addEntity({
+        dim = { sidelen * 5.5, sidelen * 5.5, sidelen, sidelen },
+        vel = { 0, 0 },
+        sprite = { name = 'quq1' },
+        enemy = {},
+        colli = { passive = true, block = true }
+    })
+
     -- Obstacles
     local walls = {{
         {4, 4}, {5, 4}, {6, 4}, {7, 4},
@@ -105,6 +114,7 @@ function love.load()
         end
     end
     ecs.addSystem(1, require('ecs/sys_player')())
+    ecs.addSystem(1, require('ecs/sys_enemy')())
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_colli')())
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
