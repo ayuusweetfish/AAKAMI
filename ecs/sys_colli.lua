@@ -37,8 +37,8 @@ print(rectIntsc({0, 0, 1, 1}, {0.5, -0.5, 1, 1}))   -- 38
 
 return function () return {
 
-component = 'colli',
-update = function (self, es)
+update = function (self, cs)
+    local es = cs.colli
     -- TODO: Optimize if this becomes the bottleneck
 
     -- Checks whether e1 collides with any other entity

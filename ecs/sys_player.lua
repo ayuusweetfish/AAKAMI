@@ -22,9 +22,8 @@ end
 
 return function () return {
 
-component = 'player',
-update = function (self, es)
-    for _, e in pairs(es) do
+update = function (self, cs)
+    for _, e in pairs(cs.player) do
         local horz = keys('right', 'left')
         local vert = keys('down', 'up')
         if horz ~= 0 and vert ~= 0 then

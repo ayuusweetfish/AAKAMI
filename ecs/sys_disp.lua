@@ -9,13 +9,12 @@ end
 
 return function (spritesheet) return {
 
-component = 'sprite',
 spritesheet = spritesheet,
 cam = {0, 0},
-update = function (self, es)
+update = function (self, cs)
     local es_z0, es_zp = {}, {}
 
-    for _, e in pairs(es) do
+    for _, e in pairs(cs.sprite) do
         if e.sprite.z == nil then es_z0[#es_z0 + 1] = e
         elseif e.sprite.z < 0 then draw(self, e)
         else es_zp[#es_zp + 1] = e end

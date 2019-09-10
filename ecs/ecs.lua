@@ -22,7 +22,7 @@ end
 
 local update = function (pass)
     for _, s in pairs(systems[pass]) do
-        s:update(components[s.component])
+        s:update(components)
     end
 end
 
