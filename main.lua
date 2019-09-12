@@ -117,6 +117,7 @@ function love.load()
     end
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_enemy')())
+    ecs.addSystem(1, require('ecs/sys_follow')())
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_bullet')())
     ecs.addSystem(1, require('ecs/sys_colli')())
