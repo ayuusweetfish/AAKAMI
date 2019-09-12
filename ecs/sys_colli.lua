@@ -56,16 +56,16 @@ update = function (self, cs)
             end
         end end
         if intsc == 0 then return nil end
-        local x, y, d = 1e10, 1e10, 1e10
-        if x0 < D then
+        local x, y, d = 1e10, 1e10, D
+        if x0 < d then
             if bit.band(intsc, 1) == 0 then x, y, d = -x0, 0, x0 end
             if bit.band(intsc, 2) == 0 then x, y, d = x0, 0, x0 end
         end
-        if y0 < D and y0 < d then
+        if y0 < d then
             if bit.band(intsc, 4) == 0 then x, y, d = 0, -y0, y0 end
             if bit.band(intsc, 8) == 0 then x, y, d = 0, y0, y0 end
         end
-        if xy0 * 2 < D and xy0 * 2 < d then
+        if xy0 * 2 < d then
             if bit.band(intsc, 16) == 0 then x, y, d = -xy0, -xy0, xy0 * 2 end
             if bit.band(intsc, 32) == 0 then x, y, d = xy0, -xy0, xy0 * 2 end
             if bit.band(intsc, 64) == 0 then x, y, d = -xy0, xy0, xy0 * 2 end
@@ -76,7 +76,9 @@ update = function (self, cs)
 
     for _, e1 in pairs(es) do if e1.colli.passive then
         local x, y = check(e1)
-        if x ~= nil then
+        if x == 1e10 then
+            print('> <')
+        elseif x ~= nil then
             e1.dim[1] = e1.dim[1] + x
             e1.dim[2] = e1.dim[2] + y
             if x * e1.vel[1] < 0 then e1.vel[1] = 0 end
