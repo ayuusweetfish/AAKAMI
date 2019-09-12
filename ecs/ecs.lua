@@ -9,7 +9,6 @@ DT = 1.0 / 300
 
 local addEntity = function (e)
     entities[#entities + 1] = e
-    e._entity = #entities
 
     local lookup = {}
     for k, v in pairs(e) do
@@ -19,6 +18,8 @@ local addEntity = function (e)
         c[#c + 1] = e
         lookup[k] = #c
     end
+
+    e._entity = #entities
     e._lookup = lookup
 
     return e
@@ -36,6 +37,7 @@ local removeEntity = function (e)
 
     -- Remove from the entity list
     entities[e._entity] = entities[#entities]
+    entities[#entities]._entity = e._entity
     table.remove(entities, #entities)
 end
 
