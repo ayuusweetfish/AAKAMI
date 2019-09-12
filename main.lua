@@ -3,8 +3,8 @@ local ecs = require 'ecs/ecs'
 
 local IS_DESKTOP = true
 
-local W = 320
-local H = 240
+W = 320
+H = 240
 local SCALE = 1
 
 if IS_DESKTOP then SCALE = 3 end

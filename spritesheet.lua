@@ -111,7 +111,10 @@ local draw = function (name, x, y, bottomAligned)
     local yAlignDelta = 0
     if bottomAligned then yAlignDelta = -item.h end
     if item ~= nil then
-        item.batch:add(item.quad, x + item.tx, y + item.ty + yAlignDelta)
+        local rx, ry = x + item.tx, y + item.ty + yAlignDelta
+        if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
+            item.batch:add(item.quad, rx, ry)
+        end
     end
 end
 
