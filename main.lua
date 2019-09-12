@@ -78,7 +78,7 @@ function love.load()
         dim = { sidelen * 5.5, sidelen * 5.5, 14, 14 },
         vel = { 0, 0 },
         sprite = { name = 'quq6' },
-        enemy = {},
+        enemy = { interval = 300 },
         colli = { passive = true, block = true }
     })
 
@@ -118,6 +118,7 @@ function love.load()
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_enemy')())
     ecs.addSystem(1, require('ecs/sys_vel')())
+    ecs.addSystem(1, require('ecs/sys_bullet')())
     ecs.addSystem(1, require('ecs/sys_colli')())
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
@@ -127,7 +128,7 @@ function love.update()
 
     local t = math.floor(T / 1)
     if w[t] ~= nil then
-        ecs.removeEntity(w[t])
+        --ecs.removeEntity(w[t])
         w[t] = nil
     end
 

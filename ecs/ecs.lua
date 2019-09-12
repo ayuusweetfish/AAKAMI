@@ -51,6 +51,11 @@ local update = function (pass)
     for _, s in pairs(systems[pass]) do
         s:update(components)
     end
+    local removed = {}
+    for _, e in ipairs(entities) do
+        if e._removal then removed[#removed + 1] = e end
+    end
+    for _, e in ipairs(removed) do removeEntity(e) end
 end
 
 return {

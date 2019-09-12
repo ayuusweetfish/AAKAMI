@@ -1,6 +1,4 @@
-local segIntscLen = function (l1, r1, l2, r2)
-    return math.max(0, math.min(r1, r2) - math.max(l1, l2))
-end
+require 'ecs/utils'
 
 local D = 4 -- Maximum push-away distance
 
@@ -12,7 +10,7 @@ end
 -- 1, 2, 4, 8: L, R, U, D
 -- 16, 32, 64, 128: UL, UR, DL, DR
 -- Requires bit module by LuaJIT
-local rectIntsc = function (a, b)
+local rectIntscFlags = function (a, b)
     local xIntsc = segIntscLen(a[1], a[1] + a[3], b[1], b[1] + b[3])
     local yIntsc = segIntscLen(a[2], a[2] + a[4], b[2], b[2] + b[4])
     if xIntsc == 0 or yIntsc == 0 then return nil end
@@ -29,10 +27,10 @@ local rectIntsc = function (a, b)
     return r, xIntsc, yIntsc
 end
 --[[
-print(rectIntsc({0, 0, 1, 1}, {0.5, 0.5, 0.2, 1}))  -- 8
-print(rectIntsc({0, 0, 1, 1}, {0.5, 0.5, 1, 1}))    -- 138
-print(rectIntsc({0, 0, 1, 1}, {-0.5, 0.5, 1, 1}))   -- 73
-print(rectIntsc({0, 0, 1, 1}, {0.5, -0.5, 1, 1}))   -- 38
+print(rectIntscFlags({0, 0, 1, 1}, {0.5, 0.5, 0.2, 1}))  -- 8
+print(rectIntscFlags({0, 0, 1, 1}, {0.5, 0.5, 1, 1}))    -- 138
+print(rectIntscFlags({0, 0, 1, 1}, {-0.5, 0.5, 1, 1}))   -- 73
+print(rectIntscFlags({0, 0, 1, 1}, {0.5, -0.5, 1, 1}))   -- 38
 ]]
 
 return function () return {
@@ -47,7 +45,7 @@ update = function (self, cs)
         local intsc = 0
         local x0, y0, xy0 = 0, 0, 0
         for _, e2 in pairs(es) do if e2 ~= e1 and e2.colli.block then
-            local r, x1, y1 = rectIntsc(e1.dim, e2.dim)
+            local r, x1, y1 = rectIntscFlags(e1.dim, e2.dim)
             if r ~= nil then
                 intsc = bit.bor(intsc, r)
                 x0 = math.max(x0, x1)
