@@ -64,18 +64,18 @@ function love.load()
 
     -- Player
     playerEntity = ecs.addEntity({
-        dim = { sidelen * 2, sidelen * 2, sidelen, sidelen },
+        dim = { sidelen * 2, sidelen * 2, 14, 14 },
         vel = { 0, 0 },
-        sprite = { name = 'quq1' },
+        sprite = { name = 'quq5' },
         player = {},
         colli = { passive = true }
     })
 
     -- Enemy
     ecs.addEntity({
-        dim = { sidelen * 5.5, sidelen * 5.5, sidelen, sidelen },
+        dim = { sidelen * 5.5, sidelen * 5.5, 14, 14 },
         vel = { 0, 0 },
-        sprite = { name = 'quq1' },
+        sprite = { name = 'quq6' },
         enemy = {},
         colli = { passive = true, block = true }
     })
