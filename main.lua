@@ -20,6 +20,8 @@ local ecs_update_count = 0
 local playerEntity
 local dispSystem
 
+local w = {}
+
 function love.conf(t)
     t.window.physics = false
 end
@@ -97,7 +99,7 @@ function love.load()
         local h = sidelen
         if i == 3 then h = sidelen * 2 end
         for _, wall in ipairs(walls[i]) do
-            ecs.addEntity({
+            w[#w + 1] = ecs.addEntity({
                 dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
                 sprite = { name = 'quq' .. tostring(i) },
                 colli = { block = (i ~= 4) }
@@ -122,6 +124,12 @@ end
 
 function love.update()
     T = T + love.timer.getDelta()
+
+    local t = math.floor(T / 1)
+    if w[t] ~= nil then
+        ecs.removeEntity(w[t])
+        w[t] = nil
+    end
 
     if love.keyboard.isDown('escape') then
         love.event.quit()
