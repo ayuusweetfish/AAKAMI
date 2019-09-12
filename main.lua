@@ -117,6 +117,7 @@ function love.load()
             })
         end
     end
+    ecs.addSystem(1, require('ecs/sys_spcpart')())
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_enemy')())
     ecs.addSystem(1, require('ecs/sys_follow')())

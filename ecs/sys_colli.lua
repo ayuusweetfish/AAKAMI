@@ -44,7 +44,7 @@ update = function (self, cs)
     local check = function (e1)
         local intsc = 0
         local x0, y0, xy0 = 0, 0, 0
-        for _, e2 in pairs(es) do if e2 ~= e1 and e2.colli.block then
+        cs.dim:colliding(e1, function (e2) if e2.colli.block then
             local r, x1, y1 = rectIntscFlags(e1.dim, e2.dim)
             if r ~= nil then
                 intsc = bit.bor(intsc, r)
@@ -52,7 +52,7 @@ update = function (self, cs)
                 y0 = math.max(y0, y1)
                 xy0 = math.max(xy0, math.min(x1, y1))
             end
-        end end
+        end end)
         if intsc == 0 then return nil end
         local x, y, d = 1e10, 1e10, D
         if x0 < d then
