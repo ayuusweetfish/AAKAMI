@@ -5,9 +5,7 @@ local IS_DESKTOP = true
 
 W = 320
 H = 240
-local SCALE = 1
-
-if IS_DESKTOP then SCALE = 3 end
+local SCALE = IS_DESKTOP and 3 or 1
 
 local sidelen = 16
 
@@ -159,14 +157,18 @@ function love.update()
 end
 
 function love.draw()
-    love.graphics.setCanvas(canvas)
+    if IS_DESKTOP then
+        love.graphics.setCanvas(canvas)
+    end
     love.graphics.clear(1, 1, 1)
     love.graphics.setColor(1, 1, 1)
     ecs.update(2)
     spritesheet.flush()
 
-    love.graphics.setCanvas(nil)
-    love.graphics.setShader(shader)
-    love.graphics.draw(canvas, 0, 0, 0, SCALE, SCALE)
-    love.graphics.setShader(nil)
+    if IS_DESKTOP then
+        love.graphics.setCanvas(nil)
+        love.graphics.setShader(shader)
+        love.graphics.draw(canvas, 0, 0, 0, SCALE, SCALE)
+        love.graphics.setShader(nil)
+    end
 end

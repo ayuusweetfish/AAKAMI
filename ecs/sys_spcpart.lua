@@ -11,9 +11,11 @@ local colliding = function (self, e, cb)
     local x, y
     for x = math.floor(x1 / BLOCK), math.floor(x2 / BLOCK) do
     for y = math.floor(y1 / BLOCK), math.floor(y2 / BLOCK) do
-        for _, t in pairs(p[x * STRIDE + y] or {}) do
-            if e ~= t and rectIntsc(e.dim, t.dim) then
-                if cb(t) then goto fin end
+        if p[x * STRIDE + y] then
+            for _, t in pairs(p[x * STRIDE + y]) do
+                if e ~= t and rectIntsc(e.dim, t.dim) then
+                    if cb(t) then goto fin end
+                end
             end
         end
     end
