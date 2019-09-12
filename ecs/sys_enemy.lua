@@ -20,12 +20,12 @@ update = function (self, cs)
                     e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
                     4, 4
                 },
-                vel = { dx * 2, dy * 2 },
+                vel = { dx * 10, dy * 10 },
                 sprite = { name = 'quq7' },
                 bullet = { source = e },
             }
             if math.random(2) == 1 then
-                bullet.follow = { target = ePlayer, vel = 32 }
+                bullet.follow = { target = ePlayer, vel = 120, accel = 16 }
             else bullet.sprite.name = 'quq8'
             end
             ecs.addEntity(bullet)
