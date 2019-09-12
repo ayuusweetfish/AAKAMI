@@ -79,8 +79,8 @@ update = function (self, cs)
         if x ~= nil then
             e1.dim[1] = e1.dim[1] + x
             e1.dim[2] = e1.dim[2] + y
-            if x ~= 0 then e1.vel[1] = 0 end
-            if y ~= 0 then e1.vel[2] = 0 end
+            if x * e1.vel[1] < 0 then e1.vel[1] = 0 end
+            if y * e1.vel[2] < 0 then e1.vel[2] = 0 end
         end
     end end
 end
