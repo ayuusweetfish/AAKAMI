@@ -25,7 +25,7 @@ update = function (self, cs)
                 bullet = { source = e },
             }
             if math.random(2) == 1 then
-                bullet.follow = { target = ePlayer, vel = 120, accel = 16 }
+                bullet.follow = { target = ePlayer, vel = 120, accel = 8 }
             else bullet.sprite.name = 'quq8'
             end
             ecs.addEntity(bullet)
