@@ -74,13 +74,15 @@ function love.load()
     })
 
     -- Enemy
-    ecs.addEntity({
-        dim = { sidelen * 5.5, sidelen * 5.5, 14, 14 },
-        vel = { 0, 0 },
-        sprite = { name = 'quq6' },
-        enemy = { interval = 300 },
-        colli = { passive = true, block = true }
-    })
+    for i = 1, 10 do
+        ecs.addEntity({
+            dim = { sidelen * (5.5 + i * 3), sidelen * 5.5, 14, 14 },
+            vel = { 0, 0 },
+            sprite = { name = 'quq6' },
+            enemy = { interval = 300 },
+            colli = { passive = true, block = true }
+        })
+    end
 
     -- Obstacles
     local walls = {{
