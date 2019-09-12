@@ -122,14 +122,30 @@ function love.load()
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
+function love.keypressed(key)
+    if key == 'up' or key == 'down' then
+        dispSys.debouncerY.reset()
+    elseif key == 'left' or key == 'right' then
+        dispSys.debouncerX.reset()
+    end
+end
+
+function love.keyreleased(key)
+    if key == 'up' or key == 'down' then
+        dispSys.debouncerY.reset()
+    elseif key == 'left' or key == 'right' then
+        dispSys.debouncerX.reset()
+    end
+end
+
 function love.update()
     T = T + love.timer.getDelta()
 
-    local t = math.floor(T / 1)
+    --[[local t = math.floor(T / 1)
     if w[t] ~= nil then
         ecs.removeEntity(w[t])
         w[t] = nil
-    end
+    end]]
 
     if love.keyboard.isDown('escape') then
         love.event.quit()
