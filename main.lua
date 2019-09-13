@@ -28,6 +28,7 @@ end
 local termInteraction = function ()
     print('Hi')
     ecs.removeEntity(term)
+    ecs.removeEntity(term.term.bubble)
 end
 
 function love.load()
@@ -97,7 +98,7 @@ function love.load()
             callback = termInteraction,
             bubble = ecs.addEntity({
                 dim = { sidelen * 3, sidelen * 5, sidelen, sidelen },
-                sprite = { name = 'quq9' }
+                sprite = { name = 'quq9', z = 1 }
             })
         }
     })
