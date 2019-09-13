@@ -16,12 +16,18 @@ local T = 0
 local ecs_update_count = 0
 
 local playerEntity
+local term
 local dispSystem
 
 local w = {}
 
 function love.conf(t)
     t.window.physics = false
+end
+
+local termInteraction = function ()
+    print('Hi')
+    ecs.removeEntity(term)
 end
 
 function love.load()
@@ -82,6 +88,20 @@ function love.load()
         })
     end
 
+    -- Terminal
+    term = ecs.addEntity({
+        dim = { sidelen * 3, sidelen * 5, sidelen, sidelen },
+        sprite = { name = 'quq2' },
+        colli = { block = true },
+        term = {
+            callback = termInteraction,
+            bubble = ecs.addEntity({
+                dim = { sidelen * 3, sidelen * 5, sidelen, sidelen },
+                sprite = { name = 'quq9' }
+            })
+        }
+    })
+
     -- Obstacles
     local walls = {{
         {4, 4}, {5, 4}, {6, 4}, {7, 4},
@@ -122,6 +142,7 @@ function love.load()
     ecs.addSystem(1, require('ecs/sys_vel')())
     ecs.addSystem(1, require('ecs/sys_bullet')())
     ecs.addSystem(1, require('ecs/sys_colli')())
+    ecs.addSystem(1, require('ecs/sys_term')())
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
