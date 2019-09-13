@@ -24,19 +24,22 @@ local updateVel = function (orig, tx, ty)
 end
 
 local nearest = function (e, v, es)
-    local K = 0.3
+    local K = 0.3   -- 'Compression' factor
     local cx, cy =
         e.dim[1] + e.dim[3] * 0.5,
         e.dim[2] + e.dim[4] * 0.5
     local vx, vy = e.vel[1], e.vel[2]
+    local still
     local vsq = vx * vx + vy * vy
     if vsq <= 1e-5 then
         vx, vy = v[1], v[2]
+        still = true
     else
         local vinv = 1 / math.sqrt(vsq)
         vx, vy = vx * vinv, vy * vinv
         v[1], v[2] = vx, vy
     end
+    -- Find the closest enemy biased towards ones that the player is facing
     local best, ret = 1e10, nil
     for _, t in ipairs(es) do
         local tx, ty =
@@ -49,6 +52,25 @@ local nearest = function (e, v, es)
             local psq = p * p
             local d2sq = dx * dx + dy * dy + (K * K - 1) * psq
             if d2sq < best then best, ret = d2sq, t end
+        end
+    end
+    -- Reorient onto the nearest enemy and update the facing direction,
+    -- if the player stands still and does not find an enemy in range
+    if still and ret == nil then
+        for _, t in ipairs(es) do
+            local tx, ty =
+                t.dim[1] + t.dim[3] * 0.5,
+                t.dim[2] + t.dim[4] * 0.5
+            local dx, dy = tx - cx, ty - cy
+            local dsq = dx * dx + dy * dy
+            if dsq < best then
+                best, ret = dsq, t
+                vx, vy = dx, dy
+            end
+        end
+        if best ~= nil then
+            local factor = 1 / math.sqrt(vx * vx + vy * vy)
+            v[1], v[2] = vx * factor, vy * factor
         end
     end
     return ret
