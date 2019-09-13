@@ -14,3 +14,12 @@ targetVec = function (s, t, l)
     local factor = l / math.sqrt(dx * dx + dy * dy)
     return dx * factor, dy * factor
 end
+
+targetVecAround = function (s, t, r, l)
+    local tx, ty = t[1] + t[3] * 0.5, t[2] + t[4] * 0.5
+    local dx, dy = tx - (s[1] + s[3] * 0.5), ty - (s[2] + s[4] * 0.5)
+    local dsq = dx * dx + dy * dy
+    if dsq < 1e-5 then return 0, 0 end
+    local factor = l * (math.sqrt(dsq) - r) / dsq
+    return dx * factor, dy * factor
+end

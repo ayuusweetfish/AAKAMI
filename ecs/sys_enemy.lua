@@ -8,7 +8,7 @@ update = function (self, cs)
     if ePlayer == nil then return end
 
     for _, e in pairs(cs.enemy) do
-        local dx, dy = targetVec(e.dim, ePlayer.dim, 16)
+        local dx, dy = targetVecAround(e.dim, ePlayer.dim, 16, 16)
 
         local rx, ry = 0, 0
         cs.dim:colliding(e, function (e2) if e2.enemy then
