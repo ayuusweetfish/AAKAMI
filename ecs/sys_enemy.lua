@@ -22,7 +22,7 @@ update = function (self, cs)
                 },
                 vel = { dx * 10, dy * 10 },
                 sprite = { name = 'quq7' },
-                bullet = { source = e },
+                bullet = { mask = 3 },
             }
             if math.random(2) == 1 then
                 bullet.follow = { target = ePlayer, vel = 120, accel = 8 }

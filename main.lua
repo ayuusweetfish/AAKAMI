@@ -68,7 +68,7 @@ function love.load()
         vel = { 0, 0 },
         sprite = { name = 'quq5' },
         player = {},
-        colli = { passive = true }
+        colli = { passive = true, tag = 2 }
     })
 
     -- Enemy
@@ -78,7 +78,7 @@ function love.load()
             vel = { 0, 0 },
             sprite = { name = 'quq6' },
             enemy = { interval = 300 },
-            colli = { passive = true, block = true }
+            colli = { passive = true, block = true, tag = 4 }
         })
     end
 
@@ -102,7 +102,7 @@ function love.load()
             w[#w + 1] = ecs.addEntity({
                 dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
                 sprite = { name = 'quq' .. tostring(i) },
-                colli = { block = (i ~= 4) }
+                colli = { block = (i ~= 4), tag = 1 }
             })
         end
     end
@@ -111,7 +111,7 @@ function love.load()
             ecs.addEntity({
                 dim = { sidelen * i, sidelen * j, sidelen, sidelen },
                 sprite = { name = 'quq1' },
-                colli = { block = true }
+                colli = { block = true, tag = 1 }
             })
         end
     end

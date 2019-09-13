@@ -81,7 +81,7 @@ update = function (self, cs)
                     },
                     vel = { dx * 10, dy * 10 },
                     sprite = { name = 'quq9' },
-                    bullet = { source = e }
+                    bullet = { mask = 5 }
                 }
                 ecs.addEntity(bullet)
             end
