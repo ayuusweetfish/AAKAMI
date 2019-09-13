@@ -1,18 +1,21 @@
 require 'ecs/utils'
 
-local BLOCK = 96
-local STRIDE = 64
+local BLOCK = 7     -- 128
+local STRIDE = 6    -- 64
+
+local rsh, lsh = bit.rshift, bit.lshift
 
 local colliding = function (self, e, cb)
     local p = self.partition
     local x1, x2, y1, y2 =
-        e.dim[1], e.dim[1] + e.dim[3],
-        e.dim[2], e.dim[2] + e.dim[4]
+        rsh(e.dim[1], BLOCK), rsh(e.dim[1] + e.dim[3], BLOCK),
+        rsh(e.dim[2], BLOCK), rsh(e.dim[2] + e.dim[4], BLOCK)
     local x, y
-    for x = math.floor(x1 / BLOCK), math.floor(x2 / BLOCK) do
-    for y = math.floor(y1 / BLOCK), math.floor(y2 / BLOCK) do
-        if p[x * STRIDE + y] then
-            for _, t in pairs(p[x * STRIDE + y]) do
+    for x = x1, x2 do
+    for y = y1, y2 do
+        local block = p[lsh(x, STRIDE) + y]
+        if block then
+            for _, t in pairs(block) do
                 if e ~= t and rectIntsc(e.dim, t.dim) then
                     if cb(t) then goto fin end
                 end
@@ -32,14 +35,15 @@ update = function (self, cs)
     local p = {}
     for _, e in pairs(cs.colli) do
         local x1, x2, y1, y2 =
-            e.dim[1], e.dim[1] + e.dim[3],
-            e.dim[2], e.dim[2] + e.dim[4]
+            rsh(e.dim[1], BLOCK), rsh(e.dim[1] + e.dim[3], BLOCK),
+            rsh(e.dim[2], BLOCK), rsh(e.dim[2] + e.dim[4], BLOCK)
         local x, y
-        for x = math.floor(x1 / BLOCK), math.floor(x2 / BLOCK) do
-        for y = math.floor(y1 / BLOCK), math.floor(y2 / BLOCK) do
-            local t = p[x * STRIDE + y] or {}
-            t[#t + 1] = e
-            p[x * STRIDE + y] = t
+        for x = x1, x2 do
+        for y = y1, y2 do
+            local i = lsh(x, STRIDE) + y
+            local t = p[i]
+            if t == nil then p[i] = { e }
+            else t[#t + 1] = e end
         end
         end
     end

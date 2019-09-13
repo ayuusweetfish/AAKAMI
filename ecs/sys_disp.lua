@@ -15,15 +15,13 @@ update = function (self, cs)
     local es_z0, es_zp = {}, {}
 
     for _, e in pairs(cs.sprite) do
-        if e.sprite.z == nil then es_z0[#es_z0 + 1] = e
-        elseif e.sprite.z < 0 then draw(self, e)
+        local z = e.sprite.z
+        if z == nil then es_z0[#es_z0 + 1] = e
+        elseif z < 0 then draw(self, e)
         else es_zp[#es_zp + 1] = e end
     end
 
     table.sort(es_z0, function (lhs, rhs)
-        if math.abs(lhs.dim[2] - rhs.dim[2]) <= 1e-6 then
-            return lhs.dim[1] < rhs.dim[1]
-        end
         return lhs.dim[2] < rhs.dim[2]
     end)
 
