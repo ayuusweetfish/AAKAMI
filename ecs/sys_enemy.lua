@@ -9,6 +9,19 @@ update = function (self, cs)
 
     for _, e in pairs(cs.enemy) do
         local dx, dy = targetVec(e.dim, ePlayer.dim, 16)
+
+        local rx, ry = 0, 0
+        cs.dim:colliding(e, function (e2) if e2.enemy then
+            local drx, dry = targetVec(e.dim, e2.dim, 6)
+            rx, ry = rx + drx, ry + dry
+        end end)
+        local rsq = rx * rx + ry * ry
+        if rsq > 36 then
+            local factor = 6 / math.sqrt(rsq)
+            rx, ry = rx * factor, ry * factor
+        end
+        dx, dy = dx - rx, dy - ry
+
         e.vel[1], e.vel[2] = dx, dy
 
         e.enemy.countdown = (e.enemy.countdown or e.enemy.interval) - 1

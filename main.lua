@@ -78,7 +78,7 @@ function love.load()
             vel = { 0, 0 },
             sprite = { name = 'quq6' },
             enemy = { interval = 300 },
-            colli = { passive = true, block = true, tag = 4 }
+            colli = { passive = true, tag = 4 }
         })
     end
 
