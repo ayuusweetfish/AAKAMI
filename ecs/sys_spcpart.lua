@@ -1,7 +1,7 @@
 require 'ecs/utils'
 
 local BLOCK = 96
-local STRIDE = 32768
+local STRIDE = 64
 
 local colliding = function (self, e, cb)
     local p = self.partition
