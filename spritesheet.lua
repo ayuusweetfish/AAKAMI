@@ -107,16 +107,28 @@ local loadCrunch = function (path)
 end
 
 -- (x, y) is the top-left corner
-local draw = function (name, x, y, bottomAligned, sx, sy)
+local draw = function (name, x, y, bottomAligned)
     local item = lookup[name]
-    if item == nil then print(name) end
+    if item == nil then print(name) return end
     local yAlignDelta = 0
     if bottomAligned then yAlignDelta = -item.h end
-    if item ~= nil then
-        local rx, ry = x + item.tx, y + item.ty + yAlignDelta
-        if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
-            item.batch:add(item.quad, rx, ry, 0, sx, sy)
-        end
+    local rx, ry = x + item.tx, y + item.ty + yAlignDelta
+    if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
+        item.batch:add(item.quad, rx, ry)
+    end
+end
+
+-- (x, y) is the centre
+-- Will be centred w.r.t the size after trimming
+local drawCen = function (name, x, y, sx, sy)
+    local item = lookup[name]
+    if item == nil then print(name) end
+    sx = sx or 1
+    sy = sy or sx
+    local rx = x + item.tx - item.sw * sx * 0.5
+    local ry = y + item.ty - item.sh * sy * 0.5
+    if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
+        item.batch:add(item.quad, rx, ry, 0, sx, sy)
     end
 end
 
@@ -136,6 +148,7 @@ return {
     loadImage = loadImage,
     loadCrunch = loadCrunch,
     draw = draw,
+    drawCen = drawCen,
     flush = flush,
     clear = clear
 }
