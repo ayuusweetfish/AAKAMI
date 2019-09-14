@@ -3,7 +3,7 @@ require 'ecs/utils'
 local BLOCK = 7     -- 128
 local STRIDE = 6    -- 64
 
-local rsh, lsh = bit.rshift, bit.lshift
+local rsh, lsh = bit.arshift, bit.lshift
 
 local _colliding = function (self, e, dim, cb)
     local p = self.partition
