@@ -25,6 +25,7 @@ end
 
 local nearest = function (e, v, es)
     local K = 0.3   -- 'Compression' factor
+    local R = 96    -- Visibile range
     local cx, cy =
         e.dim[1] + e.dim[3] * 0.5,
         e.dim[2] + e.dim[4] * 0.5
@@ -40,7 +41,7 @@ local nearest = function (e, v, es)
         v[1], v[2] = vx, vy
     end
     -- Find the closest enemy biased towards ones that the player is facing
-    local best, ret = 1e10, nil
+    local best, ret = R * R, nil
     for _, t in ipairs(es) do
         local tx, ty =
             t.dim[1] + t.dim[3] * 0.5,
@@ -92,21 +93,24 @@ update = function (self, cs)
 
         local UDown = love.keyboard.isDown('u')
         local target = nearest(e, self.lastValidVel, cs.enemy)
+        local dx, dy
         if target ~= nil then
-            local dx, dy = targetVec(e.dim, target.dim, 16)
-            if UDown and not lastUDown then
-                local bullet = {
-                    dim = {
-                        e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
-                        e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
-                        4, 4
-                    },
-                    vel = { dx * 10, dy * 10 },
-                    sprite = { name = 'quq9' },
-                    bullet = { mask = 5 }
-                }
-                ecs.addEntity(bullet)
-            end
+            dx, dy = targetVec(e.dim, target.dim, 16)
+        else
+            dx, dy = self.lastValidVel[1] * 16, self.lastValidVel[2] * 16
+        end
+        if UDown and not lastUDown then
+            local bullet = {
+                dim = {
+                    e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
+                    e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
+                    4, 4
+                },
+                vel = { dx * 10, dy * 10 },
+                sprite = { name = 'quq9' },
+                bullet = { mask = 5 }
+            }
+            ecs.addEntity(bullet)
         end
         lastUDown = UDown
     end
