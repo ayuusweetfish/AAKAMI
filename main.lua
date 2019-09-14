@@ -74,7 +74,7 @@ function love.load()
         dim = { sidelen * 2, sidelen * 2, 14, 14 },
         vel = { 0, 0 },
         sprite = { name = 'quq5' },
-        player = {},
+        player = { buff = {} },
         colli = { passive = true, tag = 2 }
     })
 

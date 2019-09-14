@@ -1,5 +1,6 @@
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
+local buff = require 'mech/buff'
 
 local keys = function (a, b)
     local result = 0
