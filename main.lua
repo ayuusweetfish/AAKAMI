@@ -1,5 +1,6 @@
 local spritesheet = require 'spritesheet'
 local ecs = require 'ecs/ecs'
+require 'buffterm'
 
 local IS_DESKTOP = true
 
@@ -19,6 +20,8 @@ local playerEntity
 local term
 local dispSystem
 
+local isBuffTermRunning = false
+
 local w = {}
 
 function love.conf(t)
@@ -26,9 +29,8 @@ function love.conf(t)
 end
 
 local termInteraction = function ()
-    print('Hi')
-    ecs.removeEntity(term)
-    ecs.removeEntity(term.term.bubble)
+    buffTermReset()
+    isBuffTermRunning = true
 end
 
 function love.load()
@@ -148,6 +150,11 @@ function love.load()
 end
 
 function love.update()
+    if isBuffTermRunning then
+        isBuffTermRunning = buffTermUpdate(term)
+        return
+    end
+
     T = T + love.timer.getDelta()
 
     local t = math.floor(T / 1)
@@ -186,6 +193,8 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
     ecs.update(2)
     spritesheet.flush()
+
+    if isBuffTermRunning then buffTermDraw() end
 
     if IS_DESKTOP then
         love.graphics.setCanvas(nil)
