@@ -1,6 +1,7 @@
 local spritesheet = require 'spritesheet'
 local ecs = require 'ecs/ecs'
 require 'buffterm'
+require 'vendterm'
 
 local IS_DESKTOP = true
 
@@ -19,7 +20,7 @@ local ecs_update_count = 0
 local playerEntity
 local dispSystem
 
-local isBuffTermRunning = false
+local termUpdate, termDraw = nil, nil
 
 local w = {}
 
@@ -27,9 +28,14 @@ function love.conf(t)
     t.window.physics = false
 end
 
-local termInteraction = function (term)
+local buffTermInteraction = function (term)
     buffTermReset(term)
-    isBuffTermRunning = true
+    termUpdate, termDraw = buffTermUpdate, buffTermDraw
+end
+
+local vendTermInteraction = function (term)
+    vendTermReset(term)
+    termUpdate, termDraw = vendTermUpdate, vendTermDraw
 end
 
 function love.load()
@@ -91,13 +97,14 @@ function love.load()
     end
 
     -- Terminal
-    for i = 1, 3 do
+    for i = 1, 4 do
         ecs.addEntity({
             dim = { sidelen * 3, sidelen * (3 + 2 * i), sidelen, sidelen },
             sprite = { name = 'quq2' },
             colli = { block = true },
             term = {
-                callback = termInteraction,
+                once = (i ~= 4),
+                callback = (i == 4 and vendTermInteraction or buffTermInteraction),
                 bubble = ecs.addEntity({
                     dim = { sidelen * 3, sidelen * (2 + 2 * i), sidelen, sidelen },
                     sprite = { name = 'quq9', z = 1 }
@@ -177,8 +184,8 @@ function love.load()
 end
 
 function love.update()
-    if isBuffTermRunning then
-        isBuffTermRunning = buffTermUpdate()
+    if termUpdate ~= nil then
+        if not termUpdate() then termUpdate, termDraw = nil, nil end
         return
     end
 
@@ -221,7 +228,7 @@ function love.draw()
     ecs.update(2)
     spritesheet.flush()
 
-    if isBuffTermRunning then buffTermDraw() end
+    if termDraw ~= nil then termDraw() end
 
     love.graphics.print(tostring(love.timer.getFPS()))
 
