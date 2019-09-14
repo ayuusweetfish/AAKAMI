@@ -54,6 +54,49 @@ bulletUpdate.triad = function (e, ePlayer, phase, dx, dy)
     end
 end
 
+bulletUpdate.penta = function (e, ePlayer, phase, dx, dy)
+    e.enemy._nextShoot = (e.enemy._nextShoot or 180)
+    e.enemy._curColour = (e.enemy._curColour or 0)
+    if phase == e.enemy._nextShoot then
+        e.enemy._curColour = (e.enemy._curColour + 1) % 2
+        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy._curColour)
+        -- 180, 195, 210, 225, 240
+        e.enemy._nextShoot = (e.enemy._nextShoot - 165) % 75 + 180
+    end
+end
+
+bulletUpdate.arp = function (e, ePlayer, phase, dx, dy)
+    e.enemy._nextShoot = (e.enemy._nextShoot or 60)
+    e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
+    if phase == e.enemy._nextShoot then
+        if phase == 0 then
+            e.enemy._curWaveColour = (e.enemy._curWaveColour + 1) % 2
+        end
+        local alpha = -phase * math.pi / 180
+        addBullet(e,
+            math.sin(alpha) * BULLET_VEL, math.cos(alpha) * BULLET_VEL,
+            e.enemy._curWaveColour)
+        e.enemy._nextShoot = (e.enemy._nextShoot + 20) % 360
+    end
+end
+
+bulletUpdate.donut = function (e, ePlayer, phase, dx, dy)
+    e.enemy._nextShoot = (e.enemy._nextShoot or 180)
+    e.enemy._curColour = (e.enemy._curColour or 0)
+    if phase == e.enemy._nextShoot then
+        if phase == 240 then
+            e.enemy._curColour = (e.enemy._curColour + 1) % 2
+        end
+        for i = 0, 340, 20 do
+            local alpha = (i + (phase == 240 and 10 or 0)) * math.pi / 180
+            addBullet(e,
+                math.sin(alpha) * BULLET_VEL, math.cos(alpha) * BULLET_VEL,
+                e.enemy._curColour)
+        end
+        e.enemy._nextShoot = (e.enemy._nextShoot == 180 and 240 or 180)
+    end
+end
+
 return function () return {
 
 update = function (self, cs)

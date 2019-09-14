@@ -99,7 +99,7 @@ function love.load()
         dim = { sidelen * 9, sidelen * 5.5, 14, 14 },
         vel = { 0, 0 },
         sprite = { name = 'quq6' },
-        enemy = { name = 'triad' },
+        enemy = { name = 'donut' },
         colli = { passive = true, tag = 4 }
     })
 
