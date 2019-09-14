@@ -86,7 +86,7 @@ function love.load()
     })
 
     -- Enemy
-    for i = 1, 15 do
+    --[[for i = 1, 15 do
         ecs.addEntity({
             dim = { sidelen * (7 + i * 1.5), sidelen * 5.5, 14, 14 },
             vel = { 0, 0 },
@@ -94,7 +94,14 @@ function love.load()
             enemy = { interval = 60 },
             colli = { passive = true, tag = 4 }
         })
-    end
+    end]]
+    ecs.addEntity({
+        dim = { sidelen * 9, sidelen * 5.5, 14, 14 },
+        vel = { 0, 0 },
+        sprite = { name = 'quq6' },
+        enemy = { name = 'triad' },
+        colli = { passive = true, tag = 4 }
+    })
 
     -- Terminal
     for i = 1, 4 do
