@@ -12,7 +12,7 @@ update = function (self, cs)
             e.term.bubble.sprite.visible = true
             if love.keyboard.isDown('i') then
                 e.term.used = true
-                e.term.callback()
+                e.term.callback(e)
                 ecs.removeEntity(e.term.bubble)
             end
         else

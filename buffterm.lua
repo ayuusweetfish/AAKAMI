@@ -2,6 +2,9 @@ local spritesheet = require 'spritesheet'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
 
+local player
+
+local term      -- Current terminal entity
 local lastDownI -- Is key <I> pressed last frame
 local lastDownL, lastDownR
 local T         -- Total time
@@ -9,20 +12,39 @@ local selIndex
 local cardNames
 local cards
 
-buffTermReset = function ()
+buffTermReset = function (_term)
+    player = ecs.components.player[1].player
+
+    term = _term
     lastDownI = nil
     lastDownL, lastDownR = nil, nil
     T = 0
     selIndex = 1
-    cardNames = { 'penetration', 'stockpile', 'energyfield' }
-    cards = { buff.penetration, buff.stockpile, buff.energyfield }
+
+    local pool = {}
+    for k, _ in pairs(buff) do
+        if player.buff[k] == nil then pool[#pool + 1] = k end
+    end
+
+    if #pool < 3 then print('OvO') end
+    local a = math.random(#pool - 2)
+    local b = math.random(#pool - 1)
+    local c = math.random(#pool)
+    if b == a then b = #pool - 1 end
+    if c == a or c == b then c = #pool end
+
+    cardNames = { pool[a], pool[b], pool[c] }
+    cards = { buff[pool[a]], buff[pool[b]], buff[pool[c]] }
 end
 
-buffTermUpdate = function (term)
+buffTermUpdate = function ()
     T = T + love.timer.getDelta()
 
     local downI = love.keyboard.isDown('i')
     if downI and lastDownI == false then
+        -- Card get!
+        player.buff[cardNames[selIndex]] = 1
+
         term.sprite.name = 'quq1'
         return false
     end

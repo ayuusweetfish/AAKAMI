@@ -17,7 +17,6 @@ local T = 0
 local ecs_update_count = 0
 
 local playerEntity
-local term
 local dispSystem
 
 local isBuffTermRunning = false
@@ -28,8 +27,8 @@ function love.conf(t)
     t.window.physics = false
 end
 
-local termInteraction = function ()
-    buffTermReset()
+local termInteraction = function (term)
+    buffTermReset(term)
     isBuffTermRunning = true
 end
 
@@ -92,18 +91,20 @@ function love.load()
     end
 
     -- Terminal
-    term = ecs.addEntity({
-        dim = { sidelen * 3, sidelen * 5, sidelen, sidelen },
-        sprite = { name = 'quq2' },
-        colli = { block = true },
-        term = {
-            callback = termInteraction,
-            bubble = ecs.addEntity({
-                dim = { sidelen * 3, sidelen * 5, sidelen, sidelen },
-                sprite = { name = 'quq9', z = 1 }
-            })
-        }
-    })
+    for i = 1, 3 do
+        ecs.addEntity({
+            dim = { sidelen * 3, sidelen * (3 + 2 * i), sidelen, sidelen },
+            sprite = { name = 'quq2' },
+            colli = { block = true },
+            term = {
+                callback = termInteraction,
+                bubble = ecs.addEntity({
+                    dim = { sidelen * 3, sidelen * (2 + 2 * i), sidelen, sidelen },
+                    sprite = { name = 'quq9', z = 1 }
+                })
+            }
+        })
+    end
 
     -- Obstacles
     local walls = {{
@@ -177,7 +178,7 @@ end
 
 function love.update()
     if isBuffTermRunning then
-        isBuffTermRunning = buffTermUpdate(term)
+        isBuffTermRunning = buffTermUpdate()
         return
     end
 
