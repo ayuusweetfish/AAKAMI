@@ -81,12 +81,12 @@ function love.load()
     })
 
     -- Enemy
-    for i = 1, 10 do
+    for i = 1, 15 do
         ecs.addEntity({
-            dim = { sidelen * (5.5 + i * 3), sidelen * 5.5, 14, 14 },
+            dim = { sidelen * (7 + i * 1.5), sidelen * 5.5, 14, 14 },
             vel = { 0, 0 },
             sprite = { name = 'quq6' },
-            enemy = { interval = 300 },
+            enemy = { interval = 60 },
             colli = { passive = true, tag = 4 }
         })
     end
@@ -138,6 +138,32 @@ function love.load()
             })
         end
     end
+
+    for i = 0, 31 do
+        ecs.addEntity({
+            dim = { sidelen * i, sidelen * -4, sidelen, sidelen },
+            sprite = { name = 'quq1' },
+            colli = { block = true, tag = 1 }
+        })
+        ecs.addEntity({
+            dim = { sidelen * i, sidelen * 31, sidelen, sidelen },
+            sprite = { name = 'quq1' },
+            colli = { block = true, tag = 1 }
+        })
+    end
+    for j = -4, 31 do
+        ecs.addEntity({
+            dim = { sidelen * -1, sidelen * j, sidelen, sidelen },
+            sprite = { name = 'quq1' },
+            colli = { block = true, tag = 1 }
+        })
+        ecs.addEntity({
+            dim = { sidelen * 32, sidelen * j, sidelen, sidelen },
+            sprite = { name = 'quq1' },
+            colli = { block = true, tag = 1 }
+        })
+    end
+
     ecs.addSystem(1, require('ecs/sys_spcpart')())
     ecs.addSystem(1, require('ecs/sys_player')())
     ecs.addSystem(1, require('ecs/sys_enemy')())
@@ -195,6 +221,8 @@ function love.draw()
     spritesheet.flush()
 
     if isBuffTermRunning then buffTermDraw() end
+
+    love.graphics.print(tostring(love.timer.getFPS()))
 
     if IS_DESKTOP then
         love.graphics.setCanvas(nil)

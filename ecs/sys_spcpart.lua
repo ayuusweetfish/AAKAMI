@@ -1,6 +1,6 @@
 require 'ecs/utils'
 
-local BLOCK = 7     -- 128
+local BLOCK = 6     -- 64
 local STRIDE = 6    -- 64
 
 local rsh, lsh = bit.arshift, bit.lshift
@@ -15,7 +15,7 @@ local _colliding = function (self, e, dim, cb)
     for y = y1, y2 do
         local block = p[lsh(x, STRIDE) + y]
         if block then
-            for _, t in pairs(block) do
+            for _, t in ipairs(block) do
                 if e ~= t and rectIntsc(dim, t.dim) then
                     if cb(t) then goto fin end
                 end
@@ -39,24 +39,42 @@ end
 
 return function () return {
 
+count = 119,
 update = function (self, cs)
     if cs.dim.colliding == nil then
         cs.dim.colliding = colliding
         cs.dim.collidingAround = collidingAround
     end
-    local p = {}
-    for _, e in pairs(cs.colli) do
+
+    self.count = self.count + 1
+    local refresh = (self.count == 120)
+    local p = (refresh and {} or cs.dim.partition)
+
+    for _, e in ipairs(cs.colli) do
         local x1, x2, y1, y2 =
             rsh(e.dim[1], BLOCK), rsh(e.dim[1] + e.dim[3], BLOCK),
             rsh(e.dim[2], BLOCK), rsh(e.dim[2] + e.dim[4], BLOCK)
-        local x, y
-        for x = x1, x2 do
-        for y = y1, y2 do
-            local i = lsh(x, STRIDE) + y
-            local t = p[i]
-            if t == nil then p[i] = { e }
-            else t[#t + 1] = e end
-        end
+        local prev = e.colli.prev
+        local locs = e.colli.locs   -- Already in which blocks
+        if locs == nil or refresh then locs = {} end
+        if prev == nil or
+            x1 ~= prev[1] or x2 ~= prev[2] or
+            y1 ~= prev[3] or y2 ~= prev[4]
+        then
+            local x, y
+            for x = x1, x2 do
+            for y = y1, y2 do
+                local i = lsh(x, STRIDE) + y
+                if not locs[i] then
+                    local t = p[i]
+                    if t == nil then p[i] = { e }
+                    else t[#t + 1] = e end
+                    locs[i] = true  -- Mark current block
+                end
+            end
+            end
+            e.colli.prev = { x1, x2, y1, y2 }
+            e.colli.locs = locs
         end
     end
     cs.dim.partition = p

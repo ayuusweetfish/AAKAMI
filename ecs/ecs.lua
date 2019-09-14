@@ -2,7 +2,7 @@ local entities = {}
 local components = {}   -- List of entities with a certain component
 local systems = { [1] = {}, [2] = {} }
 
-DT = 1.0 / 300
+DT = 1.0 / 120
 
 -- e._entity is the index in entities table
 -- e._lookup is the indices in component lists
