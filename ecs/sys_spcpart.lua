@@ -49,6 +49,7 @@ update = function (self, cs)
     self.count = self.count + 1
     local refresh = (self.count == 120)
     local p = (refresh and {} or cs.dim.partition)
+    if refresh then self.count = 0 end
 
     for _, e in ipairs(cs.colli) do
         local x1, x2, y1, y2 =
@@ -57,7 +58,7 @@ update = function (self, cs)
         local prev = e.colli.prev
         local locs = e.colli.locs   -- Already in which blocks
         if locs == nil or refresh then locs = {} end
-        if prev == nil or
+        if prev == nil or refresh or
             x1 ~= prev[1] or x2 ~= prev[2] or
             y1 ~= prev[3] or y2 ~= prev[4]
         then
