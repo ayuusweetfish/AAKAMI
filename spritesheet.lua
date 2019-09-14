@@ -40,6 +40,7 @@ local loadImage = function (path)
     local batch = love.graphics.newSpriteBatch(img, nil, 'stream')
     local w, h = img:getPixelDimensions()
 
+    img:setFilter('nearest', 'nearest')
     batches[#batches + 1] = batch
     lookup[name] = {
         batch = batch,
@@ -79,6 +80,7 @@ local loadCrunch = function (path)
         local texName = read_str()
         local img = love.graphics.newImage(wd .. texName .. '.png')
         local batch = love.graphics.newSpriteBatch(img, nil, 'stream')
+        img:setFilter('nearest', 'nearest')
         batches[#batches + 1] = batch
 
         local sprCount = read_int16()
@@ -105,7 +107,7 @@ local loadCrunch = function (path)
 end
 
 -- (x, y) is the top-left corner
-local draw = function (name, x, y, bottomAligned)
+local draw = function (name, x, y, bottomAligned, sx, sy)
     local item = lookup[name]
     if item == nil then print(name) end
     local yAlignDelta = 0
@@ -113,7 +115,7 @@ local draw = function (name, x, y, bottomAligned)
     if item ~= nil then
         local rx, ry = x + item.tx, y + item.ty + yAlignDelta
         if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
-            item.batch:add(item.quad, rx, ry)
+            item.batch:add(item.quad, rx, ry, 0, sx, sy)
         end
     end
 end
