@@ -89,6 +89,7 @@ function love.load()
         sprite = { name = 'quq5' },
         player = {
             buff = {},
+            coin = 20,
             memory = 4,
             health = 5, healthMax = 5,
             energy = 100, energyMax = 100
