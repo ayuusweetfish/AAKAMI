@@ -11,7 +11,7 @@ end
 
 local updateVel = function (orig, tx, ty)
     local A = 768   -- Acceleration
-    if tx == 0 and ty == 0 then A = 256 end
+    if tx == 0 and ty == 0 then A = 384 end
     local DV = A * DT
     local dx, dy = tx - orig[1], ty - orig[2]
     local dsq = dx * dx + dy * dy
@@ -26,7 +26,7 @@ end
 
 local nearest = function (e, v, es)
     local K = 0.3   -- 'Compression' factor
-    local R = 96    -- Visibile range
+    local R = 128   -- Visibile range
     local cx, cy =
         e.dim[1] + e.dim[3] * 0.5,
         e.dim[2] + e.dim[4] * 0.5
