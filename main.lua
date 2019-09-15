@@ -73,6 +73,11 @@ function love.load()
 
     canvas = love.graphics.newCanvas(W, H)
 
+    -- Audio
+    local source = love.audio.newSource('audio/Beverage Battle.ogg', 'static')
+    source:setLooping(true)
+    love.audio.play(source)
+
     -- Ground
     for x = -10, 30 do
         for y = -10, 30 do
