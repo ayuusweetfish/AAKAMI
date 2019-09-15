@@ -132,6 +132,11 @@ local drawCen = function (name, x, y, sx, sy)
     end
 end
 
+local text = function (s, x, y, size)
+    -- TODO
+    love.graphics.print(s, x, y, 0, size)
+end
+
 local flush = function ()
     for _, v in ipairs(batches) do
         love.graphics.draw(v, 0, 0)
@@ -149,6 +154,7 @@ return {
     loadCrunch = loadCrunch,
     draw = draw,
     drawCen = drawCen,
+    text = text,
     flush = flush,
     clear = clear
 }

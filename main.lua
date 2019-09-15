@@ -2,6 +2,7 @@ local spritesheet = require 'spritesheet'
 local ecs = require 'ecs/ecs'
 require 'buffterm'
 require 'vendterm'
+require 'knapsack'
 
 local IS_DESKTOP = true
 
@@ -22,6 +23,9 @@ local dispSystem
 
 local termUpdate, termDraw = nil, nil
 
+local lastDownI
+local knapsackRunning
+
 local w = {}
 
 function love.conf(t)
@@ -29,11 +33,13 @@ function love.conf(t)
 end
 
 local buffTermInteraction = function (term)
+    lastDownI = true
     buffTermReset(term)
     termUpdate, termDraw = buffTermUpdate, buffTermDraw
 end
 
 local vendTermInteraction = function (term)
+    lastDownI = true
     vendTermReset(term)
     termUpdate, termDraw = vendTermUpdate, vendTermDraw
 end
@@ -81,7 +87,12 @@ function love.load()
         dim = { sidelen * 2, sidelen * 2, 21, 21 },
         vel = { 0, 0 },
         sprite = { name = 'quq5' },
-        player = { buff = {} },
+        player = {
+            buff = {},
+            memory = 4,
+            health = 5, healthMax = 5,
+            energy = 100, energyMax = 100
+        },
         colli = { passive = true, tag = 2 }
     })
 
@@ -194,6 +205,9 @@ function love.update()
     if termUpdate ~= nil then
         if not termUpdate() then termUpdate, termDraw = nil, nil end
         return
+    elseif knapsackRunning then
+        knapsackRunning = knapsackUpdate()
+        return
     end
 
     T = T + love.timer.getDelta()
@@ -213,6 +227,13 @@ function love.update()
         ecs.update(1)
     end
     ecs_update_count = new_count
+
+    local downI = love.keyboard.isDown('i')
+    if downI and not lastDownI then
+        knapsackReset()
+        knapsackRunning = true
+    end
+    lastDownI = downI
 
     local camX, camY = dispSys.cam[1], dispSys.cam[2]
     local camDX, camDY =
@@ -235,7 +256,9 @@ function love.draw()
     ecs.update(2)
     spritesheet.flush()
 
-    if termDraw ~= nil then termDraw() end
+    if termDraw ~= nil then termDraw()
+    elseif knapsackRunning then knapsackDraw()
+    end
 
     love.graphics.print(tostring(love.timer.getFPS()))
 

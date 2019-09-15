@@ -9,7 +9,7 @@ local lastDownI -- Is key <I> pressed last frame
 local lastDownL, lastDownR
 local T         -- Total time
 
-vendTermReset = function (_term)
+knapsackReset = function (_term)
     player = ecs.components.player[1].player
 
     term = _term
@@ -18,7 +18,7 @@ vendTermReset = function (_term)
     T = 0
 end
 
-vendTermUpdate = function ()
+knapsackUpdate = function ()
     T = T + love.timer.getDelta()
 
     local downI = love.keyboard.isDown('i')
@@ -40,12 +40,12 @@ vendTermUpdate = function ()
     return true
 end
 
-vendTermDraw = function ()
+knapsackDraw = function ()
     love.graphics.setColor(0.3, 0.3, 0.3, 0.5)
     love.graphics.rectangle('fill', 0, 0, W, H)
     love.graphics.setColor(1, 1, 1)
     spritesheet.text(
-        string.format('Max Health: %d  Memory: %d',
+        string.format('Knapsack\nMax Health: %d  Memory: %d',
             player.healthMax, player.memory),
         W * 0.1, H * 0.1
     )

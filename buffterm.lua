@@ -69,5 +69,6 @@ buffTermDraw = function ()
             cards[i].icon, W * (i * 0.3 - 0.1), H * 0.35,
             i == selIndex and 4 or 3)
     end
+    spritesheet.text(cardNames[selIndex], W * 0.15, H * 0.6, 1)
     spritesheet.flush()
 end
