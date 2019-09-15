@@ -1,0 +1,1 @@
+~/dev/crunch/crunch/a.out quq z -b -t -s64

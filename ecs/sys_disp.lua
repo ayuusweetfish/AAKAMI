@@ -3,7 +3,9 @@ local draw = function (self, e)
         e.sprite.name,
         math.floor(e.dim[1] + 0.5) - math.floor(self.cam[1]),
         math.floor(e.dim[2] + e.dim[4] + 0.5) - math.floor(self.cam[2]),
-        true
+        true,
+        e.sprite.flipX,
+        e.sprite.flipY
     )
 end
 

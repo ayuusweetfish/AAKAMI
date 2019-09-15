@@ -51,6 +51,7 @@ function love.load()
     spritesheet.loadImage('images/ground2.png')
     spritesheet.loadImage('images/ground3.png')
     spritesheet.loadCrunch('images/quq.bin')
+    spritesheet.loadCrunch('images/char.bin')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -88,7 +89,7 @@ function love.load()
     playerEntity = ecs.addEntity({
         dim = { sidelen * 2, sidelen * 2, 21, 21 },
         vel = { 0, 0 },
-        sprite = { name = 'quq6' },
+        sprite = { name = 'aka_waiting1', flipX = false },
         player = {
             -- XXX: Get rid of this
             buff = {

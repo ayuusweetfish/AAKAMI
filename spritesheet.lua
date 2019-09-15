@@ -107,14 +107,17 @@ local loadCrunch = function (path)
 end
 
 -- (x, y) is the top-left corner
-local draw = function (name, x, y, bottomAligned)
+local draw = function (name, x, y, bottomAligned, flipX, flipY)
     local item = lookup[name]
     if item == nil then print(name) return end
     local yAlignDelta = 0
     if bottomAligned then yAlignDelta = -item.h end
     local rx, ry = x + item.tx, y + item.ty + yAlignDelta
+    local sx, sy = 1, 1
+    if flipX then rx, sx = rx + item.w, -1 end
+    if flipY then ry, sy = ry + item.h, -1 end
     if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
-        item.batch:add(item.quad, rx, ry)
+        item.batch:add(item.quad, rx, ry, 0, sx, sy)
     end
 end
 

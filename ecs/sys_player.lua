@@ -85,6 +85,8 @@ lastJDown = false,
 lastValidVel = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
+        local p = e.player
+
         local horz = keys('right', 'left')
         local vert = keys('down', 'up')
         if horz ~= 0 and vert ~= 0 then
@@ -102,8 +104,8 @@ update = function (self, cs)
             dx, dy = self.lastValidVel[1] * 16, self.lastValidVel[2] * 16
         end
         -- TODO: Support charging
-        if UDown and not self.lastUDown and e.player.energy >= 10 then
-            e.player.energy = e.player.energy - 10
+        if UDown and not self.lastUDown and p.energy >= 10 then
+            p.energy = p.energy - 10
             local bullet = {
                 dim = {
                     e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
@@ -118,13 +120,40 @@ update = function (self, cs)
         end
         self.lastUDown = UDown
 
+        p.sinceShift = (p.sinceShift or 60) + 1
+
         local JDown = love.keyboard.isDown('j')
         if JDown and not self.lastJDown then
             -- SHIFT!
-            e.player.colour = 1 - e.player.colour
-            e.sprite.name = (e.player.colour == 0 and 'quq6' or 'quq5')
+            p.colour = 1 - p.colour
+            p.sinceShift = 0
         end
         self.lastJDown = JDown
+
+        -- Animation (4 frames)
+        local frame = p.frame or -1
+        frame = (frame + 1) % 60
+        p.frame = frame
+        local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
+        local anim = (still and '_waiting' or '_running')
+        local char = (p.colour == 0 and 'aka' or 'ookami')
+        -- Hack
+        if char == 'ookami' and anim == '_waiting' then
+            anim = ''
+        end
+
+        -- Flip according to aiming direction
+        e.sprite.flipX = (dx >= 0)
+        if dy < 0 then anim = '_back' .. anim end
+
+        local sprite = char .. anim .. tostring(math.floor(frame / 15) + 1)
+
+        if p.sinceShift < 60 then
+            char = (p.colour == 0 and 'ookami2aka' or 'aka2ookami')
+            sprite = char .. tostring(math.floor(p.sinceShift / 15) + 1)
+        end
+
+        e.sprite.name = sprite
     end
 end
 
