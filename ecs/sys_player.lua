@@ -81,6 +81,7 @@ end
 return function () return {
 
 lastUDown = false,
+lastJDown = false,
 lastValidVel = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
@@ -100,7 +101,9 @@ update = function (self, cs)
         else
             dx, dy = self.lastValidVel[1] * 16, self.lastValidVel[2] * 16
         end
-        if UDown and not lastUDown then
+        -- TODO: Support charging
+        if UDown and not self.lastUDown and e.player.energy >= 10 then
+            e.player.energy = e.player.energy - 10
             local bullet = {
                 dim = {
                     e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
@@ -113,7 +116,15 @@ update = function (self, cs)
             }
             ecs.addEntity(bullet)
         end
-        lastUDown = UDown
+        self.lastUDown = UDown
+
+        local JDown = love.keyboard.isDown('j')
+        if JDown and not self.lastJDown then
+            -- SHIFT!
+            e.player.colour = 1 - e.player.colour
+            e.sprite.name = (e.player.colour == 0 and 'quq6' or 'quq5')
+        end
+        self.lastJDown = JDown
     end
 end
 

@@ -86,7 +86,7 @@ function love.load()
     playerEntity = ecs.addEntity({
         dim = { sidelen * 2, sidelen * 2, 21, 21 },
         vel = { 0, 0 },
-        sprite = { name = 'quq5' },
+        sprite = { name = 'quq6' },
         player = {
             -- XXX: Get rid of this
             buff = {
@@ -100,8 +100,9 @@ function love.load()
                 cannon = { level = 1, equipped = false }
             },
             coin = 500,
+            colour = 0,
             memory = 4,
-            health = 4, healthMax = 5,
+            health = 5, healthMax = 5,
             energy = 100, energyMax = 100
         },
         colli = { passive = true, tag = 2 }

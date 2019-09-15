@@ -16,7 +16,7 @@ local addBullet = function (e, vx, vy, colour)
         },
         vel = { vx, vy },
         sprite = { name = (colour == 0 and 'quq7' or 'quq8') },
-        bullet = { mask = 3 },
+        bullet = { mask = 3, colour = colour },
     }
     ecs.addEntity(bullet)
     --if math.random(2) == 1 then
