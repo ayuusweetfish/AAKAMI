@@ -43,7 +43,7 @@ buffTermUpdate = function ()
     local downI = love.keyboard.isDown('i')
     if downI and lastDownI == false then
         -- Card get!
-        player.buff[cardNames[selIndex]] = 1
+        player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
 
         term.sprite.name = 'quq1'
         return false
