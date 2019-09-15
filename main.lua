@@ -18,7 +18,7 @@ local canvas
 local T = 0
 local ecs_update_count = 0
 
-local playerEntity
+local playerEntity, player
 local dispSystem
 
 local termUpdate, termDraw = nil, nil
@@ -99,13 +99,14 @@ function love.load()
                 magazine = { level = 1, equipped = false },
                 cannon = { level = 1, equipped = false }
             },
-            coin = 20,
+            coin = 500,
             memory = 4,
-            health = 5, healthMax = 5,
+            health = 4, healthMax = 5,
             energy = 100, energyMax = 100
         },
         colli = { passive = true, tag = 2 }
     })
+    player = playerEntity.player
 
     -- Enemy
     --[[for i = 1, 15 do
@@ -269,6 +270,13 @@ function love.draw()
 
     if termDraw ~= nil then termDraw()
     elseif knapsackRunning then knapsackDraw()
+    else
+        -- HUD
+        spritesheet.text(
+            string.format('Health  %d/%d\nEnergy  %d/%d',
+                player.health, player.healthMax,
+                player.energy, player.energyMax),
+            6, H * 0.1)
     end
 
     love.graphics.print(tostring(love.timer.getFPS()))

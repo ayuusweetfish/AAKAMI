@@ -1,6 +1,7 @@
 local spritesheet = require 'spritesheet'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
+local vend = require 'mech/vend'
 
 local player
 
@@ -38,7 +39,26 @@ local mainUpdate = function ()
     local downU = love.keyboard.isDown('u')
     if downU and lastDownU == false then
         local selIndex = selRow * 2 + selCol
-        if selIndex == 3 then
+        if selIndex == 0 then
+            local price = vend.heal
+            if player.coin >= price and player.health < player.healthMax then
+                player.coin = player.coin - price
+                player.health = player.health + 1
+            end
+        elseif selIndex == 1 then
+            local price = vend.healthMax(player.healthMax)
+            if player.coin >= price then
+                player.coin = player.coin - price
+                player.healthMax = player.healthMax + 1
+                player.health = player.health + 1
+            end
+        elseif selIndex == 2 then
+            local price = vend.memory(player.memory)
+            if player.coin >= price then
+                player.coin = player.coin - price
+                player.memory = player.memory + 1
+            end
+        elseif selIndex == 3 then
             inCardsPanel = true
         end
     end
@@ -89,6 +109,18 @@ local mainDraw = function ()
     spritesheet.text('SOLIDIFY', W * 0.55, H * 0.25)
     spritesheet.text('ADD MEM', W * 0.2, H * 0.6)
     spritesheet.text('UPGRADE/SELL\nCARDS', W * 0.55, H * 0.6)
+
+    spritesheet.text(
+        string.format('+1 for %d coins', vend.heal),
+        W * 0.2, H * 0.35)
+    spritesheet.text(
+        string.format('%d -> %d for %d coins',
+            player.healthMax, player.healthMax + 1, vend.healthMax(player.healthMax)),
+        W * 0.55, H * 0.35)
+    spritesheet.text(
+        string.format('%d -> %d for %d coins',
+            player.memory, player.memory + 1, vend.memory(player.memory)),
+        W * 0.2, H * 0.7)
 end
 
 local cardsDraw = function ()
@@ -105,8 +137,8 @@ vendTermDraw = function ()
 
     love.graphics.setColor(1, 1, 1)
     spritesheet.text(
-        string.format('Max Health: %d  Memory: %d',
-            player.healthMax, player.memory),
+        string.format('Health: %d/%d  Memory: %d  Coins: %d',
+            player.health, player.healthMax, player.memory, player.coin),
         W * 0.1, H * 0.1
     )
     spritesheet.flush()
