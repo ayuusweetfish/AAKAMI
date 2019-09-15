@@ -10,7 +10,7 @@ penetrate = {
 },
 
 stockpile = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 1, 1, 2, 2 },
     sellrate = 30,
     upgrade = { 30, 40, 50 },
@@ -20,7 +20,7 @@ stockpile = {
 
 energyfield = {
     prereq = 'stockpile',
-    icon = 'quq12',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 40,
     upgrade = {},
@@ -29,7 +29,7 @@ energyfield = {
 },
 
 rebound = {
-    icon = 'quq13',
+    icon = 'quq10',
     memory = { 1 },
     sellrate = 30,
     upgrade = {},
@@ -38,7 +38,7 @@ rebound = {
 },
 
 dodge = {
-    icon = 'quq14',
+    icon = 'quq10',
     memory = { 2, 2, 3 },
     sellrate = 40,
     upgrade = { 40, 50 },
@@ -47,7 +47,7 @@ dodge = {
 },
 
 rstarve = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -56,7 +56,7 @@ rstarve = {
 },
 
 bstarve = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -65,7 +65,7 @@ bstarve = {
 },
 
 incise = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -74,7 +74,7 @@ incise = {
 },
 
 fork = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -83,7 +83,7 @@ fork = {
 },
 
 magazine = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -92,7 +92,7 @@ magazine = {
 },
 
 cannon = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -101,7 +101,7 @@ cannon = {
 },
 
 rage = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -110,7 +110,7 @@ rage = {
 },
 
 machgun = {
-    icon = 'quq11',
+    icon = 'quq10',
     memory = { 2 },
     sellrate = 0,
     updade = {},

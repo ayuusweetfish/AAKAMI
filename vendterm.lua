@@ -12,7 +12,7 @@ local lastDownLa, lastDownRa
 local lastDownUa, lastDownDa
 local T         -- Total time
 
-local selRow, selCol = 0, 0 -- Kept between different uses
+local selRow, selCol = 0, 0 -- Persist
 
 local inCardsPanel
 

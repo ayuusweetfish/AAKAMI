@@ -13,7 +13,7 @@ local T         -- Total time
 
 local cardNames
 local total
-local selIndex
+local selIndex = 0  -- Persists
 local memUsed
 
 knapsackReset = function (_term)
@@ -35,7 +35,6 @@ knapsackReset = function (_term)
             memUsed = memUsed + buff[k].memory[v.level]
         end
     end
-    selIndex = 0
 end
 
 knapsackUpdate = function ()
@@ -107,8 +106,8 @@ knapsackDraw = function ()
     local row, col = selIndex % 3, math.floor(selIndex / 3)
     love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
     love.graphics.rectangle('fill',
-        W * (col + 1) / 6 - 12, H * (0.291 + 0.15 * row) - 12,
-        24, 24)
+        W * (col + 1) / 6 - 16, H * (0.3 + 0.15 * row) - 16,
+        32, 32)
 
     love.graphics.setColor(1, 1, 1)
 
@@ -116,10 +115,10 @@ knapsackDraw = function ()
     for i = 1, total do
         local row, col = (i - 1) % 3, math.floor((i - 1) / 3)
         local name = cardNames[i]
-        local x, y = W * (col + 1) / 6, H * (0.225 + 0.15 * row)
+        local x, y = W * (col + 1) / 6, H * (0.3 + 0.15 * row)
         spritesheet.drawCen(buff[name].icon, x, y)
         if player.buff[name].equipped then
-            spritesheet.drawCen('quq9', x, y)
+            spritesheet.drawCen('quq8', x, y)
         end
     end
 

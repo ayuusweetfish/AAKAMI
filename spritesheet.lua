@@ -125,8 +125,8 @@ local drawCen = function (name, x, y, sx, sy)
     if item == nil then print(name) end
     sx = sx or 1
     sy = sy or sx
-    local rx = x + item.tx - item.sw * sx * 0.5
-    local ry = y + item.ty - item.sh * sy * 0.5
+    local rx = x + (- item.sw * 0.5) * sx
+    local ry = y + (- item.sh * 0.5) * sy
     if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
         item.batch:add(item.quad, rx, ry, 0, sx, sy)
     end
