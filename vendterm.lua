@@ -15,6 +15,22 @@ local T         -- Total time
 local selRow, selCol = 0, 0 -- Persist
 
 local inCardsPanel
+local cardNames
+local total
+local selIndex = 0  -- Persists
+
+local isMenu, menuItem  -- Is in sell/upgrade menu
+
+local refreshCards = function ()
+    cardNames = {}
+    total = 0
+    for k, v in pairs(player.buff) do
+        if not v.equipped then
+            total = total + 1
+            cardNames[total] = k
+        end
+    end
+end
 
 vendTermReset = function (_term)
     player = ecs.components.player[1].player
@@ -26,6 +42,9 @@ vendTermReset = function (_term)
     lastDownUa, lastDownDa = nil, nil
     T = 0
     inCardsPanel = false
+
+    refreshCards()
+    isMenu, menuItem = false, 0
 end
 
 local mainUpdate = function ()
@@ -84,9 +103,35 @@ local cardsUpdate = function ()
     local downI = love.keyboard.isDown('i')
     if downI and lastDownI == false then
         lastDownI = downI
-        return false
+        if isMenu then isMenu = false else return false end
     end
     lastDownI = downI
+
+    if isMenu then
+        local downL = love.keyboard.isDown('left')
+        local downR = love.keyboard.isDown('right')
+        local downU = love.keyboard.isDown('up')
+        local downD = love.keyboard.isDown('down')
+        if downL and lastDownLa == false then menuItem = 1 - menuItem end
+        if downR and lastDownRa == false then menuItem = 1 - menuItem end
+        if downU and lastDownUa == false then menuItem = 1 - menuItem end
+        if downD and lastDownDa == false then menuItem = 1 - menuItem end
+        lastDownLa = downL
+        lastDownRa = downR
+        lastDownUa = downU
+        lastDownDa = downD
+    else
+        local downU = love.keyboard.isDown('u')
+        if downU and lastDownU == false then
+            isMenu, menuItem = true, 0
+        end
+        lastDownU = downU
+
+        if total ~= 0 then
+            selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa =
+                moveLRUD(total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
+        end
+    end
 
     return true
 end
@@ -125,7 +170,56 @@ end
 
 local cardsDraw = function ()
     love.graphics.setColor(1, 1, 1)
-    spritesheet.text('CARDS!!', W * 0.2, H * 0.25)
+
+    local selName = cardNames[selIndex + 1]
+    local selPlayerBuff = player.buff[selName]
+    local selCard = buff[selName]
+    local selMem = selCard.memory[selPlayerBuff.level]
+
+    if isMenu then
+        drawOneCard(selCard, W * 0.25, H * 0.4)
+
+        spritesheet.text(
+            string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
+            W * 0.45, H * 0.25, 1)
+
+        love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
+        love.graphics.rectangle('fill',
+            W * 0.1, H * (0.6 + menuItem * 0.15),
+            W * 0.8, H * 0.15)
+
+        love.graphics.setColor(1, 1, 1)
+        spritesheet.text('UPGRADE', W * 0.1 + 4, H * 0.6 + 2)
+        local upgradeText
+        if selPlayerBuff.level < #selCard.args then
+            upgradeText = string.format('%d coins | val: %d -> %d | mem: %d -> %d',
+                selCard.upgrade[selPlayerBuff.level],
+                selCard.args[selPlayerBuff.level],
+                selCard.args[selPlayerBuff.level + 1],
+                selCard.memory[selPlayerBuff.level],
+                selCard.memory[selPlayerBuff.level + 1])
+        else
+            upgradeText = 'Maximum'
+        end
+        spritesheet.text(upgradeText, W * 0.1 + 4, H * 0.6 + 17)
+        spritesheet.text('SELL', W * 0.1 + 4, H * 0.75 + 2)
+        spritesheet.text(
+            tonumber(selCard.sellrate) .. ' coins',
+            W * 0.1 + 4, H * 0.75 + 17)
+
+    else
+        drawCardList(cardNames, player, selIndex, 0.3)
+
+        -- Card description
+        if total ~= 0 then
+            spritesheet.text(
+                string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
+                W * 0.15, H * 0.7, 1)
+        end
+    end
+
+    love.graphics.setColor(1, 1, 1)
+    spritesheet.flush()
 end
 
 vendTermDraw = function ()

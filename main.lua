@@ -133,8 +133,8 @@ function love.load()
             sprite = { name = 'quq2' },
             colli = { block = true },
             term = {
-                once = (i ~= 4),
-                callback = (i == 4 and vendTermInteraction or buffTermInteraction),
+                once = (i ~= 1),
+                callback = (i == 1 and vendTermInteraction or buffTermInteraction),
                 bubble = ecs.addEntity({
                     dim = { sidelen * 3, sidelen * (2 + 2 * i), sidelen, sidelen },
                     sprite = { name = 'quq9', z = 1 }

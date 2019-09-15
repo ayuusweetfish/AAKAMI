@@ -69,9 +69,9 @@ buffTermDraw = function ()
     love.graphics.rectangle('fill', 0, 0, W, H)
     love.graphics.setColor(1, 1, 1)
     for i = 1, 3 do
-        spritesheet.drawCen(
-            cards[i].icon, W * (i * 0.3 - 0.1), H * 0.4,
-            i == selIndex and 4 or 3)
+        drawOneCard(
+            cards[i], W * (i * 0.3 - 0.1), H * 0.4,
+            i == selIndex and 3 or 2)
     end
     spritesheet.text(cardNames[selIndex], W * 0.15, H * 0.65, 1)
     spritesheet.flush()
