@@ -78,7 +78,7 @@ function love.load()
 
     -- Player
     playerEntity = ecs.addEntity({
-        dim = { sidelen * 2, sidelen * 2, 14, 14 },
+        dim = { sidelen * 2, sidelen * 2, 21, 21 },
         vel = { 0, 0 },
         sprite = { name = 'quq5' },
         player = { buff = {} },
@@ -88,7 +88,7 @@ function love.load()
     -- Enemy
     --[[for i = 1, 15 do
         ecs.addEntity({
-            dim = { sidelen * (7 + i * 1.5), sidelen * 5.5, 14, 14 },
+            dim = { sidelen * (7 + i * 1.5), sidelen * 5.5, 21, 21 },
             vel = { 0, 0 },
             sprite = { name = 'quq6' },
             enemy = { interval = 60 },
@@ -96,7 +96,7 @@ function love.load()
         })
     end]]
     ecs.addEntity({
-        dim = { sidelen * 9, sidelen * 5.5, 14, 14 },
+        dim = { sidelen * 9, sidelen * 5.5, 21, 21 },
         vel = { 0, 0 },
         sprite = { name = 'quq6' },
         enemy = { name = 'donut' },
