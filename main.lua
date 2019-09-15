@@ -89,7 +89,7 @@ function love.load()
     playerEntity = ecs.addEntity({
         dim = { sidelen * 2, sidelen * 2, 21, 21 },
         vel = { 0, 0 },
-        sprite = { name = 'aka_waiting1', flipX = false },
+        sprite = { name = 'aka_waiting1', flipX = false, trim = true },
         player = {
             -- XXX: Get rid of this
             buff = {
@@ -125,7 +125,7 @@ function love.load()
     ecs.addEntity({
         dim = { sidelen * 9, sidelen * 5.5, 21, 21 },
         vel = { 0, 0 },
-        sprite = { name = 'quq6' },
+        sprite = { name = 'colaeli_attacking1', trim = true },
         enemy = { pattern = 'donut' },
         health = { val = 8, max = 8 },
         colli = { passive = true, tag = 4 }

@@ -133,6 +133,10 @@ update = function (self, cs)
         end
         patternUpdate[e.enemy.pattern](e, ePlayer, ph, dx, dy)
 
+        local frame = ((e.enemy.frame or -1) + 1) % 60
+        e.enemy.frame = frame
+        e.sprite.name = 'colaeli_attacking' .. tostring(math.floor(frame / 15) + 1)
+
     end
 end
 

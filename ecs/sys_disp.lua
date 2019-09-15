@@ -1,5 +1,6 @@
 local draw = function (self, e)
-    self.spritesheet.draw(
+    local f = e.sprite.trim and self.spritesheet.drawTrimmed or self.spritesheet.draw
+    f(
         e.sprite.name,
         math.floor(e.dim[1] + 0.5) - math.floor(self.cam[1]),
         math.floor(e.dim[2] + e.dim[4] + 0.5) - math.floor(self.cam[2]),

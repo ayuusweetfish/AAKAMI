@@ -121,6 +121,21 @@ local draw = function (name, x, y, bottomAligned, flipX, flipY)
     end
 end
 
+-- (x, y) is the top-left corner
+local drawTrimmed = function (name, x, y, bottomAligned, flipX, flipY)
+    local item = lookup[name]
+    if item == nil then print(name) return end
+    local yAlignDelta = 0
+    if bottomAligned then yAlignDelta = -item.sh end
+    local rx, ry = x + item.tx - item.sx, y + item.ty - item.sy + yAlignDelta
+    local sx, sy = 1, 1
+    if flipX then rx, sx = rx + item.w, -1 end
+    if flipY then ry, sy = ry + item.h, -1 end
+    if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
+        item.batch:add(item.quad, rx, ry, 0, sx, sy)
+    end
+end
+
 -- (x, y) is the centre
 -- Will be centred w.r.t the size after trimming
 local drawCen = function (name, x, y, sx, sy)

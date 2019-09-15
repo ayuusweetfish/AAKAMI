@@ -143,6 +143,7 @@ update = function (self, cs)
         end
 
         -- Flip according to aiming direction
+        -- TODO: Implement with a separate component/system
         e.sprite.flipX = (dx >= 0)
         if dy < 0 then anim = '_back' .. anim end
 
