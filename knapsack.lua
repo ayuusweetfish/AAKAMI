@@ -7,7 +7,12 @@ local player
 local term      -- Current terminal entity
 local lastDownI -- Is key <I> pressed last frame
 local lastDownL, lastDownR
+local lastDownU, lastDownD
 local T         -- Total time
+
+local cardNames
+local total
+local selIndex
 
 knapsackReset = function (_term)
     player = ecs.components.player[1].player
@@ -15,7 +20,16 @@ knapsackReset = function (_term)
     term = _term
     lastDownI = nil
     lastDownL, lastDownR = nil, nil
+    lastDownU, lastDownD = nil, nil
     T = 0
+
+    cardNames = {}
+    total = 0
+    for k, _ in pairs(player.buff) do
+        total = total + 1
+        cardNames[total] = k
+    end
+    selIndex = 0
 end
 
 knapsackUpdate = function ()
@@ -28,14 +42,39 @@ knapsackUpdate = function ()
     end
     lastDownI = downI
 
-    local downL = love.keyboard.isDown('left') or love.keyboard.isDown('up')
-    local downR = love.keyboard.isDown('right') or love.keyboard.isDown('down')
-    if downL and lastDownL == false then
+    if total ~= 0 then
+        local downL = love.keyboard.isDown('left')
+        local downR = love.keyboard.isDown('right')
+        local downU = love.keyboard.isDown('up')
+        local downD = love.keyboard.isDown('down')
+        if downL and lastDownL == false then
+            local last = selIndex
+            selIndex = selIndex - 3
+            if selIndex < 0 then
+                selIndex = total - total % 3 + selIndex
+                    + (selIndex + 3 < total % 3 and 3 or 0)
+            end
+            if selIndex == last then selIndex = (selIndex + total - 1) % total end
+        end
+        if downR and lastDownR == false then
+            local last = selIndex
+            selIndex = selIndex + 3
+            if selIndex >= total then
+                selIndex = selIndex % 3
+            end
+            if selIndex == last then selIndex = (selIndex + 1) % total end
+        end
+        if downU and lastDownU == false then
+            selIndex = (selIndex + total - 1) % total
+        end
+        if downD and lastDownD == false then
+            selIndex = (selIndex + 1) % total
+        end
+        lastDownL = downL
+        lastDownR = downR
+        lastDownU = downU
+        lastDownD = downD
     end
-    if downR and lastDownR == false then
-    end
-    lastDownL = downL
-    lastDownR = downR
 
     return true
 end
@@ -43,6 +82,13 @@ end
 knapsackDraw = function ()
     love.graphics.setColor(0.3, 0.3, 0.3, 0.5)
     love.graphics.rectangle('fill', 0, 0, W, H)
+
+    local row, col = selIndex % 3, math.floor(selIndex / 3)
+    love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
+    love.graphics.rectangle('fill',
+        W * (col + 1) / 6 - 12, H * (0.291 + 0.15 * row) - 12,
+        24, 24)
+
     love.graphics.setColor(1, 1, 1)
 
     spritesheet.text(
@@ -51,15 +97,16 @@ knapsackDraw = function ()
         W * 0.1, H * 0.1
     )
 
-    local index = 0
     local memUsed = 0
-    for k, v in pairs(buff) do
-        local row, col = index % 5, math.floor(index / 5)
-        index = index + 1
-        spritesheet.drawCen(buff[k].icon, W * (0.1 + 0.3 * col), H * (0.2 + 0.1 * row))
-        spritesheet.text(k, W * (0.15 + 0.3 * col), H * (0.233 + 0.1 * row))
-        if v.equipped then
+    for i = 1, total do
+        local row, col = (i - 1) % 3, math.floor((i - 1) / 3)
+        spritesheet.drawCen(buff[cardNames[i]].icon, W * (col + 1) / 6, H * (0.225 + 0.15 * row))
+        if player.buff[cardNames[i]].equipped then
         end
+    end
+
+    if total ~= 0 then
+        spritesheet.text(cardNames[selIndex + 1], W * 0.15, H * 0.7, 1)
     end
 
     spritesheet.flush()

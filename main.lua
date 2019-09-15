@@ -88,7 +88,14 @@ function love.load()
         vel = { 0, 0 },
         sprite = { name = 'quq5' },
         player = {
-            buff = {},
+            -- XXX: Get rid of this
+            buff = {
+                penetrate = { level = 1, equipped = false },
+                stockpile = { level = 1, equipped = false },
+                energyfield = { level = 1, equipped = false },
+                rebound = { level = 1, equipped = false },
+                dodge = { level = 1, equipped = false }
+            },
             coin = 20,
             memory = 4,
             health = 5, healthMax = 5,
