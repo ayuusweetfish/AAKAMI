@@ -107,10 +107,35 @@ local cardsUpdate = function ()
     end
     lastDownI = downI
 
+    local downU = love.keyboard.isDown('u')
+
     if isMenu then
+        if downU and lastDownU == false then
+            local selName = cardNames[selIndex + 1]
+            local selPlayerBuff = player.buff[selName]
+            local selCard = buff[selName]
+            local selMem = selCard.memory[selPlayerBuff.level]
+            if menuItem == 0 then
+                -- Upgrade
+                if selPlayerBuff.level < #selCard.args and
+                    player.coin >= selCard.upgrade[selPlayerBuff.level]
+                then
+                    player.coin = player.coin - selCard.upgrade[selPlayerBuff.level]
+                    selPlayerBuff.level = selPlayerBuff.level + 1
+                end
+            else
+                -- Sell
+                player.buff[selName] = nil
+                player.coin = player.coin + selCard.sellrate
+                refreshCards()
+                if selIndex >= total then selIndex = math.max(0, total - 1) end
+                isMenu = false
+            end
+        end
+
         local downL = love.keyboard.isDown('left')
         local downR = love.keyboard.isDown('right')
-        local downU = love.keyboard.isDown('up')
+        local downU = love.keyboard.isDown('up')    -- Shadowed!
         local downD = love.keyboard.isDown('down')
         if downL and lastDownLa == false then menuItem = 1 - menuItem end
         if downR and lastDownRa == false then menuItem = 1 - menuItem end
@@ -121,17 +146,17 @@ local cardsUpdate = function ()
         lastDownUa = downU
         lastDownDa = downD
     else
-        local downU = love.keyboard.isDown('u')
-        if downU and lastDownU == false then
+        if downU and lastDownU == false and total > 0 then
             isMenu, menuItem = true, 0
         end
-        lastDownU = downU
 
         if total ~= 0 then
             selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa =
                 moveLRUD(total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
         end
     end
+
+    lastDownU = downU
 
     return true
 end
@@ -174,7 +199,7 @@ local cardsDraw = function ()
     local selName = cardNames[selIndex + 1]
     local selPlayerBuff = player.buff[selName]
     local selCard = buff[selName]
-    local selMem = selCard.memory[selPlayerBuff.level]
+    local selMem = selCard and selCard.memory[selPlayerBuff.level] or nil
 
     if isMenu then
         drawOneCard(selCard, W * 0.25, H * 0.4)

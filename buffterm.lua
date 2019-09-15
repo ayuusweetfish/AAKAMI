@@ -71,7 +71,7 @@ buffTermDraw = function ()
     for i = 1, 3 do
         drawOneCard(
             cards[i], W * (i * 0.3 - 0.1), H * 0.4,
-            i == selIndex and 3 or 2)
+            i == selIndex)
     end
     spritesheet.text(cardNames[selIndex], W * 0.15, H * 0.65, 1)
     spritesheet.flush()

@@ -36,6 +36,8 @@ knapsackReset = function (_term)
             memUsed = memUsed + buff[k].memory[v.level]
         end
     end
+
+    if selIndex >= total then selIndex = math.max(0, total - 1) end
 end
 
 knapsackUpdate = function ()
@@ -49,7 +51,7 @@ knapsackUpdate = function ()
     lastDownI = downI
 
     local downU = love.keyboard.isDown('u')
-    if downU and lastDownU == false then
+    if downU and lastDownU == false and total > 0 then
         -- Equip/unequip
         local selName = cardNames[selIndex + 1]
         local selPlayerBuff = player.buff[selName]
@@ -63,7 +65,7 @@ knapsackUpdate = function ()
     end
     lastDownU = downU
 
-    if total ~= 0 then
+    if total > 0 then
         selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa =
             moveLRUD(total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
     end
@@ -80,18 +82,23 @@ knapsackDraw = function ()
 
     -- Memory bar
     -- TODO: Draw a bar!
-    local selName = cardNames[selIndex + 1]
-    local selPlayerBuff = player.buff[selName]
-    local selMem = buff[selName].memory[selPlayerBuff.level]
     spritesheet.text(
-        string.format('Memory: %d/%d -> %d/%d',
-            memUsed, player.memory,
-            memUsed + selMem * (selPlayerBuff.equipped and -1 or 1), player.memory),
+        string.format('Memory: %d/%d',
+            memUsed, player.memory),
         W * 0.1, H * 0.1
     )
+    if total > 0 then
+        local selName = cardNames[selIndex + 1]
+        local selPlayerBuff = player.buff[selName]
+        local selMem = buff[selName].memory[selPlayerBuff.level]
+        spritesheet.text(
+            string.format('-> %d/%d',
+                memUsed, player.memory,
+                memUsed + selMem * (selPlayerBuff.equipped and -1 or 1), player.memory),
+            W * 0.4, H * 0.1
+        )
 
-    -- Card description
-    if total ~= 0 then
+        -- Card description
         spritesheet.text(
             string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
             W * 0.15, H * 0.7, 1)

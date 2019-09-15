@@ -92,7 +92,7 @@ function love.load()
             buff = {
                 penetrate = { level = 2, equipped = false },
                 rebound = { level = 1, equipped = false },
-                dodge = { level = 3, equipped = false },
+                dodge = { level = 1, equipped = false },
                 rstarve = { level = 1, equipped = false },
                 bstarve = { level = 1, equipped = false },
                 fork = { level = 1, equipped = false },
