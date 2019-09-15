@@ -58,6 +58,12 @@ local update = function (pass)
     for _, e in ipairs(removed) do removeEntity(e) end
 end
 
+local reset = function ()
+    entities = {}
+    components = {}
+    systems = { [1] = {}, [2] = {} }
+end
+
 return {
     dt = DT,
 
@@ -68,5 +74,7 @@ return {
     addEntity = addEntity,
     removeEntity = removeEntity,
     addSystem = addSystem,
-    update = update
+    update = update,
+
+    reset = reset
 }

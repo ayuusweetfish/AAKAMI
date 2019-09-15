@@ -3,7 +3,7 @@ local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
 local vend = require 'mech/vend'
 
-local player
+local player, playerEntity
 
 local term      -- Current terminal entity
 local lastDownI -- Is key <I> pressed last frame
@@ -33,7 +33,8 @@ local refreshCards = function ()
 end
 
 vendTermReset = function (_term)
-    player = ecs.components.player[1].player
+    playerEntity = ecs.components.player[1]
+    player = playerEntity.player
 
     term = _term
     lastDownI = nil
@@ -60,16 +61,16 @@ local mainUpdate = function ()
         local selIndex = selRow * 2 + selCol
         if selIndex == 0 then
             local price = vend.heal
-            if player.coin >= price and player.health < player.healthMax then
+            if player.coin >= price and playerEntity.health.val < playerEntity.health.max then
                 player.coin = player.coin - price
-                player.health = player.health + 1
+                playerEntity.health.val = playerEntity.health.val + 1
             end
         elseif selIndex == 1 then
-            local price = vend.healthMax(player.healthMax)
+            local price = vend.healthMax(playerEntity.health.max)
             if player.coin >= price then
                 player.coin = player.coin - price
-                player.healthMax = player.healthMax + 1
-                player.health = player.health + 1
+                playerEntity.health.max = playerEntity.health.max + 1
+                playerEntity.health.val = playerEntity.health.val + 1
             end
         elseif selIndex == 2 then
             local price = vend.memory(player.memory)
@@ -185,7 +186,8 @@ local mainDraw = function ()
         W * 0.2, H * 0.35)
     spritesheet.text(
         string.format('%d -> %d for %d coins',
-            player.healthMax, player.healthMax + 1, vend.healthMax(player.healthMax)),
+            playerEntity.health.max, playerEntity.health.max + 1,
+            vend.healthMax(playerEntity.health.max)),
         W * 0.55, H * 0.35)
     spritesheet.text(
         string.format('%d -> %d for %d coins',
@@ -257,7 +259,7 @@ vendTermDraw = function ()
     love.graphics.setColor(1, 1, 1)
     spritesheet.text(
         string.format('Health: %d/%d  Memory: %d  Coins: %d',
-            player.health, player.healthMax, player.memory, player.coin),
+            playerEntity.health.val, playerEntity.health.max, player.memory, player.coin),
         W * 0.1, H * 0.1
     )
     spritesheet.flush()

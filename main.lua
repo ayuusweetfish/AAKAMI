@@ -19,6 +19,8 @@ local T = 0
 local ecs_update_count = 0
 
 local playerEntity, player
+local gameOver
+
 local dispSystem
 
 local termUpdate, termDraw = nil, nil
@@ -102,9 +104,9 @@ function love.load()
             coin = 500,
             colour = 0,
             memory = 4,
-            health = 5, healthMax = 5,
             energy = 100, energyMax = 100
         },
+        health = { val = 5, max = 5 },
         colli = { passive = true, tag = 2 }
     })
     player = playerEntity.player
@@ -123,7 +125,8 @@ function love.load()
         dim = { sidelen * 9, sidelen * 5.5, 21, 21 },
         vel = { 0, 0 },
         sprite = { name = 'quq6' },
-        enemy = { name = 'donut' },
+        enemy = { pattern = 'donut' },
+        health = { val = 8, max = 8 },
         colli = { passive = true, tag = 4 }
     })
 
@@ -235,11 +238,26 @@ function love.update()
         love.event.quit()
     end
 
+    if gameOver then
+        if love.keyboard.isDown('u') then
+            ecs.reset()
+            gameOver = false
+            love.load()
+        end
+        return
+    end
+
     local new_count = math.floor(T / ecs.dt)
     for i = 1, new_count - ecs_update_count do
         ecs.update(1)
     end
     ecs_update_count = new_count
+
+    if playerEntity.health.val <= 0 then
+        -- Game over!
+        gameOver = true
+        return
+    end
 
     local downI = love.keyboard.isDown('i')
     if downI and not lastDownI then
@@ -265,20 +283,28 @@ function love.draw()
         love.graphics.setCanvas(canvas)
     end
     love.graphics.clear(1, 1, 1)
-    love.graphics.setColor(1, 1, 1)
     ecs.update(2)
+    love.graphics.setColor(1, 1, 1)
     spritesheet.flush()
 
-    if termDraw ~= nil then termDraw()
+    if gameOver then
+        love.graphics.setColor(0.2, 0.2, 0.2, 0.8)
+        love.graphics.rectangle('fill', 0, 0, W, H)
+        love.graphics.setColor(1, 1, 1)
+        spritesheet.text('GAME OVER\nPress X to retry', W * 0.2, H * 0.35, 2)
+    elseif termDraw ~= nil then termDraw()
     elseif knapsackRunning then knapsackDraw()
     else
         -- HUD
         spritesheet.text(
             string.format('Health  %d/%d\nEnergy  %d/%d',
-                player.health, player.healthMax,
+                playerEntity.health.val, playerEntity.health.max,
                 player.energy, player.energyMax),
             6, H * 0.1)
     end
+
+    love.graphics.setColor(1, 1, 1)
+    spritesheet.flush()
 
     love.graphics.print(tostring(love.timer.getFPS()))
 

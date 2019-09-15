@@ -6,16 +6,13 @@ update = function (self, cs)
             if not e2.colli.fence and
                 bit.band(e2.colli.tag or 0, e1.bullet.mask) ~= 0
             then
-                -- Is player?
-                if e2.player ~= nil then
+                if e2.health ~= nil then
+                    -- Is absorbed?
                     local p = e2.player
-                    if p.colour == e1.bullet.colour then
+                    if p ~= nil and p.colour == e1.bullet.colour then
                         p.energy = math.min(p.energy + 10, p.energyMax)
                     else
-                        p.health = p.health - 1
-                        if p.health <= 0 then
-                            p.fail = true
-                        end
+                        e2.health.val = e2.health.val - 1
                     end
                 end
 

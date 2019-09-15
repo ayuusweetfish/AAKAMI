@@ -5,7 +5,7 @@ local PERIOD = 360
 local BULLET_VEL = 120
 local BULLET_ACCEL = 960
 
-local bulletUpdate = {}
+local patternUpdate = {}
 
 local addBullet = function (e, vx, vy, colour)
     local bullet = {
@@ -25,7 +25,7 @@ local addBullet = function (e, vx, vy, colour)
     --end
 end
 
-bulletUpdate.triplet = function (e, ePlayer, phase, dx, dy)
+patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
     e.enemy._nextShoot = (e.enemy._nextShoot or 180)
     e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
     if phase == e.enemy._nextShoot then
@@ -39,7 +39,7 @@ bulletUpdate.triplet = function (e, ePlayer, phase, dx, dy)
     end
 end
 
-bulletUpdate.triad = function (e, ePlayer, phase, dx, dy)
+patternUpdate.triad = function (e, ePlayer, phase, dx, dy)
     e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
     if phase == 180 then
         e.enemy._curWaveColour = (e.enemy._curWaveColour + 1) % 2
@@ -54,7 +54,7 @@ bulletUpdate.triad = function (e, ePlayer, phase, dx, dy)
     end
 end
 
-bulletUpdate.penta = function (e, ePlayer, phase, dx, dy)
+patternUpdate.penta = function (e, ePlayer, phase, dx, dy)
     e.enemy._nextShoot = (e.enemy._nextShoot or 180)
     e.enemy._curColour = (e.enemy._curColour or 0)
     if phase == e.enemy._nextShoot then
@@ -65,7 +65,7 @@ bulletUpdate.penta = function (e, ePlayer, phase, dx, dy)
     end
 end
 
-bulletUpdate.arp = function (e, ePlayer, phase, dx, dy)
+patternUpdate.arp = function (e, ePlayer, phase, dx, dy)
     e.enemy._nextShoot = (e.enemy._nextShoot or 60)
     e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
     if phase == e.enemy._nextShoot then
@@ -80,7 +80,7 @@ bulletUpdate.arp = function (e, ePlayer, phase, dx, dy)
     end
 end
 
-bulletUpdate.donut = function (e, ePlayer, phase, dx, dy)
+patternUpdate.donut = function (e, ePlayer, phase, dx, dy)
     e.enemy._nextShoot = (e.enemy._nextShoot or 180)
     e.enemy._curColour = (e.enemy._curColour or 0)
     if phase == e.enemy._nextShoot then
@@ -131,7 +131,7 @@ update = function (self, cs)
             local factor = 1 / math.sqrt(dsq)
             dx, dy = dx * factor, dy * factor
         end
-        bulletUpdate[e.enemy.name](e, ePlayer, ph, dx, dy)
+        patternUpdate[e.enemy.pattern](e, ePlayer, ph, dx, dy)
 
     end
 end
