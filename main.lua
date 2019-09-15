@@ -163,7 +163,7 @@ function love.load()
             w[#w + 1] = ecs.addEntity({
                 dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
                 sprite = { name = 'quq' .. tostring(i) },
-                colli = { block = (i ~= 4), tag = 1 }
+                colli = { block = (i ~= 4), tag = 1, fence = (i >= 2) }
             })
         end
     end
