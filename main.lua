@@ -90,11 +90,11 @@ function love.load()
         player = {
             -- XXX: Get rid of this
             buff = {
-                penetrate = { level = 1, equipped = false },
-                stockpile = { level = 1, equipped = false },
+                penetrate = { level = 2, equipped = false },
+                stockpile = { level = 2, equipped = false },
                 energyfield = { level = 1, equipped = false },
                 rebound = { level = 1, equipped = false },
-                dodge = { level = 1, equipped = false }
+                dodge = { level = 3, equipped = false }
             },
             coin = 20,
             memory = 4,

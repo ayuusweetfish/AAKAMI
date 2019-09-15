@@ -6,28 +6,34 @@ local player
 
 local term      -- Current terminal entity
 local lastDownI -- Is key <I> pressed last frame
-local lastDownL, lastDownR
-local lastDownU, lastDownD
+local lastDownU -- Is key <U> pressed last frame
+local lastDownLa, lastDownRa
+local lastDownUa, lastDownDa
 local T         -- Total time
 
 local cardNames
 local total
 local selIndex
+local memUsed
 
 knapsackReset = function (_term)
     player = ecs.components.player[1].player
 
     term = _term
     lastDownI = nil
-    lastDownL, lastDownR = nil, nil
-    lastDownU, lastDownD = nil, nil
+    lastDownLa, lastDownRa = nil, nil
+    lastDownUa, lastDownDa = nil, nil
     T = 0
 
     cardNames = {}
     total = 0
-    for k, _ in pairs(player.buff) do
+    memUsed = 0
+    for k, v in pairs(player.buff) do
         total = total + 1
         cardNames[total] = k
+        if v.equipped then
+            memUsed = memUsed + buff[k].memory[v.level]
+        end
     end
     selIndex = 0
 end
@@ -42,12 +48,27 @@ knapsackUpdate = function ()
     end
     lastDownI = downI
 
+    local downU = love.keyboard.isDown('u')
+    if downU and lastDownU == false then
+        -- Equip/unequip
+        local selName = cardNames[selIndex + 1]
+        local selPlayerBuff = player.buff[selName]
+        local memDelta = buff[selName].memory[selPlayerBuff.level]
+        local newMemUsed = memUsed +
+            (selPlayerBuff.equipped and -memDelta or memDelta)
+        if newMemUsed <= player.memory then
+            selPlayerBuff.equipped = not selPlayerBuff.equipped
+            memUsed = newMemUsed
+        end
+    end
+    lastDownU = downU
+
     if total ~= 0 then
         local downL = love.keyboard.isDown('left')
         local downR = love.keyboard.isDown('right')
         local downU = love.keyboard.isDown('up')
         local downD = love.keyboard.isDown('down')
-        if downL and lastDownL == false then
+        if downL and lastDownLa == false then
             local last = selIndex
             selIndex = selIndex - 3
             if selIndex < 0 then
@@ -56,7 +77,7 @@ knapsackUpdate = function ()
             end
             if selIndex == last then selIndex = (selIndex + total - 1) % total end
         end
-        if downR and lastDownR == false then
+        if downR and lastDownRa == false then
             local last = selIndex
             selIndex = selIndex + 3
             if selIndex >= total then
@@ -64,16 +85,16 @@ knapsackUpdate = function ()
             end
             if selIndex == last then selIndex = (selIndex + 1) % total end
         end
-        if downU and lastDownU == false then
+        if downU and lastDownUa == false then
             selIndex = (selIndex + total - 1) % total
         end
-        if downD and lastDownD == false then
+        if downD and lastDownDa == false then
             selIndex = (selIndex + 1) % total
         end
-        lastDownL = downL
-        lastDownR = downR
-        lastDownU = downU
-        lastDownD = downD
+        lastDownLa = downL
+        lastDownRa = downR
+        lastDownUa = downU
+        lastDownDa = downD
     end
 
     return true
@@ -91,22 +112,34 @@ knapsackDraw = function ()
 
     love.graphics.setColor(1, 1, 1)
 
-    spritesheet.text(
-        string.format('Knapsack\nMax Health: %d  Memory: %d',
-            player.healthMax, player.memory),
-        W * 0.1, H * 0.1
-    )
-
-    local memUsed = 0
+    -- Card list
     for i = 1, total do
         local row, col = (i - 1) % 3, math.floor((i - 1) / 3)
-        spritesheet.drawCen(buff[cardNames[i]].icon, W * (col + 1) / 6, H * (0.225 + 0.15 * row))
-        if player.buff[cardNames[i]].equipped then
+        local name = cardNames[i]
+        local x, y = W * (col + 1) / 6, H * (0.225 + 0.15 * row)
+        spritesheet.drawCen(buff[name].icon, x, y)
+        if player.buff[name].equipped then
+            spritesheet.drawCen('quq9', x, y)
         end
     end
 
+    -- Memory bar
+    -- TODO: Draw a bar!
+    local selName = cardNames[selIndex + 1]
+    local selPlayerBuff = player.buff[selName]
+    local selMem = buff[selName].memory[selPlayerBuff.level]
+    spritesheet.text(
+        string.format('Memory: %d/%d -> %d/%d',
+            memUsed, player.memory,
+            memUsed + selMem * (selPlayerBuff.equipped and -1 or 1), player.memory),
+        W * 0.1, H * 0.1
+    )
+
+    -- Card description
     if total ~= 0 then
-        spritesheet.text(cardNames[selIndex + 1], W * 0.15, H * 0.7, 1)
+        spritesheet.text(
+            string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
+            W * 0.15, H * 0.7, 1)
     end
 
     spritesheet.flush()
