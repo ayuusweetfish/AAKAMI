@@ -91,10 +91,13 @@ function love.load()
             -- XXX: Get rid of this
             buff = {
                 penetrate = { level = 2, equipped = false },
-                stockpile = { level = 2, equipped = false },
-                energyfield = { level = 1, equipped = false },
                 rebound = { level = 1, equipped = false },
-                dodge = { level = 3, equipped = false }
+                dodge = { level = 3, equipped = false },
+                rstarve = { level = 1, equipped = false },
+                bstarve = { level = 1, equipped = false },
+                fork = { level = 1, equipped = false },
+                magazine = { level = 1, equipped = false },
+                cannon = { level = 1, equipped = false }
             },
             coin = 20,
             memory = 4,

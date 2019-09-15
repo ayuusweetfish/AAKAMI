@@ -22,8 +22,12 @@ buffTermReset = function (_term)
     selIndex = 1
 
     local pool = {}
-    for k, _ in pairs(buff) do
-        if player.buff[k] == nil then pool[#pool + 1] = k end
+    for k, v in pairs(buff) do
+        if player.buff[k] == nil and
+            (v.prereq == nil or player.buff[v.prereq] ~= nil)
+        then
+            pool[#pool + 1] = k
+        end
     end
 
     if #pool < 3 then print('OvO') end
