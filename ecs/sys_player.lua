@@ -83,6 +83,7 @@ return function () return {
 lastUDown = false,
 lastJDown = false,
 lastValidVel = {1, 0},
+shootDir = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
         local p = e.player
@@ -104,19 +105,24 @@ update = function (self, cs)
             dx, dy = self.lastValidVel[1] * 16, self.lastValidVel[2] * 16
         end
         -- TODO: Support charging
-        if UDown and not self.lastUDown and p.energy >= 10 then
-            p.energy = p.energy - 10
-            local bullet = {
-                dim = {
-                    e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
-                    e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
-                    4, 4
-                },
-                vel = { dx * 10, dy * 10 },
-                sprite = { name = 'quq9' },
-                bullet = { mask = 5 }
-            }
-            ecs.addEntity(bullet)
+        if UDown and not self.lastUDown then
+            -- Turn
+            self.shootDir[1], self.shootDir[2] = dx, dy
+            -- Try to shoot
+            if p.energy >= 10 then
+                p.energy = p.energy - 10
+                local bullet = {
+                    dim = {
+                        e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
+                        e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
+                        4, 4
+                    },
+                    vel = { dx * 10, dy * 10 },
+                    sprite = { name = 'quq9' },
+                    bullet = { mask = 5 }
+                }
+                ecs.addEntity(bullet)
+            end
         end
         self.lastUDown = UDown
 
@@ -135,6 +141,9 @@ update = function (self, cs)
         frame = (frame + 1) % 60
         p.frame = frame
         local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
+        if not still then
+            self.shootDir[1], self.shootDir[2] = e.vel[1], e.vel[2]
+        end
         local anim = (still and '_waiting' or '_running')
         local char = (p.colour == 0 and 'aka' or 'ookami')
         -- Hack
@@ -144,8 +153,8 @@ update = function (self, cs)
 
         -- Flip according to aiming direction
         -- TODO: Implement with a separate component/system
-        e.sprite.flipX = (dx >= 0)
-        if dy < 0 then anim = '_back' .. anim end
+        e.sprite.flipX = (self.shootDir[1] >= 0)
+        if self.shootDir[2] < 0 then anim = '_back' .. anim end
 
         local sprite = char .. anim .. tostring(math.floor(frame / 15) + 1)
 
