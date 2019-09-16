@@ -136,6 +136,8 @@ update = function (self, cs)
         local frame = ((e.enemy.frame or -1) + 1) % 60
         e.enemy.frame = frame
         e.sprite.name = 'colaeli_attacking' .. tostring(math.floor(frame / 15) + 1)
+        e.sprite.ox = 12
+        e.sprite.oy = 13
 
     end
 end

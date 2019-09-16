@@ -155,6 +155,8 @@ update = function (self, cs)
         end
 
         e.sprite.name = sprite
+        e.sprite.ox = 11
+        e.sprite.oy = 14
     end
 end
 

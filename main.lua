@@ -92,9 +92,9 @@ function love.load()
 
     -- Player
     playerEntity = ecs.addEntity({
-        dim = { sidelen * 2, sidelen * 2, 21, 21 },
+        dim = { sidelen * 2, sidelen * 2, 10, 12 },
         vel = { 0, 0 },
-        sprite = { name = 'aka_waiting1', flipX = false, trim = true },
+        sprite = { name = 'aka_waiting1' },
         player = {
             -- XXX: Get rid of this
             buff = {
@@ -128,9 +128,9 @@ function love.load()
         })
     end]]
     ecs.addEntity({
-        dim = { sidelen * 9, sidelen * 5.5, 21, 21 },
+        dim = { sidelen * 9, sidelen * 5.5, 8, 12 },
         vel = { 0, 0 },
-        sprite = { name = 'colaeli_attacking1', trim = true },
+        sprite = { name = 'colaeli_attacking1' },
         enemy = { pattern = 'donut' },
         health = { val = 8, max = 8 },
         colli = { passive = true, tag = 4 }
@@ -140,7 +140,7 @@ function love.load()
     for i = 1, 4 do
         ecs.addEntity({
             dim = { sidelen * 3, sidelen * (3 + 2 * i), sidelen, sidelen },
-            sprite = { name = 'quq2' },
+            sprite = { name = 'quq2', oy = 16 },
             colli = { block = true },
             term = {
                 once = (i ~= 1),
@@ -172,7 +172,7 @@ function love.load()
         for _, wall in ipairs(walls[i]) do
             w[#w + 1] = ecs.addEntity({
                 dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
-                sprite = { name = 'quq' .. tostring(i) },
+                sprite = { name = 'quq' .. tostring(i), oy = (i == 3 and 0 or 16) },
                 colli = { block = (i ~= 4), tag = 1, fence = (i >= 2) }
             })
         end
@@ -181,7 +181,7 @@ function love.load()
         for j = 14, 30 do
             ecs.addEntity({
                 dim = { sidelen * i, sidelen * j, sidelen, sidelen },
-                sprite = { name = 'quq1' },
+                sprite = { name = 'quq1', oy = 16 },
                 colli = { block = true, tag = 1 }
             })
         end
@@ -190,24 +190,24 @@ function love.load()
     for i = 0, 31 do
         ecs.addEntity({
             dim = { sidelen * i, sidelen * -4, sidelen, sidelen },
-            sprite = { name = 'quq1' },
+            sprite = { name = 'quq1', oy = 16 },
             colli = { block = true, tag = 1 }
         })
         ecs.addEntity({
             dim = { sidelen * i, sidelen * 31, sidelen, sidelen },
-            sprite = { name = 'quq1' },
+            sprite = { name = 'quq1', oy = 16 },
             colli = { block = true, tag = 1 }
         })
     end
     for j = -4, 31 do
         ecs.addEntity({
             dim = { sidelen * -1, sidelen * j, sidelen, sidelen },
-            sprite = { name = 'quq1' },
+            sprite = { name = 'quq1', oy = 16 },
             colli = { block = true, tag = 1 }
         })
         ecs.addEntity({
             dim = { sidelen * 32, sidelen * j, sidelen, sidelen },
-            sprite = { name = 'quq1' },
+            sprite = { name = 'quq1', oy = 16 },
             colli = { block = true, tag = 1 }
         })
     end

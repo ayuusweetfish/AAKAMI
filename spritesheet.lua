@@ -107,32 +107,13 @@ local loadCrunch = function (path)
 end
 
 -- (x, y) is the top-left corner
-local draw = function (name, x, y, bottomAligned, flipX, flipY)
+local draw = function (name, x, y, flipX, flipY)
     local item = lookup[name]
     if item == nil then print(name) return end
-    local yAlignDelta = 0
-    if bottomAligned then yAlignDelta = -item.h end
-    local rx, ry = x + item.tx, y + item.ty + yAlignDelta
-    local sx, sy = 1, 1
-    if flipX then rx, sx = rx + item.w, -1 end
-    if flipY then ry, sy = ry + item.h, -1 end
+    local rx = x + (flipX and -item.tx or item.tx)
+    local ry = y + (flipY and -item.ty or item.ty)
     if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
-        item.batch:add(item.quad, rx, ry, 0, sx, sy)
-    end
-end
-
--- (x, y) is the top-left corner
-local drawTrimmed = function (name, x, y, bottomAligned, flipX, flipY)
-    local item = lookup[name]
-    if item == nil then print(name) return end
-    local yAlignDelta = 0
-    if bottomAligned then yAlignDelta = -item.sh end
-    local rx, ry = x + item.tx - item.sx, y + item.ty - item.sy + yAlignDelta
-    local sx, sy = 1, 1
-    if flipX then rx, sx = rx + item.w, -1 end
-    if flipY then ry, sy = ry + item.h, -1 end
-    if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
-        item.batch:add(item.quad, rx, ry, 0, sx, sy)
+        item.batch:add(item.quad, rx, ry, 0, flipX and -1 or 1, flipY and -1 or 1)
     end
 end
 
