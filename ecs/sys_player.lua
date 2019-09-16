@@ -1,6 +1,7 @@
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
 local buff = require 'mech/buff'
+local fsm = require 'fsm'
 
 local keys = function (a, b)
     local result = 0
@@ -88,6 +89,18 @@ update = function (self, cs)
     for _, e in pairs(cs.player) do
         local p = e.player
 
+        -- State machine
+        if p.fsm == nil then
+            p.fsm = fsm.create({
+                akaShoot = {1, 40},
+                akaHit = {1, 40},
+                akaShift = {2, 40},
+                ookamiShoot = {2, 40},
+                ookamiHit = {2, 40},
+                ookamiShift = {1, 40}
+            })
+        end
+
         local horz = keys('right', 'left')
         local vert = keys('down', 'up')
         if horz ~= 0 and vert ~= 0 then
@@ -98,7 +111,7 @@ update = function (self, cs)
 
         local UDown = love.keyboard.isDown('u')
         local target = nearest(e, self.lastValidVel, cs.enemy)
-        local dx, dy
+        local dx, dy    -- Aiming direction
         if target ~= nil then
             dx, dy = targetVec(e.dim, target.dim, 16)
         else
@@ -122,28 +135,80 @@ update = function (self, cs)
                     bullet = { mask = 5 }
                 }
                 ecs.addEntity(bullet)
+                p.fsm:trans(
+                    p.fsm.curState == 1 and 'akaShoot' or 'ookamiShoot',
+                    true
+                )
             end
         end
         self.lastUDown = UDown
 
-        p.sinceShift = (p.sinceShift or 60) + 1
-
         local JDown = love.keyboard.isDown('j')
         if JDown and not self.lastJDown then
             -- SHIFT!
-            p.colour = 1 - p.colour
-            p.sinceShift = 0
+            p.fsm:trans(
+                p.fsm.curState == 1 and 'akaShift' or 'ookamiShift'
+            )
         end
         self.lastJDown = JDown
 
-        -- Animation (4 frames)
-        local frame = p.frame or -1
-        frame = (frame + 1) % 60
-        p.frame = frame
+        p.fsm:step()
+
+        p.colour = p.fsm.curState - 1
+
         local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
         if not still then
             self.shootDir[1], self.shootDir[2] = e.vel[1], e.vel[2]
         end
+
+        -- Animation
+
+        local sprite
+        local t = p.fsm.curTrans
+        local frame = math.floor((t and p.fsm.curTransStep / 10 or p.fsm.age / 15))
+
+        local char = (p.fsm.curState == 1 and 'aka' or 'ookami')
+        local isBack = (self.shootDir[2] < 0)
+
+        if t == 'akaShift' then
+            sprite = 'aka2ookami' .. tostring(frame % 4 + 1)
+        elseif t == 'ookamiShift' then
+            sprite = 'ookami2aka' .. tostring(frame % 4 + 1)
+        elseif t == 'akaShoot' or t == 'ookamiShoot' then
+            local state, dir
+            if still then
+                state = 'attacking'
+                local x = math.abs(self.shootDir[1])
+                dir = (self.shootDir[2] < -x and 'up' or
+                    (self.shootDir[2] > x and 'down' or 'left'))
+            else
+                state = 'runattack'
+                dir = (self.shootDir[2] < 0 and 'up' or 'down')
+            end
+            local len = (not still and dir == 'left') and 8 or 4
+            -- Hack!
+            sprite = char .. (isBack and '_back_' or '_')
+                ..  state .. '_' .. dir .. tostring(frame % len + 1)
+        elseif t == 'akaHit' or t == 'ookamiHit' then
+            sprite = char .. (isBack and '_back' or '')
+                .. '_beattacked' .. tostring(math.floor(frame % 4 / 2) + 1)
+        else
+            local state = (still and 'waiting' or 'running')
+
+            -- Hack!
+            if char == 'ookami' and state == 'waiting' then state = '' end
+
+            sprite = char .. (isBack and '_back' or '')
+                .. (state == '' and '' or '_')
+                .. state .. tostring(frame % 4 + 1)
+        end
+
+        e.sprite.flipX = (self.shootDir[1] >= 0)
+
+        -- Animation (4 frames)
+        --[[local frame = p.frame or -1
+        frame = (frame + 1) % 60
+        p.frame = frame
         local anim = (still and '_waiting' or '_running')
         local char = (p.colour == 0 and 'aka' or 'ookami')
         -- Hack
@@ -153,7 +218,6 @@ update = function (self, cs)
 
         -- Flip according to aiming direction
         -- TODO: Implement with a separate component/system
-        e.sprite.flipX = (self.shootDir[1] >= 0)
         if self.shootDir[2] < 0 then anim = '_back' .. anim end
 
         local sprite = char .. anim .. tostring(math.floor(frame / 15) + 1)
@@ -161,7 +225,7 @@ update = function (self, cs)
         if p.sinceShift < 60 then
             char = (p.colour == 0 and 'ookami2aka' or 'aka2ookami')
             sprite = char .. tostring(math.floor(p.sinceShift / 15) + 1)
-        end
+        end]]
 
         e.sprite.name = sprite
         e.sprite.ox = 11

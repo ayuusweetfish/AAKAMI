@@ -15,6 +15,14 @@ update = function (self, cs)
                         p.energy = math.min(p.energy + 10, p.energyMax)
                     else
                         e2.health.val = e2.health.val - 1
+                        -- Play hit animation
+                        -- TODO: Consider enemies also
+                        if p then
+                            p.fsm:trans(
+                                p.fsm.curState == 1 and 'akaHit' or 'ookamiHit',
+                                true
+                            )
+                        end
                     end
                 end
 
