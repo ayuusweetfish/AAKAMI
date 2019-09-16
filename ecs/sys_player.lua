@@ -178,7 +178,7 @@ update = function (self, cs)
             local state, dir
             if still then
                 state = 'attacking'
-                local x = math.abs(self.shootDir[1])
+                local x = math.abs(self.shootDir[1]) * 0.3
                 dir = (self.shootDir[2] < -x and 'up' or
                     (self.shootDir[2] > x and 'down' or 'left'))
             else
