@@ -106,6 +106,28 @@ local loadCrunch = function (path)
     f:close()
 end
 
+local initializeTileset = function (name, sideLen)
+    local item = lookup[name]
+    if item == nil then print(name) return end
+    local index = 0
+    -- Dodgy...
+    for y = 0, item.h - 1, sideLen do
+    for x = 0, item.w - 1, sideLen do
+        local tile = {
+            batch = item.batch,
+            sx = item.sx + x, sy = item.sy + y, sw = sideLen, sh = sideLen,
+            tx = 0, ty = 0, w = sideLen, h = sideLen
+        }
+        tile.quad = love.graphics.newQuad(
+            tile.sx, tile.sy, tile.sw, tile.sh,
+            item.quad:getTextureDimensions()
+        )
+        index = index + 1
+        lookup[name .. '#' .. tonumber(index)] = tile
+    end
+    end
+end
+
 -- (x, y) is the top-left corner
 local draw = function (name, x, y, flipX, flipY)
     local item = lookup[name]
@@ -151,6 +173,7 @@ end
 return {
     loadImage = loadImage,
     loadCrunch = loadCrunch,
+    initializeTileset = initializeTileset,
     draw = draw,
     drawCen = drawCen,
     text = text,

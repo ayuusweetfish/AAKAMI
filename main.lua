@@ -4,6 +4,8 @@ require 'buffterm'
 require 'vendterm'
 require 'knapsack'
 
+local level1 = require 'levels/level1'
+
 local IS_DESKTOP = true
 
 W = 320
@@ -47,11 +49,9 @@ local vendTermInteraction = function (term)
 end
 
 function love.load()
-    spritesheet.loadImage('images/ground1.png')
-    spritesheet.loadImage('images/ground2.png')
-    spritesheet.loadImage('images/ground3.png')
-    spritesheet.loadCrunch('images/quq.bin')
     spritesheet.loadCrunch('images/char.bin')
+    spritesheet.loadCrunch('images/quq.bin')
+    spritesheet.initializeTileset('tileset3', 16)
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -79,20 +79,56 @@ function love.load()
     love.audio.play(source)
 
     -- Ground
-    for x = -10, 30 do
-        for y = -10, 30 do
-            local name
-            if ((x + y) % 2 == 0) then name = 'ground1' else name = 'ground2' end
+    local levelW = level1.width
+    local levelH = level1.height
+    local floorData = level1.layers[1].data
+    for x = 1, levelW do
+    for y = 1, levelH do
+        ecs.addEntity({
+            dim = { x * 16, y * 16 },
+            sprite = {
+                name = 'tileset3#' .. floorData[(y - 1) * levelW + x],
+                z = -1
+            }
+        })
+    end
+    end
+
+    -- Walls & fences
+    local wallData = level1.layers[2].data
+    local fenceData = level1.layers[3].data
+    for x = 1, levelW do
+    for y = 1, levelH do
+        local t = wallData[(y - 1) * levelW + x]
+        if t ~= 0 then
             ecs.addEntity({
-                dim = { x * sidelen, y * sidelen, sidelen, sidelen },
-                sprite = { name = name, z = -1 }
+                dim = { x * 16, y * 16, 16, 16 },
+                sprite = {
+                    name = 'tileset3#' .. bit.band(t, 1023),
+                    flipX = (bit.band(t, 0x80000000) ~= 0),
+                    flipY = (bit.band(t, 0x40000000) ~= 0)
+                },
+                colli = { block = true }
             })
         end
+        t = fenceData[(y - 1) * levelW + x]
+        if t ~= 0 then
+            ecs.addEntity({
+                dim = { x * 16, y * 16, 16, 16 },
+                sprite = {
+                    name = 'tileset3#' .. bit.band(t, 1023),
+                    flipX = (bit.band(t, 0x80000000) ~= 0),
+                    flipY = (bit.band(t, 0x40000000) ~= 0)
+                },
+                colli = { block = true, fence = true }
+            })
+        end
+    end
     end
 
     -- Player
     playerEntity = ecs.addEntity({
-        dim = { sidelen * 2, sidelen * 2, 10, 12 },
+        dim = { sidelen * 4, sidelen * 4, 10, 12 },
         vel = { 0, 0 },
         sprite = { name = 'aka_waiting1' },
         player = {
@@ -118,15 +154,6 @@ function love.load()
     player = playerEntity.player
 
     -- Enemy
-    --[[for i = 1, 15 do
-        ecs.addEntity({
-            dim = { sidelen * (7 + i * 1.5), sidelen * 5.5, 21, 21 },
-            vel = { 0, 0 },
-            sprite = { name = 'quq6' },
-            enemy = { interval = 60 },
-            colli = { passive = true, tag = 4 }
-        })
-    end]]
     ecs.addEntity({
         dim = { sidelen * 9, sidelen * 5.5, 48, 48 },
         vel = { 0, 0 },
@@ -159,65 +186,6 @@ function love.load()
                     sprite = { name = 'quq9', z = 1 }
                 })
             }
-        })
-    end
-
-    -- Obstacles
-    local walls = {{
-        {4, 4}, {5, 4}, {6, 4}, {7, 4},
-        {4, 5},                 {7, 5},
-        {4, 6},                 {7, 6},
-                {5, 7}
-    }, {
-                {5, 10}
-    }, {
-                {6, 9}
-    }, {
-                {7, 10}
-    }}
-    for i = 1, 4 do
-        local h = sidelen
-        if i == 3 then h = sidelen * 2 end
-        for _, wall in ipairs(walls[i]) do
-            w[#w + 1] = ecs.addEntity({
-                dim = { sidelen * wall[1], sidelen * wall[2], sidelen, h },
-                sprite = { name = 'quq' .. tostring(i), oy = (i == 3 and 0 or 16) },
-                colli = { block = (i ~= 4), tag = 1, fence = (i >= 2) }
-            })
-        end
-    end
-    for i = 14, 30 do
-        for j = 14, 30 do
-            ecs.addEntity({
-                dim = { sidelen * i, sidelen * j, sidelen, sidelen },
-                sprite = { name = 'quq1', oy = 16 },
-                colli = { block = true, tag = 1 }
-            })
-        end
-    end
-
-    for i = 0, 31 do
-        ecs.addEntity({
-            dim = { sidelen * i, sidelen * -4, sidelen, sidelen },
-            sprite = { name = 'quq1', oy = 16 },
-            colli = { block = true, tag = 1 }
-        })
-        ecs.addEntity({
-            dim = { sidelen * i, sidelen * 31, sidelen, sidelen },
-            sprite = { name = 'quq1', oy = 16 },
-            colli = { block = true, tag = 1 }
-        })
-    end
-    for j = -4, 31 do
-        ecs.addEntity({
-            dim = { sidelen * -1, sidelen * j, sidelen, sidelen },
-            sprite = { name = 'quq1', oy = 16 },
-            colli = { block = true, tag = 1 }
-        })
-        ecs.addEntity({
-            dim = { sidelen * 32, sidelen * j, sidelen, sidelen },
-            sprite = { name = 'quq1', oy = 16 },
-            colli = { block = true, tag = 1 }
         })
     end
 
