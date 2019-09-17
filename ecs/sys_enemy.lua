@@ -172,10 +172,12 @@ update = function (self, cs)
         local flipSprite = not isMinion
 
         if t == 'hit' then
-            sprite = n.name .. '_beattacked' .. tostring(frame % 2 + 1)
+            sprite = n.name .. '_beattacked' .. tostring(frame % a[2] + 1)
             flipSprite = true
         elseif t == 'death' then
             -- TODO
+        elseif t == 'attack' then
+            sprite = n.name .. '_attacking' .. tostring(frame % a[3] + 1)
         else
             sprite = n.name .. '_waiting' .. tostring(frame % a[1] + 1)
         end
