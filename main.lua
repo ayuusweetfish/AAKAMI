@@ -128,10 +128,10 @@ function love.load()
         })
     end]]
     ecs.addEntity({
-        dim = { sidelen * 9, sidelen * 5.5, 8, 12 },
+        dim = { sidelen * 9, sidelen * 5.5, 16, 16 },
         vel = { 0, 0 },
-        sprite = { name = 'colaeli_attacking1' },
-        enemy = { pattern = 'donut' },
+        sprite = { name = '' },
+        enemy = { name = 'cola', pattern = 'donut' },
         health = { val = 8, max = 8 },
         colli = { passive = true, tag = 4 }
     })

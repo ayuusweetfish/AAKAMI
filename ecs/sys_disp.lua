@@ -1,5 +1,7 @@
 local draw = function (self, e)
     local s = e.sprite
+    local o = s.overlay
+::redraw::
     local fx = s.flipX
     local fy = s.flipY
     local ox = (s.ox or 0)
@@ -12,6 +14,10 @@ local draw = function (self, e)
         math.floor(e.dim[2] + 0.5) - math.floor(self.cam[2]) + oy,
         fx, fy
     )
+    if o and s ~= o then
+        s = o
+        goto redraw
+    end
 end
 
 return function (spritesheet) return {

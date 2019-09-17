@@ -1,5 +1,6 @@
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
+local fsm = require 'fsm'
 
 local PERIOD = 360
 local BULLET_VEL = 120
@@ -104,6 +105,17 @@ update = function (self, cs)
     if ePlayer == nil then return end
 
     for _, e in pairs(cs.enemy) do
+        local n = e.enemy
+
+        if n.fsm == nil then
+            -- 1: normal
+            -- 2: death
+            n.fsm = fsm.create({
+                hit = {1, 30},
+                death = {2, n.name == 'yeshu' and 105 or 30}
+            })
+        end
+
         -- Follow player and repel other enemies
         local dx, dy = targetVecAround(e.dim, ePlayer.dim, 16, 16)
 
@@ -133,11 +145,42 @@ update = function (self, cs)
         end
         patternUpdate[e.enemy.pattern](e, ePlayer, ph, dx, dy)
 
-        local frame = ((e.enemy.frame or -1) + 1) % 60
-        e.enemy.frame = frame
-        e.sprite.name = 'colaeli_attacking' .. tostring(math.floor(frame / 15) + 1)
-        e.sprite.ox = 12
-        e.sprite.oy = 13
+        n.fsm:step()
+
+        local sprite, spriteFace
+        local t = n.fsm.curTrans
+        local frame = math.floor((t and n.fsm.curTransStep / 15 or n.fsm.age / 15))
+
+        local isYeshu = (n.name == 'yeshu')
+        local isRightward = (e.vel[1] > 0)
+        local flipSprite = isYeshu
+
+        if t == 'hit' then
+            sprite = n.name .. '_beattacked' .. tostring(frame % 2 + 1)
+            flipSprite = true
+        elseif t == 'death' then
+            -- TODO
+        else
+            local len = (isYeshu and 8 or 4)
+            sprite = n.name .. '_waiting' .. tostring(frame % len + 1)
+        end
+
+        if not isYeshu then
+            spriteFace = sprite:sub(1, -2) .. '_face' .. sprite:sub(-1)
+            local o = e.sprite.overlay
+            if o == nil then
+                o = {}
+                e.sprite.overlay = o
+            end
+            o.name = spriteFace
+            o.flipX = isRightward
+        end
+
+        if flipSprite then
+            e.sprite.flipX = isRightward
+        end
+
+        e.sprite.name = sprite
 
     end
 end

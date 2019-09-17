@@ -91,6 +91,9 @@ update = function (self, cs)
 
         -- State machine
         if p.fsm == nil then
+            -- 1: aka
+            -- 2: ookami
+            -- 3: death
             p.fsm = fsm.create({
                 akaShoot = {1, 40},
                 akaHit = {1, 40},
@@ -204,28 +207,6 @@ update = function (self, cs)
         end
 
         e.sprite.flipX = (self.shootDir[1] >= 0)
-
-        -- Animation (4 frames)
-        --[[local frame = p.frame or -1
-        frame = (frame + 1) % 60
-        p.frame = frame
-        local anim = (still and '_waiting' or '_running')
-        local char = (p.colour == 0 and 'aka' or 'ookami')
-        -- Hack
-        if char == 'ookami' and anim == '_waiting' then
-            anim = ''
-        end
-
-        -- Flip according to aiming direction
-        -- TODO: Implement with a separate component/system
-        if self.shootDir[2] < 0 then anim = '_back' .. anim end
-
-        local sprite = char .. anim .. tostring(math.floor(frame / 15) + 1)
-
-        if p.sinceShift < 60 then
-            char = (p.colour == 0 and 'ookami2aka' or 'aka2ookami')
-            sprite = char .. tostring(math.floor(p.sinceShift / 15) + 1)
-        end]]
 
         e.sprite.name = sprite
         e.sprite.ox = 11

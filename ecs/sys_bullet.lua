@@ -16,12 +16,13 @@ update = function (self, cs)
                     else
                         e2.health.val = e2.health.val - 1
                         -- Play hit animation
-                        -- TODO: Consider enemies also
                         if p then
                             p.fsm:trans(
                                 p.fsm.curState == 1 and 'akaHit' or 'ookamiHit',
                                 true
                             )
+                        elseif e2.enemy then
+                            e2.enemy.fsm:trans('hit', true)
                         end
                     end
                 end
