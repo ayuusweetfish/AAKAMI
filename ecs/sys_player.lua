@@ -3,6 +3,11 @@ require 'ecs/utils'
 local buff = require 'mech/buff'
 local fsm = require 'fsm'
 
+local PLAYER_VEL = 96
+local PLAYER_BULLET_VEL = 160
+local PLAYER_ACCEL = 768
+local PLAYER_DECEL = 384
+
 local keys = function (a, b)
     local result = 0
     if love.keyboard.isDown(a) then result = result + 1 end
@@ -11,9 +16,7 @@ local keys = function (a, b)
 end
 
 local updateVel = function (orig, tx, ty)
-    local A = 768   -- Acceleration
-    if tx == 0 and ty == 0 then A = 384 end
-    local DV = A * DT
+    local DV = (tx == 0 and ty == 0 and PLAYER_DECEL or PLAYER_ACCEL) * DT
     local dx, dy = tx - orig[1], ty - orig[2]
     local dsq = dx * dx + dy * dy
     if dsq <= DV * DV then
@@ -110,15 +113,15 @@ update = function (self, cs)
             horz = horz / 1.414213562
             vert = vert / 1.414213562
         end
-        updateVel(e.vel, horz * 96, vert * 96)
+        updateVel(e.vel, horz * PLAYER_VEL, vert * PLAYER_VEL)
 
         local UDown = love.keyboard.isDown('u')
         local target = nearest(e, self.lastValidVel, cs.enemy)
         local dx, dy    -- Aiming direction
         if target ~= nil then
-            dx, dy = targetVec(e.dim, target.dim, 16)
+            dx, dy = targetVec(e.dim, target.dim, 1)
         else
-            dx, dy = self.lastValidVel[1] * 16, self.lastValidVel[2] * 16
+            dx, dy = self.lastValidVel[1] * 1, self.lastValidVel[2] * 1
         end
         -- TODO: Support charging
         if UDown and not self.lastUDown then
@@ -129,11 +132,11 @@ update = function (self, cs)
                 p.energy = p.energy - 10
                 local bullet = {
                     dim = {
-                        e.dim[1] + e.dim[3] * 0.5 + dx * 0.25,
-                        e.dim[2] + e.dim[4] * 0.5 + dy * 0.25,
+                        e.dim[1] + e.dim[3] * 0.5 + dx * 4,
+                        e.dim[2] + e.dim[4] * 0.5 + dy * 4,
                         4, 4
                     },
-                    vel = { dx * 10, dy * 10 },
+                    vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
                     sprite = { name = 'quq9' },
                     bullet = { mask = 5 }
                 }
