@@ -108,7 +108,7 @@ function love.load()
                     flipX = (bit.band(t, 0x80000000) ~= 0),
                     flipY = (bit.band(t, 0x40000000) ~= 0)
                 },
-                colli = { block = true }
+                colli = { block = true, tag = 3 }
             })
         end
         t = fenceData[(y - 1) * levelW + x]
@@ -120,7 +120,7 @@ function love.load()
                     flipX = (bit.band(t, 0x80000000) ~= 0),
                     flipY = (bit.band(t, 0x40000000) ~= 0)
                 },
-                colli = { block = true, fence = true }
+                colli = { block = true, tag = 3, fence = true }
             })
         end
     end

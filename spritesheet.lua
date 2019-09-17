@@ -134,7 +134,7 @@ local draw = function (name, x, y, flipX, flipY)
     if item == nil then print(name) return end
     local rx = x + (flipX and -item.tx or item.tx)
     local ry = y + (flipY and -item.ty or item.ty)
-    if rx >= -item.w and rx <= W and ry >= -item.h and ry <= H then
+    if rx >= -item.w and rx <= W + item.w and ry >= -item.h and ry <= H + item.h then
         item.batch:add(item.quad, rx, ry, 0, flipX and -1 or 1, flipY and -1 or 1)
     end
 end
