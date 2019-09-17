@@ -24,6 +24,9 @@ local addBullet = function (e, vx, vy, colour)
     --    bullet.follow = { target = ePlayer, vel = BULLET_VEL, accel = BULLET_ACCEL * DT }
     --else bullet.sprite.name = 'quq8'
     --end
+
+    -- Play animation
+    e.enemy.fsm:trans('attack')
 end
 
 patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
@@ -98,6 +101,15 @@ patternUpdate.donut = function (e, ePlayer, phase, dx, dy)
     end
 end
 
+-- Idle, hit, attack, death
+local animations = {
+    cola = {4, 2, 0, 2},
+    pepsi = {4, 2, 0, 2},
+    yeshu = {8, 2, 0, 7},
+    colaeli = {7, 2, 7, 4},
+    starcoco = {8, 2, 6, 4}
+}
+
 return function () return {
 
 update = function (self, cs)
@@ -106,13 +118,15 @@ update = function (self, cs)
 
     for _, e in pairs(cs.enemy) do
         local n = e.enemy
+        local a = animations[n.name]
 
         if n.fsm == nil then
             -- 1: normal
             -- 2: death
             n.fsm = fsm.create({
-                hit = {1, 30},
-                death = {2, n.name == 'yeshu' and 105 or 30}
+                hit = {1, 15 * a[2]},
+                attack = {1, 10 * a[3]},
+                death = {2, 15 * a[4]}
             })
         end
 
@@ -149,11 +163,13 @@ update = function (self, cs)
 
         local sprite, spriteFace
         local t = n.fsm.curTrans
-        local frame = math.floor((t and n.fsm.curTransStep / 15 or n.fsm.age / 15))
+        local frame = math.floor(
+            t and n.fsm.curTransStep / (t == 'attack' and 10 or 15) or n.fsm.age / 15
+        )
 
-        local isYeshu = (n.name == 'yeshu')
+        local isMinion = (n.name == 'cola' or n.name == 'pepsi')
         local isRightward = (e.vel[1] > 0)
-        local flipSprite = isYeshu
+        local flipSprite = not isMinion
 
         if t == 'hit' then
             sprite = n.name .. '_beattacked' .. tostring(frame % 2 + 1)
@@ -161,11 +177,10 @@ update = function (self, cs)
         elseif t == 'death' then
             -- TODO
         else
-            local len = (isYeshu and 8 or 4)
-            sprite = n.name .. '_waiting' .. tostring(frame % len + 1)
+            sprite = n.name .. '_waiting' .. tostring(frame % a[1] + 1)
         end
 
-        if not isYeshu then
+        if isMinion then
             spriteFace = sprite:sub(1, -2) .. '_face' .. sprite:sub(-1)
             local o = e.sprite.overlay
             if o == nil then
