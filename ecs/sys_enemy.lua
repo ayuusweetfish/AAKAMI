@@ -33,6 +33,9 @@ local addBullet = function (e, vx, vy, colour)
     end
 end
 
+patternUpdate.none = function (e, ePlayer, phase, dx, dy)
+end
+
 patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
     e.enemy._nextShoot = (e.enemy._nextShoot or 180)
     e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
