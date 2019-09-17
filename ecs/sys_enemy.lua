@@ -136,6 +136,10 @@ update = function (self, cs)
             })
         end
 
+        if n.fsm.curState == 2 then
+            if n.fsm.curTrans == nil then ecs.removeEntity(e) end
+        end
+
         -- Follow player and repel other enemies
         local dx, dy = targetVecAround(e.dim, ePlayer.dim, 16, 16)
         local vx0, vy0 = e.vel[1], e.vel[2]
@@ -167,7 +171,11 @@ update = function (self, cs)
         patternUpdate[e.enemy.pattern](e, ePlayer, ph, dx, dy)
 
         -- Velocity update
-        e.vel[1], e.vel[2] = dx2, dy2
+        if n.fsm.curState ~= 2 then
+            e.vel[1], e.vel[2] = dx2, dy2
+        else
+            e.vel[1], e.vel[2] = 0, 0
+        end
 
         n.fsm:step()
 
@@ -186,7 +194,7 @@ update = function (self, cs)
             sprite = n.name .. '_beattacked' .. tostring(frame % a[2] + 1)
             flipSprite = true
         elseif t == 'death' then
-            -- TODO
+            sprite = n.name .. '_dead' .. tostring(frame % a[4] + 1)
         elseif t == 'attack' then
             if n.boss then
                 local dir = (math.abs(dx2) < math.abs(dy2) * 0.3 and 'front' or 'left')
