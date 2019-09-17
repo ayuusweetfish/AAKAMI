@@ -26,7 +26,11 @@ local addBullet = function (e, vx, vy, colour)
     --end
 
     -- Play animation
-    e.enemy.fsm:trans('attack')
+    if e.enemy.boss and (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] >= 10 * 10) then
+        e.enemy.fsm:trans('runattack')
+    else
+        e.enemy.fsm:trans('attack')
+    end
 end
 
 patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
@@ -101,13 +105,14 @@ patternUpdate.donut = function (e, ePlayer, phase, dx, dy)
     end
 end
 
--- Idle, hit, attack, death
+-- Idle, hit, attack, death, run, runattack
 local animations = {
     cola = {4, 2, 0, 2},
     pepsi = {4, 2, 0, 2},
     yeshu = {8, 2, 0, 7},
     colaeli = {7, 2, 7, 4},
-    starcoco = {8, 2, 6, 4}
+    starcoco = {8, 2, 6, 4},
+    boss = {8, 2, 8, 6, 6, 6}
 }
 
 return function () return {
@@ -126,12 +131,14 @@ update = function (self, cs)
             n.fsm = fsm.create({
                 hit = {1, 15 * a[2]},
                 attack = {1, 10 * a[3]},
-                death = {2, 15 * a[4]}
+                death = {2, 15 * a[4]},
+                runattack = (n.boss and {1, 10 * a[6]} or nil)
             })
         end
 
         -- Follow player and repel other enemies
         local dx, dy = targetVecAround(e.dim, ePlayer.dim, 16, 16)
+        local vx0, vy0 = e.vel[1], e.vel[2]
 
         local rx, ry = 0, 0
         cs.dim:colliding(e, function (e2) if e2.enemy then
@@ -144,9 +151,9 @@ update = function (self, cs)
             rx, ry = rx * factor, ry * factor
         end
         local dx2, dy2 = dx - rx, dy - ry
-        e.vel[1], e.vel[2] = dx2, dy2
 
         -- Bullets
+        -- Done before velocity update to take actual (blocked) velocity into account
         local ph = (e.enemy.phase or 0)
         ph = (ph + 1) % PERIOD
         e.enemy.phase = ph
@@ -159,12 +166,16 @@ update = function (self, cs)
         end
         patternUpdate[e.enemy.pattern](e, ePlayer, ph, dx, dy)
 
+        -- Velocity update
+        e.vel[1], e.vel[2] = dx2, dy2
+
         n.fsm:step()
 
         local sprite, spriteFace
         local t = n.fsm.curTrans
         local frame = math.floor(
-            t and n.fsm.curTransStep / (t == 'attack' and 10 or 15) or n.fsm.age / 15
+            t and n.fsm.curTransStep / ((t == 'attack' or t == 'runattack') and 10 or 15)
+              or n.fsm.age / 15
         )
 
         local isMinion = (n.name == 'cola' or n.name == 'pepsi')
@@ -177,9 +188,28 @@ update = function (self, cs)
         elseif t == 'death' then
             -- TODO
         elseif t == 'attack' then
-            sprite = n.name .. '_attacking' .. tostring(frame % a[3] + 1)
+            if n.boss then
+                local dir = (math.abs(dx2) < math.abs(dy2) * 0.3 and 'front' or 'left')
+                sprite = n.name .. '_attacking_' .. dir .. tostring(frame % a[3] + 1)
+            else
+                sprite = n.name .. '_attacking' .. tostring(frame % a[3] + 1)
+            end
+        elseif t == 'runattack' then
+            -- Boss exclusive
+            local y = math.abs(dy2) * 0.3
+            local dir = (dx2 < -y and 'left' or (dx2 > y and 'right' or 'front'))
+            sprite = n.name .. '_runattack_' .. dir .. tostring(frame % a[6] + 1)
+            -- Do not flip the sprite in case of rightward movement
+            if dx2 > y then isRightward = false end
         else
-            sprite = n.name .. '_waiting' .. tostring(frame % a[1] + 1)
+            if n.boss and vx0 * vx0 + vy0 * vy0 > 4 * 4 then
+                local y = math.abs(dy2) * 0.3
+                local dir = (dx2 < -y and 'left' or (dx2 > y and 'right' or 'front'))
+                sprite = n.name .. '_running_' .. dir .. tostring(frame % a[5] + 1)
+                if dx2 > y then isRightward = false end
+            else
+                sprite = n.name .. '_waiting' .. tostring(frame % a[1] + 1)
+            end
         end
 
         if isMinion then
