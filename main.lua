@@ -30,6 +30,9 @@ local termUpdate, termDraw = nil, nil
 local lastDownI
 local knapsackRunning
 
+local isSlow
+local lastDownZ
+
 local w = {}
 
 function love.conf(t)
@@ -209,7 +212,11 @@ function love.update()
         return
     end
 
-    T = T + love.timer.getDelta()
+    local downZ = love.keyboard.isDown('z')
+    if downZ and not lastDownZ then isSlow = not isSlow end
+    lastDownZ = downZ
+
+    T = T + love.timer.getDelta() * (isSlow and 1.0 / 16 or 1)
 
     local t = math.floor(T / 1)
     if w[t] ~= nil then

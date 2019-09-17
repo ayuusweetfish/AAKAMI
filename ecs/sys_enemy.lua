@@ -178,6 +178,8 @@ update = function (self, cs)
         end
 
         n.fsm:step()
+        n.lastFlipDur = (n.lastFlipDur or 400) + 1
+        n.lastDirDur = (n.lastDirDur or 400) + 1
 
         local sprite, spriteFace
         local t = n.fsm.curTrans
@@ -198,22 +200,35 @@ update = function (self, cs)
         elseif t == 'attack' then
             if n.boss then
                 local dir = (math.abs(dx2) < math.abs(dy2) * 0.3 and 'front' or 'left')
-                sprite = n.name .. '_attacking_' .. dir .. tostring(frame % a[3] + 1)
+                if dir ~= n.lastDir and n.lastDirDur >= 60 then
+                    n.lastDir = dir
+                    n.lastDirDur = 0
+                end
+                sprite = n.name .. '_attacking_' .. n.lastDir .. tostring(frame % a[3] + 1)
             else
                 sprite = n.name .. '_attacking' .. tostring(frame % a[3] + 1)
             end
         elseif t == 'runattack' then
             -- Boss exclusive
             local y = math.abs(dy2) * 0.3
+            -- XXX: Duplication!!!
             local dir = (dx2 < -y and 'left' or (dx2 > y and 'right' or 'front'))
-            sprite = n.name .. '_runattack_' .. dir .. tostring(frame % a[6] + 1)
+            if dir ~= n.lastDir and n.lastDirDur >= 60 then
+                n.lastDir = dir
+                n.lastDirDur = 0
+            end
+            sprite = n.name .. '_runattack_' .. n.lastDir .. tostring(frame % a[6] + 1)
             -- Do not flip the sprite in case of rightward movement
             if dx2 > y then isRightward = false end
         else
             if n.boss and vx0 * vx0 + vy0 * vy0 > 4 * 4 then
                 local y = math.abs(dy2) * 0.3
                 local dir = (dx2 < -y and 'left' or (dx2 > y and 'right' or 'front'))
-                sprite = n.name .. '_running_' .. dir .. tostring(frame % a[5] + 1)
+                if dir ~= n.lastDir and n.lastDirDur >= 60 then
+                    n.lastDir = dir
+                    n.lastDirDur = 0
+                end
+                sprite = n.name .. '_running_' .. n.lastDir .. tostring(frame % a[5] + 1)
                 if dx2 > y then isRightward = false end
             else
                 sprite = n.name .. '_waiting' .. tostring(frame % a[1] + 1)
@@ -231,9 +246,12 @@ update = function (self, cs)
             o.flipX = isRightward
         end
 
-        if flipSprite then
-            e.sprite.flipX = isRightward
+        local f = (isRightward and flipSprite)
+        if f ~= n.lastFlip and n.lastFlipDur >= 40 then
+            n.lastFlip = f
+            n.lastFlipDur = 0
         end
+        e.sprite.flipX = n.lastFlip
 
         e.sprite.name = sprite
 
