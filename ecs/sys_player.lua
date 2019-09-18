@@ -121,6 +121,12 @@ update = function (self, cs)
         updateVel(e.vel, horz * PLAYER_VEL, vert * PLAYER_VEL)
 
         local UDown = love.keyboard.isDown('u')
+        local sinceLastShoot
+        local hasMachGun = (p.buff.machgun and p.buff.machgun.equipped)
+        if hasMachGun then
+            sinceLastShoot = (p.sinceLastShoot or 0) + 1
+        end
+
         local target = nearest(e, self.lastValidVel, cs.enemy)
         local dx, dy    -- Aiming direction
         if target ~= nil then
@@ -128,19 +134,25 @@ update = function (self, cs)
         else
             dx, dy = self.lastValidVel[1] * 1, self.lastValidVel[2] * 1
         end
-        -- TODO: Support charging
-        if UDown and not self.lastUDown then
+        -- TODO: Support more charging
+        if UDown and (not self.lastUDown or (hasMachGun and sinceLastShoot >= 30)) then
             -- Turn
             self.shootDir[1], self.shootDir[2] = dx, dy
             -- Try to shoot
-            if p.energy >= 10 then
-                p.energy = p.energy - 10
-                local damage = 1
-                -- Note: enemies slayed without the buff is also kept
-                if p.buff.rage and p.buff.rage.equipped and p.slayed then
-                    p.slayed = false
-                    damage = 2
-                end
+            local damage = 1
+            local cost = 10
+            -- Note: enemies slayed without the buff is also kept
+            if p.buff.rage and p.buff.rage.equipped and p.slayed then
+                p.slayed = false
+                damage = 2
+            end
+            if hasMachGun then
+                damage = damage * 0.5
+                cost = cost * 0.5
+                sinceLastShoot = 0
+            end
+            if p.energy >= cost then
+                p.energy = p.energy - cost
                 local addBullet = function (dx, dy)
                     local bullet = {
                         dim = {
@@ -174,6 +186,9 @@ update = function (self, cs)
             end
         end
         self.lastUDown = UDown
+        if hasMachGun then
+            p.sinceLastShoot = sinceLastShoot
+        end
 
         local JDown = love.keyboard.isDown('j')
         if JDown and not self.lastJDown then
