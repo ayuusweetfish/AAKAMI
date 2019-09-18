@@ -60,6 +60,7 @@ function love.load()
     spritesheet.cropFromTileset('tileset3', 90, 32, 32, 'vendterm')
     spritesheet.cropFromTileset('tileset3', 184, 16, 32, 'doorv')
     spritesheet.cropFromTileset('tileset3', 230, 32, 32, 'doorh')
+    spritesheet.loadImage('images/triangle.png')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
