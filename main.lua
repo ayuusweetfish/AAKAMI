@@ -94,7 +94,7 @@ function love.load()
             dim = { x * 16, y * 16 },
             sprite = {
                 name = 'tileset3#' .. floorData[(y - 1) * levelW + x],
-                z = -1
+                z = -2
             }
         })
     end
@@ -115,7 +115,7 @@ function love.load()
                     name = 'tileset3#' .. id,
                     flipX = (bit.band(t, 0x80000000) ~= 0),
                     flipY = (bit.band(t, 0x40000000) ~= 0),
-                    z = (colli and -1 or 1)
+                    z = (colli and -1 or 2)
                 },
                 colli = (colli and { block = true, tag = 3 } or nil)
             })
@@ -127,7 +127,8 @@ function love.load()
                 sprite = {
                     name = 'tileset3#' .. bit.band(t, 1023),
                     flipX = (bit.band(t, 0x80000000) ~= 0),
-                    flipY = (bit.band(t, 0x40000000) ~= 0)
+                    flipY = (bit.band(t, 0x40000000) ~= 0),
+                    z = -1
                 },
                 colli = { block = true, tag = 3, fence = true }
             })
@@ -139,7 +140,7 @@ function love.load()
     playerEntity = ecs.addEntity({
         dim = { sidelen * 4, sidelen * 4, 10, 12 },
         vel = { 0, 0 },
-        sprite = { name = 'aka_waiting1' },
+        sprite = { name = 'aka_waiting1', z = 0 },
         player = {
             -- XXX: Get rid of this
             buff = {

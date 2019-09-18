@@ -25,21 +25,23 @@ return function (spritesheet) return {
 spritesheet = spritesheet,
 cam = {0, 0},
 update = function (self, cs)
-    local es_z0, es_zp = {}, {}
+    local es_z = {
+        [-2] = {},
+        [-1] = {},
+        [0] = {},
+        [1] = {},
+        [2] = {}
+    }
 
     for _, e in ipairs(cs.sprite) do if e.sprite.visible ~= false then
-        local z = e.sprite.z
-        if z == nil then es_z0[#es_z0 + 1] = e
-        elseif z < 0 then draw(self, e)
-        else es_zp[#es_zp + 1] = e end
+        local z = e.sprite.z or 0
+        local es = es_z[z]
+        es[#es + 1] = e
     end end
 
-    table.sort(es_z0, function (lhs, rhs)
-        return lhs.dim[2] < rhs.dim[2]
-    end)
-
-    for _, e in ipairs(es_z0) do draw(self, e) end
-    for _, e in ipairs(es_zp) do draw(self, e) end
+    for z = -2, 2 do
+        for _, e in ipairs(es_z[z]) do draw(self, e) end
+    end
 end
 
 } end
