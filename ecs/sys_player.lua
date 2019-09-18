@@ -107,6 +107,11 @@ update = function (self, cs)
             })
         end
 
+        -- Magazine?
+        local hasMagazine = p.buff.magazine and p.buff.magazine.equipped
+        p.energyMax = (hasMagazine and 150 or 100)
+        p.energy = math.min(p.energy, p.energyMax)
+
         local horz = keys('right', 'left')
         local vert = keys('down', 'up')
         if horz ~= 0 and vert ~= 0 then
