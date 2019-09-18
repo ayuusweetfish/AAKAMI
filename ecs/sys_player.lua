@@ -134,8 +134,42 @@ update = function (self, cs)
         else
             dx, dy = self.lastValidVel[1] * 1, self.lastValidVel[2] * 1
         end
-        -- TODO: Support more charging
-        if UDown and (not self.lastUDown or (hasMachGun and sinceLastShoot >= 30)) then
+
+        local addBullet = function (dx, dy, damage)
+            local bullet = {
+                dim = {
+                    e.dim[1] + e.dim[3] * 0.5 + dx * 4,
+                    e.dim[2] + e.dim[4] * 0.5 + dy * 4,
+                    4, 4
+                },
+                vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
+                sprite = { name = 'quq9' },
+                bullet = {
+                    mask = 5,
+                    age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
+                    penetrate = ((p.buff.penetrate and p.buff.penetrate.equipped) and true or nil),
+                    damage = damage
+                }
+            }
+            ecs.addEntity(bullet)
+        end
+
+        -- Charging
+        if p.buff.stockpile and p.buff.stockpile.equipped then
+            if UDown then
+                local cost = 0.25
+                if p.energy >= cost then
+                    p.energy = p.energy - cost
+                    p.charge = (p.charge or 0) + 1
+                end
+            elseif self.lastUDown then
+                -- Release
+                addBullet(dx, dy, p.charge * 0.25 * 0.1)
+                p.charge = 0
+            end
+
+        -- Normal attack
+        elseif UDown and (not self.lastUDown or (hasMachGun and sinceLastShoot >= 30)) then
             -- Turn
             self.shootDir[1], self.shootDir[2] = dx, dy
             -- Try to shoot
@@ -153,30 +187,12 @@ update = function (self, cs)
             end
             if p.energy >= cost then
                 p.energy = p.energy - cost
-                local addBullet = function (dx, dy)
-                    local bullet = {
-                        dim = {
-                            e.dim[1] + e.dim[3] * 0.5 + dx * 4,
-                            e.dim[2] + e.dim[4] * 0.5 + dy * 4,
-                            4, 4
-                        },
-                        vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
-                        sprite = { name = 'quq9' },
-                        bullet = {
-                            mask = 5,
-                            age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
-                            penetrate = ((p.buff.penetrate and p.buff.penetrate.equipped) and true or nil),
-                            damage = damage
-                        }
-                    }
-                    ecs.addEntity(bullet)
-                end
 
-                addBullet(dx, dy)
+                addBullet(dx, dy, damage)
                 if p.buff.fork and p.buff.fork.equipped then
                     local alpha = math.atan2(dy, dx)
-                    addBullet(math.cos(alpha + math.pi / 6), math.sin(alpha + math.pi / 6))
-                    addBullet(math.cos(alpha - math.pi / 6), math.sin(alpha - math.pi / 6))
+                    addBullet(math.cos(alpha + math.pi / 6), math.sin(alpha + math.pi / 6), damage)
+                    addBullet(math.cos(alpha - math.pi / 6), math.sin(alpha - math.pi / 6), damage)
                 end
 
                 p.fsm:trans(
