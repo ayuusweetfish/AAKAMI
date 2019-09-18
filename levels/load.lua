@@ -114,6 +114,15 @@ return function (L, buffTermInteraction, vendTermInteraction)
                     })
                 }
             })
+        elseif o.name:sub(1, 4) == 'Door' then
+            local isV = (o.name:byte(5) == 86)  -- 86 == ord('V')
+            ecs.addEntity({
+                dim = isV and { o.x + 16, o.y + 32, 16, 16 }
+                    or { o.x, o.y, 32, 16 },
+                sprite = isV and { name = 'tileset3#doorv', oy = 16, z = -1 }
+                    or { name = 'tileset3#doorh', oy = 16, z = -1 },
+                colli = { block = true }
+            })
         end
     end
 

@@ -2694,7 +2694,7 @@ return {
         },
         {
           id = 58,
-          name = "Door",
+          name = "DoorH",
           type = "",
           shape = "point",
           x = 1488,
@@ -2707,7 +2707,7 @@ return {
         },
         {
           id = 59,
-          name = "Door",
+          name = "DoorH",
           type = "",
           shape = "point",
           x = 1520,
@@ -2720,7 +2720,7 @@ return {
         },
         {
           id = 60,
-          name = "Door",
+          name = "DoorH",
           type = "",
           shape = "point",
           x = 800,
@@ -2746,7 +2746,7 @@ return {
         },
         {
           id = 63,
-          name = "Door",
+          name = "DoorH",
           type = "",
           shape = "point",
           x = 1024,
@@ -2759,7 +2759,7 @@ return {
         },
         {
           id = 64,
-          name = "Door",
+          name = "DoorH",
           type = "",
           shape = "point",
           x = 160,
@@ -2772,7 +2772,7 @@ return {
         },
         {
           id = 65,
-          name = "Door3",
+          name = "DoorH3",
           type = "",
           shape = "point",
           x = 64,
@@ -2785,7 +2785,7 @@ return {
         },
         {
           id = 66,
-          name = "Door",
+          name = "DoorV",
           type = "",
           shape = "point",
           x = 1072,
@@ -2811,7 +2811,7 @@ return {
         },
         {
           id = 69,
-          name = "Door",
+          name = "DoorV",
           type = "",
           shape = "point",
           x = 432,
@@ -2824,7 +2824,7 @@ return {
         },
         {
           id = 70,
-          name = "Door1",
+          name = "DoorV1",
           type = "",
           shape = "point",
           x = 1232,
@@ -2863,7 +2863,7 @@ return {
         },
         {
           id = 73,
-          name = "Door",
+          name = "DoorV",
           type = "",
           shape = "point",
           x = 352,
@@ -2876,7 +2876,7 @@ return {
         },
         {
           id = 74,
-          name = "Door",
+          name = "DoorV",
           type = "",
           shape = "point",
           x = 352,
@@ -2889,7 +2889,7 @@ return {
         },
         {
           id = 75,
-          name = "Door2",
+          name = "DoorV2",
           type = "",
           shape = "point",
           x = 640,
