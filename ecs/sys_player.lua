@@ -136,21 +136,31 @@ update = function (self, cs)
                     p.slayed = false
                     damage = 2
                 end
-                local bullet = {
-                    dim = {
-                        e.dim[1] + e.dim[3] * 0.5 + dx * 4,
-                        e.dim[2] + e.dim[4] * 0.5 + dy * 4,
-                        4, 4
-                    },
-                    vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
-                    sprite = { name = 'quq9' },
-                    bullet = {
-                        mask = 5,
-                        age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
-                        damage = damage
+                local addBullet = function (dx, dy)
+                    local bullet = {
+                        dim = {
+                            e.dim[1] + e.dim[3] * 0.5 + dx * 4,
+                            e.dim[2] + e.dim[4] * 0.5 + dy * 4,
+                            4, 4
+                        },
+                        vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
+                        sprite = { name = 'quq9' },
+                        bullet = {
+                            mask = 5,
+                            age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
+                            damage = damage
+                        }
                     }
-                }
-                ecs.addEntity(bullet)
+                    ecs.addEntity(bullet)
+                end
+
+                addBullet(dx, dy)
+                if p.buff.fork and p.buff.fork.equipped then
+                    local alpha = math.atan2(dy, dx)
+                    addBullet(math.cos(alpha + math.pi / 6), math.sin(alpha + math.pi / 6))
+                    addBullet(math.cos(alpha - math.pi / 6), math.sin(alpha - math.pi / 6))
+                end
+
                 p.fsm:trans(
                     p.fsm.curState == 1 and 'akaShoot' or 'ookamiShoot',
                     true
