@@ -57,7 +57,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
 
     -- Player
     local playerEntity = ecs.addEntity({
-        dim = { 16 * 4, 16 * 4, 10, 12 },
+        dim = { 0, 0, 10, 12 },
         vel = { 0, 0 },
         sprite = { name = 'aka_waiting1' },
         player = {
@@ -95,7 +95,10 @@ return function (L, buffTermInteraction, vendTermInteraction)
 
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
-        if o.name == 'Buff' or o.name == 'Shop' then
+        if o.name == 'Spawn' then
+            playerEntity.dim[1] = o.x
+            playerEntity.dim[2] = o.y
+        elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')
             ecs.addEntity({
@@ -128,7 +131,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
         elseif o.name:sub(1, 3) == 'Key' then
             local id = tonumber(o.name:sub(4))
             ecs.addEntity({
-                dim = { o.x, o.y, 16, 16 },
+                dim = { o.x + 16, o.y + 16, 16, 16 },
                 sprite = { name = 'tileset3#169' },
                 key = { id = id }
             })

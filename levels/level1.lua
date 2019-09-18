@@ -9,7 +9,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 15,
-  nextobjectid = 76,
+  nextobjectid = 77,
   properties = {},
   tilesets = {
     {
@@ -2772,7 +2772,7 @@ return {
         },
         {
           id = 65,
-          name = "DoorH3",
+          name = "Door3",
           type = "",
           shape = "point",
           x = 64,
@@ -2894,6 +2894,19 @@ return {
           shape = "point",
           x = 640,
           y = 352,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 76,
+          name = "Spawn",
+          type = "",
+          shape = "point",
+          x = 1008,
+          y = 144,
           width = 0,
           height = 0,
           rotation = 0,
