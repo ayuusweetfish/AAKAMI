@@ -143,7 +143,7 @@ function love.load()
         player = {
             -- XXX: Get rid of this
             buff = {
-                incise = { level = 1, equipped = false }
+                rage = { level = 1, equipped = false }
             },
             coin = 500,
             colour = 0,

@@ -130,6 +130,12 @@ update = function (self, cs)
             -- Try to shoot
             if p.energy >= 10 then
                 p.energy = p.energy - 10
+                local damage = 1
+                -- Note: enemies slayed without the buff is also kept
+                if p.buff.rage and p.buff.rage.equipped and p.slayed then
+                    p.slayed = false
+                    damage = 2
+                end
                 local bullet = {
                     dim = {
                         e.dim[1] + e.dim[3] * 0.5 + dx * 4,
@@ -140,7 +146,8 @@ update = function (self, cs)
                     sprite = { name = 'quq9' },
                     bullet = {
                         mask = 5,
-                        age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil)
+                        age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
+                        damage = damage
                     }
                 }
                 ecs.addEntity(bullet)

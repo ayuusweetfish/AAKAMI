@@ -28,9 +28,9 @@ update = function (self, cs)
                                 return
                             end
                         end
-                        local damage = 1
+                        local damage = (e1.bullet.damage or 1)
                         -- Incise?
-                        if e1.bullet.age and e1.bullet.age >= 90 then damage = 2 end
+                        if e1.bullet.age and e1.bullet.age >= 90 then damage = damage * 1.5 end
                         print(damage)
                         e2.health.val = e2.health.val - damage
                         -- Play hit animation
@@ -43,6 +43,9 @@ update = function (self, cs)
                             )
                         elseif e2.enemy then
                             e2.enemy.fsm:trans(e2.health.val <= 0 and 'death' or 'hit', true)
+                            if e2.health.val <= 0 then
+                                cs.player[1].player.slayed = true
+                            end
                         end
                     end
                 end
