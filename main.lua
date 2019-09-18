@@ -57,6 +57,7 @@ function love.load()
     spritesheet.initializeTileset('tileset3', 16)
     spritesheet.cropFromTileset('tileset3', 86, 32, 32, 'offterm')
     spritesheet.cropFromTileset('tileset3', 88, 32, 32, 'buffterm')
+    spritesheet.cropFromTileset('tileset3', 90, 32, 32, 'vendterm')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')

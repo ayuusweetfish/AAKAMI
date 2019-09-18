@@ -95,15 +95,19 @@ return function (L, buffTermInteraction, vendTermInteraction)
 
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
-        if o.name == 'Buff' then
-            -- Buff terminal
+        if o.name == 'Buff' or o.name == 'Shop' then
+            -- A terminal
+            local isBuff = (o.name == 'Buff')
             ecs.addEntity({
                 dim = { o.x - 8, o.y, 18, 16 },
-                sprite = { name = 'tileset3#buffterm', ox = 7, oy = 16, z = -1 },
+                sprite = {
+                    name = (isBuff and 'tileset3#buffterm' or 'tileset3#vendterm'),
+                    ox = 7, oy = 16, z = -1
+                },
                 colli = { block = true },
                 term = {
-                    once = true,
-                    callback = buffTermInteraction,
+                    once = isBuff,
+                    callback = (isBuff and buffTermInteraction or vendTermInteraction),
                     bubble = ecs.addEntity({
                         dim = { o.x - 8, o.y, 16, 16 },
                         sprite = { name = 'quq9', z = 1 }
