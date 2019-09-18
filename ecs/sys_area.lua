@@ -37,6 +37,27 @@ local spawnEnemy = function (p, a)
     })
 end
 
+local spawnElite = function (a)
+    local x1, y1, w1, h1 = a[1], a[2], a[3] - 48, a[4] - 48
+    local x = x1 + math.random() * w1
+    local y = y1 + math.random() * h1
+
+    local names = { 'colaeli', 'starcoco' }
+    local patterns = { 'arp', 'donut' }
+
+    ecs.addEntity({
+        dim = { x, y, 32, 32 },
+        vel = { 0, 0 },
+        sprite = { name = '' },
+        enemy = {
+            name = names[math.random(2)],
+            pattern = patterns[math.random(2)]
+        },
+        health = { val = 10, max = 10 },
+        colli = { passive = true, tag = 4 }
+    })
+end
+
 return function () return {
 
 update = function (self, cs)
@@ -50,6 +71,13 @@ update = function (self, cs)
                 spawnEnemy(p.dim, e.dim)
             end
             e.enemyarea.sinceLastSpawn = sinceLastSpawn
+        end
+    end
+
+    for _, e in pairs(cs.elitearea) do
+        if not e.elitearea.spawned and rectIntsc(p.dim, e.dim) then
+            e.elitearea.spawned = true
+            spawnElite(p.dim)
         end
     end
 end

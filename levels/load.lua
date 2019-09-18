@@ -140,6 +140,11 @@ return function (L, buffTermInteraction, vendTermInteraction)
                 dim = { o.x + 16, o.y + 16, o.width, o.height },
                 enemyarea = {}
             })
+        elseif o.name == 'EliteArea' then
+            ecs.addEntity({
+                dim = { o.x + 16, o.y + 16, o.width, o.height },
+                elitearea = {}
+            })
         end
     end
 
