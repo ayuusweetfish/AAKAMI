@@ -138,7 +138,10 @@ update = function (self, cs)
                     },
                     vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
                     sprite = { name = 'quq9' },
-                    bullet = { mask = 5 }
+                    bullet = {
+                        mask = 5,
+                        age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil)
+                    }
                 }
                 ecs.addEntity(bullet)
                 p.fsm:trans(

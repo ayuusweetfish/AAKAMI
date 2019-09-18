@@ -4,6 +4,8 @@ update = function (self, cs)
     for _, e1 in pairs(cs.bullet or {}) do
         e1.sprite.oy = 28
 
+        if e1.bullet.age then e1.bullet.age = e1.bullet.age + 1 end
+
         cs.dim:colliding(e1, function (e2)
             if not e2.colli.fence and
                 bit.band(e2.colli.tag or 0, e1.bullet.mask) ~= 0
@@ -26,7 +28,11 @@ update = function (self, cs)
                                 return
                             end
                         end
-                        e2.health.val = e2.health.val - 1
+                        local damage = 1
+                        -- Incise?
+                        if e1.bullet.age and e1.bullet.age >= 90 then damage = 2 end
+                        print(damage)
+                        e2.health.val = e2.health.val - damage
                         -- Play hit animation
                         if p then
                             p.fsm:trans(
