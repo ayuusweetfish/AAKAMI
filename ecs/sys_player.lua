@@ -148,6 +148,7 @@ update = function (self, cs)
                         bullet = {
                             mask = 5,
                             age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
+                            penetrate = ((p.buff.penetrate and p.buff.penetrate.equipped) and true or nil),
                             damage = damage
                         }
                     }

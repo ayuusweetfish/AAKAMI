@@ -143,7 +143,7 @@ function love.load()
         player = {
             -- XXX: Get rid of this
             buff = {
-                fork = { level = 1, equipped = false }
+                penetrate = { level = 1, equipped = false }
             },
             coin = 500,
             colour = 0,

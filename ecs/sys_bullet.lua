@@ -5,6 +5,7 @@ update = function (self, cs)
         e1.sprite.oy = 28
 
         if e1.bullet.age then e1.bullet.age = e1.bullet.age + 1 end
+        local penetrated = false
 
         cs.dim:colliding(e1, function (e2)
             if not e2.colli.fence and
@@ -20,6 +21,12 @@ update = function (self, cs)
                         ) and 15 or 10
                         p.energy = math.min(p.energy + increment, p.energyMax)
                     else
+                        -- Penetrate?
+                        if e1.bullet.penetrate then
+                            if e1.bullet.penetrate == e2 then return end
+                            e1.bullet.penetrate = e2
+                            penetrated = true
+                        end
                         -- Dodge?
                         if p ~= nil then
                             if e1.bullet.dodged then return end
@@ -51,7 +58,7 @@ update = function (self, cs)
                 end
 
                 -- Vanish
-                e1._removal = true
+                e1._removal = not penetrated
                 return true
             end
         end)
