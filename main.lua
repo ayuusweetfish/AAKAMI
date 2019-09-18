@@ -203,6 +203,29 @@ function love.draw()
                 i <= playerEntity.health.val and 'life1' or 'life2',
                 i * 20 - 8, 12)
         end
+        local x, y = 12, 32
+        local w = player.energyMax + 2
+        local w1 = player.energy + 2
+        local h = 12
+        love.graphics.setColor(0x3d / 255, 0x3d / 255, 0x3d / 255)
+        love.graphics.rectangle('fill', x + 2, y, w - 4, h)
+        love.graphics.rectangle('fill', x + 1, y + 1, w - 2, h - 2)
+        love.graphics.rectangle('fill', x, y + 2, w, h - 4)
+        local dw = function (r, g, b, w)
+            if w < 3 then return end
+            love.graphics.setColor(r / 255, g / 255, b / 255)
+            love.graphics.rectangle('fill', x + 2, y + 1, w - 4, h - 2)
+            love.graphics.rectangle('fill', x + 1, y + 2, w - 2, h - 4)
+        end
+        dw(0xbd, 0xbd, 0xbd, w)
+        dw(0xc5, 0x60, 0x25, w1)
+        dw(0xee, 0x8e, 0x2e, w1 - 1)
+        love.graphics.setColor(0xfc / 255, 0xcb / 255, 0xa3 / 255)
+        if w1 >= 6 then
+            love.graphics.setLineWidth(1)
+            love.graphics.setLineStyle('rough')
+            love.graphics.line(x + 2, y + 2, x + w1 - 4, y + 2)
+        end
     end
 
     love.graphics.setColor(1, 1, 1)
