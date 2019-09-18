@@ -18,14 +18,20 @@ local spawnEnemy = function (p, a)
     end
     if x == nil then print('> <') return end
 
-    local R = math.random()
-    local name = (R < 1 / 3 and 'cola' or (R < 2 / 3 and 'pepsi' or 'yeshu'))
+    local names = { 'cola', 'pepsi', 'yeshu' }
+    local colours = { 0, 1, nil }
+    local patterns = { 'triplet', 'triad', 'penta' }
+    local i = math.random(3)
 
     ecs.addEntity({
         dim = { x, y, 16, 16 },
         vel = { 0, 0 },
         sprite = { name = '' },
-        enemy = { name = name, pattern = 'donut' },
+        enemy = {
+            name = names[i],
+            colour = colours[i],
+            pattern = patterns[math.random(3)]
+        },
         health = { val = 4, max = 4 },
         colli = { passive = true, tag = 4 }
     })
@@ -39,7 +45,7 @@ update = function (self, cs)
     for _, e in pairs(cs.enemyarea) do
         if rectIntsc(p.dim, e.dim) then
             local sinceLastSpawn = (e.enemyarea.sinceLastSpawn or 0) + 1
-            if sinceLastSpawn >= 360 then
+            if sinceLastSpawn >= 270 then
                 sinceLastSpawn = 0
                 spawnEnemy(p.dim, e.dim)
             end

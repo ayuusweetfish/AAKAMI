@@ -44,7 +44,7 @@ patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
             e.enemy._curWaveColour = (e.enemy._curWaveColour + 1) % 2
         end
         -- Generate a bullet
-        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy._curWaveColour)
+        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy.colour or e.enemy._curWaveColour)
         -- 180, 210, 240
         e.enemy._nextShoot = (e.enemy._nextShoot - 150) % 90 + 180
     end
@@ -54,14 +54,14 @@ patternUpdate.triad = function (e, ePlayer, phase, dx, dy)
     e.enemy._curWaveColour = (e.enemy._curWaveColour or 0)
     if phase == 180 then
         e.enemy._curWaveColour = (e.enemy._curWaveColour + 1) % 2
-        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy._curWaveColour)
+        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy.colour or e.enemy._curWaveColour)
         local alpha = math.atan2(dy, dx)
         addBullet(e,
             BULLET_VEL * math.cos(alpha + math.pi / 6), BULLET_VEL * math.sin(alpha + math.pi / 6),
-            e.enemy._curWaveColour)
+            e.enemy.colour or e.enemy._curWaveColour)
         addBullet(e,
             BULLET_VEL * math.cos(alpha - math.pi / 6), BULLET_VEL * math.sin(alpha - math.pi / 6),
-            e.enemy._curWaveColour)
+            e.enemy.colour or e.enemy._curWaveColour)
     end
 end
 
@@ -70,7 +70,7 @@ patternUpdate.penta = function (e, ePlayer, phase, dx, dy)
     e.enemy._curColour = (e.enemy._curColour or 0)
     if phase == e.enemy._nextShoot then
         e.enemy._curColour = (e.enemy._curColour + 1) % 2
-        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy._curColour)
+        addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy.colour or e.enemy._curColour)
         -- 180, 195, 210, 225, 240
         e.enemy._nextShoot = (e.enemy._nextShoot - 165) % 75 + 180
     end
