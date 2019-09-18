@@ -51,6 +51,27 @@ local vendTermInteraction = function (term)
     termUpdate, termDraw = vendTermUpdate, vendTermDraw
 end
 
+local reinitializeGameCore = function ()
+    playerEntity = levelLoad(
+        require('levels/level1'),
+        buffTermInteraction,
+        vendTermInteraction
+    )
+    player = playerEntity.player
+
+    ecs.addSystem(1, require('ecs/sys_spcpart')())
+    ecs.addSystem(1, require('ecs/sys_player')())
+    ecs.addSystem(1, require('ecs/sys_enemy')())
+    ecs.addSystem(1, require('ecs/sys_follow')())
+    ecs.addSystem(1, require('ecs/sys_vel')())
+    ecs.addSystem(1, require('ecs/sys_bullet')())
+    ecs.addSystem(1, require('ecs/sys_colli')())
+    ecs.addSystem(1, require('ecs/sys_term')())
+    ecs.addSystem(1, require('ecs/sys_door')())
+    ecs.addSystem(1, require('ecs/sys_area')())
+    dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
+end
+
 function love.load()
     spritesheet.loadCrunch('images/char.bin')
     spritesheet.loadCrunch('images/quq.bin')
@@ -93,24 +114,7 @@ function love.load()
     source:setLooping(true)
     love.audio.play(source)
 
-    playerEntity = levelLoad(
-        require('levels/level1'),
-        buffTermInteraction,
-        vendTermInteraction
-    )
-    player = playerEntity.player
-
-    ecs.addSystem(1, require('ecs/sys_spcpart')())
-    ecs.addSystem(1, require('ecs/sys_player')())
-    ecs.addSystem(1, require('ecs/sys_enemy')())
-    ecs.addSystem(1, require('ecs/sys_follow')())
-    ecs.addSystem(1, require('ecs/sys_vel')())
-    ecs.addSystem(1, require('ecs/sys_bullet')())
-    ecs.addSystem(1, require('ecs/sys_colli')())
-    ecs.addSystem(1, require('ecs/sys_term')())
-    ecs.addSystem(1, require('ecs/sys_door')())
-    ecs.addSystem(1, require('ecs/sys_area')())
-    dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
+    reinitializeGameCore()
 end
 
 function love.update()
@@ -139,10 +143,10 @@ function love.update()
     end
 
     if gameOver then
-        if love.keyboard.isDown('u') then
+        if love.keyboard.isDown('k') then
             ecs.reset()
             gameOver = false
-            love.load()
+            reinitializeGameCore()
         end
         return
     end
@@ -191,7 +195,9 @@ function love.draw()
         love.graphics.setColor(0.2, 0.2, 0.2, 0.8)
         love.graphics.rectangle('fill', 0, 0, W, H)
         love.graphics.setColor(1, 1, 1)
-        spritesheet.text('GAME OVER\nPress X to retry', W * 0.2, H * 0.35, 2)
+        spritesheet.text('GAME OVER', W * 0.25, H * 0.35, 2)
+        spritesheet.draw('gamepad2', W * 0.7, H * 0.9)
+        spritesheet.text('Restart', W * 0.7 + 20, H * 0.9)
     elseif termDraw ~= nil then termDraw()
     elseif knapsackRunning then knapsackDraw()
     else

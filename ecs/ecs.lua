@@ -59,9 +59,13 @@ local update = function (pass)
 end
 
 local reset = function ()
-    entities = {}
-    components = {}
-    systems = { [1] = {}, [2] = {} }
+    local clearTable = function (t)
+        for k, _ in pairs(t) do t[k] = nil end
+    end
+    clearTable(entities)
+    clearTable(components)
+    clearTable(systems[1])
+    clearTable(systems[2])
 end
 
 return {

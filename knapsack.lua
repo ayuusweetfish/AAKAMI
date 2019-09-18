@@ -18,6 +18,7 @@ local selIndex = 0  -- Persists
 local memUsed
 
 knapsackReset = function (_term)
+    print(ecs)
     player = ecs.components.player[1].player
 
     term = _term
