@@ -96,8 +96,8 @@ return function (L, buffTermInteraction, vendTermInteraction)
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
         if o.name == 'Spawn' then
-            playerEntity.dim[1] = 80--o.x
-            playerEntity.dim[2] = 80--o.y
+            playerEntity.dim[1] = o.x
+            playerEntity.dim[2] = o.y
         elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')
@@ -113,7 +113,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
                     callback = (isBuff and buffTermInteraction or vendTermInteraction),
                     bubble = ecs.addEntity({
                         dim = { o.x - 5, o.y - 24, 16, 16 },
-                        sprite = { name = 'triangle', z = 1 }
+                        sprite = { name = 'triangle', z = 2 }
                     })
                 }
             })
@@ -126,7 +126,14 @@ return function (L, buffTermInteraction, vendTermInteraction)
                 sprite = isV and { name = 'tileset3#doorv', oy = 16, z = 0 }
                     or { name = 'tileset3#doorh', oy = 16, z = 0 },
                 colli = { block = true, tag = 3 },
-                door = { id = id }
+                door = {
+                    id = id,
+                    bubble = (id == 0 and nil or ecs.addEntity({
+                        dim = isV and { o.x + 12, o.y - 8, 16, 16 }
+                            or { o.x + 4, o.y - 36, 16, 16 },
+                        sprite = { name = 'requirekey', z = 2 }
+                    }))
+                }
             })
         elseif o.name:sub(1, 3) == 'Key' then
             local id = tonumber(o.name:sub(4))

@@ -6,19 +6,21 @@ return function () return {
 update = function (self, cs)
     local p = cs.player[1]
     local k = p.player.keys
-    if k == nil then k = {} p.keys = k end
+    if k == nil then k = {} p.player.keys = k end
 
     for _, e in pairs(cs.door) do
-        if (e.door.id == 0 or k[e.door.id]) and
-            rectIntscAround(p.dim, e.dim, 8)
-        then
+        local near = rectIntscAround(p.dim, e.dim, 8)
+        local b = e.door.bubble
+        if (e.door.id == 0 or k[e.door.id]) and near then
             e.colli.tag = 0
             e.colli.block = false
             e.sprite.visible = false
+            if b ~= nil then b.sprite.visible = false end
         else
             e.colli.tag = 3
             e.colli.block = true
             e.sprite.visible = true
+            if b ~= nil then b.sprite.visible = near end
         end
     end
 
