@@ -135,6 +135,11 @@ return function (L, buffTermInteraction, vendTermInteraction)
                 sprite = { name = 'tileset3#169' },
                 key = { id = id }
             })
+        elseif o.name == 'Area' then
+            ecs.addEntity({
+                dim = { o.x + 16, o.y + 16, o.width, o.height },
+                enemyarea = {}
+            })
         end
     end
 

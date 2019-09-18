@@ -5,7 +5,7 @@ return function () return {
 
 update = function (self, cs)
     local p = cs.player[1]
-    local k = p.keys
+    local k = p.player.keys
     if k == nil then k = {} p.keys = k end
 
     for _, e in pairs(cs.door) do

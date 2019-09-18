@@ -102,6 +102,7 @@ function love.load()
     ecs.addSystem(1, require('ecs/sys_colli')())
     ecs.addSystem(1, require('ecs/sys_term')())
     ecs.addSystem(1, require('ecs/sys_door')())
+    ecs.addSystem(1, require('ecs/sys_area')())
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
 end
 
