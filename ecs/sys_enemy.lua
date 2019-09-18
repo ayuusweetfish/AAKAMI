@@ -203,7 +203,7 @@ update = function (self, cs)
         elseif t == 'attack' then
             if n.boss then
                 local dir = (math.abs(dx2) < math.abs(dy2) * 0.3 and 'front' or 'left')
-                if dir ~= n.lastDir and n.lastDirDur >= 60 then
+                if dir ~= n.lastDir and (n.lastDirDur >= 60 or n.lastDir == 'right') then
                     n.lastDir = dir
                     n.lastDirDur = 0
                 end
