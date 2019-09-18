@@ -81,6 +81,9 @@ function love.load()
     source:setLooping(true)
     love.audio.play(source)
 
+    -- Tileset
+    local tiles = level1.tilesets[1].tiles
+
     -- Ground
     local levelW = level1.width
     local levelH = level1.height
@@ -104,14 +107,17 @@ function love.load()
     for y = 1, levelH do
         local t = wallData[(y - 1) * levelW + x]
         if t ~= 0 then
+            local id = bit.band(t, 1023)
+            local colli = tiles[id].properties.collidable
             ecs.addEntity({
                 dim = { x * 16, y * 16, 16, 16 },
                 sprite = {
-                    name = 'tileset3#' .. bit.band(t, 1023),
+                    name = 'tileset3#' .. id,
                     flipX = (bit.band(t, 0x80000000) ~= 0),
-                    flipY = (bit.band(t, 0x40000000) ~= 0)
+                    flipY = (bit.band(t, 0x40000000) ~= 0),
+                    z = (colli and -1 or 1)
                 },
-                colli = { block = true, tag = 3 }
+                colli = (colli and { block = true, tag = 3 } or nil)
             })
         end
         t = fenceData[(y - 1) * levelW + x]
