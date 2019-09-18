@@ -18,6 +18,14 @@ update = function (self, cs)
                         ) and 15 or 10
                         p.energy = math.min(p.energy + increment, p.energyMax)
                     else
+                        -- Dodge?
+                        if p ~= nil then
+                            if e1.bullet.dodged then return end
+                            if p.buff.dodge and p.buff.dodge.equipped and math.random() < 0.1 then
+                                e1.bullet.dodged = true
+                                return
+                            end
+                        end
                         e2.health.val = e2.health.val - 1
                         -- Play hit animation
                         if p then
