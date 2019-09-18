@@ -119,9 +119,10 @@ return function (L, buffTermInteraction, vendTermInteraction)
             ecs.addEntity({
                 dim = isV and { o.x + 16, o.y + 32, 16, 32 }
                     or { o.x, o.y, 32, 16 },
-                sprite = isV and { name = 'tileset3#doorv', oy = 16, z = -1 }
-                    or { name = 'tileset3#doorh', oy = 16, z = -1 },
-                colli = { block = true }
+                sprite = isV and { name = 'tileset3#doorv', oy = 16, z = 0 }
+                    or { name = 'tileset3#doorh', oy = 16, z = 0 },
+                colli = { block = true, tag = 3 },
+                door = { id = 0 }
             })
         end
     end
