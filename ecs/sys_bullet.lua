@@ -12,7 +12,11 @@ update = function (self, cs)
                     -- Is absorbed?
                     local p = e2.player
                     if p ~= nil and p.colour == e1.bullet.colour then
-                        p.energy = math.min(p.energy + 10, p.energyMax)
+                        local increment = (
+                            (p.colour == 0 and p.buff.rstarve and p.buff.rstarve.equipped) or
+                            (p.colour == 1 and p.buff.bstarve and p.buff.bstarve.equipped)
+                        ) and 15 or 10
+                        p.energy = math.min(p.energy + increment, p.energyMax)
                     else
                         e2.health.val = e2.health.val - 1
                         -- Play hit animation
