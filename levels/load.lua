@@ -116,13 +116,21 @@ return function (L, buffTermInteraction, vendTermInteraction)
             })
         elseif o.name:sub(1, 4) == 'Door' then
             local isV = (o.name:byte(5) == 86)  -- 86 == ord('V')
+            local id = tonumber(o.name:sub(6)) or 0
             ecs.addEntity({
                 dim = isV and { o.x + 16, o.y + 32, 16, 32 }
                     or { o.x, o.y, 32, 16 },
                 sprite = isV and { name = 'tileset3#doorv', oy = 16, z = 0 }
                     or { name = 'tileset3#doorh', oy = 16, z = 0 },
                 colli = { block = true, tag = 3 },
-                door = { id = 0 }
+                door = { id = id }
+            })
+        elseif o.name:sub(1, 3) == 'Key' then
+            local id = tonumber(o.name:sub(4))
+            ecs.addEntity({
+                dim = { o.x, o.y, 16, 16 },
+                sprite = { name = 'tileset3#169' },
+                key = { id = id }
             })
         end
     end
