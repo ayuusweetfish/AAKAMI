@@ -107,6 +107,9 @@ update = function (self, cs)
             })
         end
 
+        -- Invincibility update
+        p.invincibility = math.max(0, (p.invincibility or 0) - 1)
+
         -- Magazine?
         local hasMagazine = p.buff.magazine and p.buff.magazine.equipped
         p.energyMax = (hasMagazine and 150 or 100)

@@ -39,7 +39,13 @@ update = function (self, cs)
                         -- Incise?
                         if e1.bullet.age and e1.bullet.age >= 90 then damage = damage * 1.5 end
                         print(damage)
-                        e2.health.val = e2.health.val - damage
+                        -- Invincible?
+                        if not p or p.invincibility == 0 then
+                            e2.health.val = e2.health.val - damage
+                            if p then
+                                p.invincibility = 120   -- One second of invincibility
+                            end
+                        end
                         -- Play hit animation
                         if p then
                             p.fsm:trans(
