@@ -62,6 +62,8 @@ function love.load()
     spritesheet.cropFromTileset('tileset3', 230, 32, 32, 'doorh')
     spritesheet.loadImage('images/triangle.png')
     spritesheet.loadImage('images/requirekey.png')
+    spritesheet.loadImage('images/life1.png')
+    spritesheet.loadImage('images/life2.png')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -196,6 +198,11 @@ function love.draw()
                 playerEntity.health.val, playerEntity.health.max,
                 player.energy, player.energyMax),
             6, H * 0.1)
+        for i = 1, playerEntity.health.max do
+            spritesheet.draw(
+                i <= playerEntity.health.val and 'life1' or 'life2',
+                i * 20 - 8, 12)
+        end
     end
 
     love.graphics.setColor(1, 1, 1)
