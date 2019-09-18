@@ -49,7 +49,7 @@ buffTermUpdate = function ()
         -- Card get!
         player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
 
-        term.sprite.name = 'quq1'
+        term.sprite.name = 'tileset3#offterm'
         return false
     end
     lastDownI = downI

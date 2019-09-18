@@ -128,6 +128,21 @@ local initializeTileset = function (name, sideLen)
     end
 end
 
+local cropFromTileset = function (tileset, id, w, h, name)
+    local item = lookup[tileset .. '#' .. tostring(id)]
+    if item == nil then print(tileset, id) return end
+    local tile = {
+        batch = item.batch,
+        sx = item.sx, sy = item.sy, sw = w, sh = h,
+        tx = 0, ty = 0, w = w, h = h
+    }
+    tile.quad = love.graphics.newQuad(
+        tile.sx, tile.sy, tile.sw, tile.sh,
+        item.quad:getTextureDimensions()
+    )
+    lookup[tileset .. '#' .. name] = tile
+end
+
 -- (x, y) is the top-left corner
 local draw = function (name, x, y, flipX, flipY)
     local item = lookup[name]
@@ -174,6 +189,7 @@ return {
     loadImage = loadImage,
     loadCrunch = loadCrunch,
     initializeTileset = initializeTileset,
+    cropFromTileset = cropFromTileset,
     draw = draw,
     drawCen = drawCen,
     text = text,

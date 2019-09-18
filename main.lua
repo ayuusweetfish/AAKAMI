@@ -55,6 +55,8 @@ function love.load()
     spritesheet.loadCrunch('images/char.bin')
     spritesheet.loadCrunch('images/quq.bin')
     spritesheet.initializeTileset('tileset3', 16)
+    spritesheet.cropFromTileset('tileset3', 86, 32, 32, 'offterm')
+    spritesheet.cropFromTileset('tileset3', 88, 32, 32, 'buffterm')
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -81,7 +83,11 @@ function love.load()
     source:setLooping(true)
     love.audio.play(source)
 
-    playerEntity = levelLoad(require('levels/level1'))
+    playerEntity = levelLoad(
+        require('levels/level1'),
+        buffTermInteraction,
+        vendTermInteraction
+    )
     player = playerEntity.player
 
     ecs.addSystem(1, require('ecs/sys_spcpart')())

@@ -1,6 +1,6 @@
 local ecs = require 'ecs/ecs'
 
-return function (L)
+return function (L, buffTermInteraction, vendTermInteraction)
     -- Tileset
     local tiles = L.tilesets[1].tiles
 
@@ -93,21 +93,24 @@ return function (L)
         colli = { passive = true, tag = 4 }
     })
 
-    -- Terminal
-    for i = 1, 4 do
-        ecs.addEntity({
-            dim = { 16 * 3, 16 * (3 + 2 * i), 16, 16 },
-            sprite = { name = 'quq2', oy = 16 },
-            colli = { block = true },
-            term = {
-                once = (i ~= 1),
-                callback = (i == 1 and vendTermInteraction or buffTermInteraction),
-                bubble = ecs.addEntity({
-                    dim = { 16 * 3, 16 * (2 + 2 * i), 16, 16 },
-                    sprite = { name = 'quq9', z = 1 }
-                })
-            }
-        })
+    -- Objects
+    for _, o in pairs(L.layers[5].objects) do
+        if o.name == 'Buff' then
+            -- Buff terminal
+            ecs.addEntity({
+                dim = { o.x - 8, o.y, 18, 16 },
+                sprite = { name = 'tileset3#buffterm', ox = 7, oy = 16, z = -1 },
+                colli = { block = true },
+                term = {
+                    once = true,
+                    callback = buffTermInteraction,
+                    bubble = ecs.addEntity({
+                        dim = { o.x - 8, o.y, 16, 16 },
+                        sprite = { name = 'quq9', z = 1 }
+                    })
+                }
+            })
+        end
     end
 
     return playerEntity
