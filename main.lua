@@ -60,7 +60,10 @@ function love.load()
     spritesheet.cropFromTileset('tileset3', 90, 32, 32, 'vendterm')
     spritesheet.cropFromTileset('tileset3', 184, 16, 32, 'doorv')
     spritesheet.cropFromTileset('tileset3', 230, 32, 32, 'doorh')
-    spritesheet.loadImage('images/triangle.png')
+    spritesheet.loadImage('images/gamepad1.png')
+    spritesheet.loadImage('images/gamepad2.png')
+    spritesheet.loadImage('images/gamepad3.png')
+    spritesheet.loadImage('images/gamepad4.png')
     spritesheet.loadImage('images/requirekey.png')
     spritesheet.loadImage('images/life1.png')
     spritesheet.loadImage('images/life2.png')
@@ -193,11 +196,6 @@ function love.draw()
     elseif knapsackRunning then knapsackDraw()
     else
         -- HUD
-        spritesheet.text(
-            string.format('Health  %d/%d\nEnergy  %d/%d',
-                playerEntity.health.val, playerEntity.health.max,
-                player.energy, player.energyMax),
-            6, H * 0.1)
         for i = 1, playerEntity.health.max do
             spritesheet.draw(
                 i <= playerEntity.health.val and 'life1' or 'life2',

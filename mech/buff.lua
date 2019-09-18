@@ -28,6 +28,7 @@ energyfield = {
     -- arg: none
 },
 
+--[[
 rebound = {
     icon = 'quq10',
     memory = { 1 },
@@ -36,6 +37,7 @@ rebound = {
     args = { 1 }
     -- arg: none
 },
+]]
 
 dodge = {
     icon = 'quq10',
@@ -91,6 +93,7 @@ magazine = {
     -- arg: additional energy
 },
 
+--[[
 cannon = {
     icon = 'quq10',
     memory = { 2 },
@@ -99,6 +102,7 @@ cannon = {
     args = { 1 }
     -- arg: range or damage or both?
 },
+]]
 
 rage = {
     icon = 'quq10',

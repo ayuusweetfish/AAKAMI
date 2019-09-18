@@ -113,7 +113,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
                     callback = (isBuff and buffTermInteraction or vendTermInteraction),
                     bubble = ecs.addEntity({
                         dim = { o.x - 5, o.y - 24, 16, 16 },
-                        sprite = { name = 'triangle', z = 2 }
+                        sprite = { name = 'gamepad1', z = 2 }
                     })
                 }
             })

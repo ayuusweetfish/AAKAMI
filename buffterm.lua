@@ -74,5 +74,9 @@ buffTermDraw = function ()
             i == selIndex)
     end
     spritesheet.text(cardNames[selIndex], W * 0.15, H * 0.65, 1)
+
+    spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
+    spritesheet.text('Confirm', W * 0.7 + 20, H * 0.9)
+
     spritesheet.flush()
 end
