@@ -18,7 +18,6 @@ local selIndex = 0  -- Persists
 local memUsed
 
 knapsackReset = function (_term)
-    print(ecs)
     player = ecs.components.player[1].player
 
     term = _term
@@ -88,14 +87,16 @@ knapsackDraw = function ()
             memUsed, player.memory),
         W * 0.1, H * 0.1
     )
+    local equipped = false
     if total > 0 then
         local selName = cardNames[selIndex + 1]
         local selPlayerBuff = player.buff[selName]
         local selMem = buff[selName].memory[selPlayerBuff.level]
+        equipped = selPlayerBuff.equipped
         spritesheet.text(
             string.format('-> %d/%d',
                 memUsed, player.memory,
-                memUsed + selMem * (selPlayerBuff.equipped and -1 or 1), player.memory),
+                memUsed + selMem * (equipped and -1 or 1), player.memory),
             W * 0.4, H * 0.1
         )
 
@@ -104,6 +105,11 @@ knapsackDraw = function ()
             string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
             W * 0.15, H * 0.7, 1)
     end
+
+    spritesheet.draw('gamepad4', W * 0.7, H * 0.8)
+    spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.8)
+    spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
+    spritesheet.text('Back', W * 0.7 + 20, H * 0.9)
 
     spritesheet.flush()
 end

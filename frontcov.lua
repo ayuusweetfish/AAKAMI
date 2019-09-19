@@ -37,6 +37,8 @@ frontCovDraw = function ()
         spritesheet.text('Attack', W * 0.4 + 20, H * 0.35)
         spritesheet.draw('gamepad3', W * 0.4, H * 0.45)
         spritesheet.text('SHIFT!', W * 0.4 + 20, H * 0.45)
+        spritesheet.draw('gamepad1', W * 0.4, H * 0.55)
+        spritesheet.text('Knapsack', W * 0.4 + 20, H * 0.55)
     end
 
     if T >= 2 then
