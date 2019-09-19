@@ -103,6 +103,8 @@ function love.load()
     spritesheet.loadImage('images/requirekey.png')
     spritesheet.loadImage('images/life1.png')
     spritesheet.loadImage('images/life2.png')
+    spritesheet.loadImage('images/font.png')
+    spritesheet.initializeTileset('font', 6, 8)
 
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')

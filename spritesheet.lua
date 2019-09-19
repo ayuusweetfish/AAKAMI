@@ -106,17 +106,18 @@ local loadCrunch = function (path)
     f:close()
 end
 
-local initializeTileset = function (name, sideLen)
+local initializeTileset = function (name, sideLenX, sideLenY)
     local item = lookup[name]
     if item == nil then print(name) return end
+    sideLenY = sideLenY or sideLenX
     local index = 0
     -- Dodgy...
-    for y = 0, item.h - 1, sideLen do
-    for x = 0, item.w - 1, sideLen do
+    for y = 0, item.h - 1, sideLenY do
+    for x = 0, item.w - 1, sideLenX do
         local tile = {
             batch = item.batch,
-            sx = item.sx + x, sy = item.sy + y, sw = sideLen, sh = sideLen,
-            tx = 0, ty = 0, w = sideLen, h = sideLen
+            sx = item.sx + x, sy = item.sy + y, sw = sideLenX, sh = sideLenY,
+            tx = 0, ty = 0, w = sideLenX, h = sideLenY
         }
         tile.quad = love.graphics.newQuad(
             tile.sx, tile.sy, tile.sw, tile.sh,
@@ -169,8 +170,12 @@ local drawCen = function (name, x, y, sx, sy)
 end
 
 local text = function (s, x, y, size)
-    -- TODO
-    love.graphics.print(s, x, y, 0, size)
+    y = y + 4
+    local ch = { s:byte(1, #s) }
+    for _, c in ipairs(ch) do
+        draw('font#' .. tonumber(c - 31), x, y)
+        x = x + 6
+    end
 end
 
 local flush = function ()
