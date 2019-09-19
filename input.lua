@@ -59,7 +59,7 @@ input.direction = function ()
     if j then
         local x, y = j:getGamepadAxis('leftx'), j:getGamepadAxis('lefty')
         local dsq = x * x + y * y
-        if dsq < 0.01 * 0.01 then return 0, 0
+        if dsq < 0.1 * 0.1 then return 0, 0
         elseif dsq > 1 then
             local d = math.sqrt(dsq)
             x, y = x / d, y / d
