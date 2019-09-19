@@ -57,9 +57,9 @@ return function (L, buffTermInteraction, vendTermInteraction)
 
     -- Player
     local playerBuff = {}
-    for k, _ in pairs(require('mech/buff')) do
+    --[[for k, _ in pairs(require('mech/buff')) do
         playerBuff[k] = { level = 1, equipped = false }
-    end
+    end]]
     local playerEntity = ecs.addEntity({
         dim = { 0, 0, 10, 12 },
         vel = { 0, 0 },

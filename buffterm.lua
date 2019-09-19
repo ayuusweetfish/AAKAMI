@@ -72,12 +72,15 @@ buffTermDraw = function ()
     love.graphics.setColor(0.3, 0.3, 0.3, 0.5)
     love.graphics.rectangle('fill', 0, 0, W, H)
     love.graphics.setColor(1, 1, 1)
+
+    spritesheet.text('TAKE ONE!', W * 0.125, H * 0.1, W, 2)
     for i = 1, 3 do
         drawOneCard(
             cards[i], W * (i * 0.3 - 0.1), H * 0.4,
             i == selIndex)
     end
-    spritesheet.text(cardNames[selIndex], W * 0.15, H * 0.65, 1)
+    spritesheet.text(cards[selIndex].name, W * 0.15, H * 0.625)
+    spritesheet.text(cards[selIndex].desc, W * 0.15, H * 0.7, W * 0.7)
 
     spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
     spritesheet.text('Confirm', W * 0.7 + 20, H * 0.9)
