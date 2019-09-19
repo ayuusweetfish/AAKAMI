@@ -183,15 +183,15 @@ local mainDraw = function ()
     spritesheet.text('UPGRADE/SELL\nCARDS', W * 0.55, H * 0.6)
 
     spritesheet.text(
-        string.format('+1 for %d coins', vend.heal),
+        string.format('+1\n%d coins', vend.heal),
         W * 0.2, H * 0.35)
     spritesheet.text(
-        string.format('%d -> %d for %d coins',
+        string.format('%d -> %d\n%d coins',
             playerEntity.health.max, playerEntity.health.max + 1,
             vend.healthMax(playerEntity.health.max)),
         W * 0.55, H * 0.35)
     spritesheet.text(
-        string.format('%d -> %d for %d coins',
+        string.format('%d -> %d\n%d coins',
             player.memory, player.memory + 1, vend.memory(player.memory)),
         W * 0.2, H * 0.7)
 end

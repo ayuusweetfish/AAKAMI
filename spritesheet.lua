@@ -173,10 +173,16 @@ local text = function (s, x, y, size)
     x = x + 3
     y = y + 8
     size = size or 1
+    local x0 = x
     local ch = { s:byte(1, #s) }
     for _, c in ipairs(ch) do
-        drawCen('font#' .. tonumber(c - 31), x, y, size)
-        x = x + 6 * size
+        if c == 10 then
+            x = x0
+            y = y + 9 * size
+        else
+            drawCen('font#' .. tonumber(c - 31), x, y, size)
+            x = x + 6 * size
+        end
     end
 end
 
