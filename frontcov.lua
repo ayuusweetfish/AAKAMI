@@ -1,6 +1,7 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 
-local lastDownK = false
+local lastDownB = false
 local cutscene = 1
 local T = 0
 
@@ -11,8 +12,8 @@ frontCovUpdate = function ()
 
     T = T + love.timer.getDelta()
 
-    local downK = love.keyboard.isDown('k')
-    if downK and not lastDownK then
+    local downB = input.B()
+    if downB and not lastDownB then
         -- Trigger
         cutscene = cutscene + 1
         T = 0
@@ -21,7 +22,7 @@ frontCovUpdate = function ()
             return false
         end
     end
-    lastDownK = downK
+    lastDownB = downB
 
     return true
 end

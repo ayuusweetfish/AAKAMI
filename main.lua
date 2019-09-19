@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 local ecs = require 'ecs/ecs'
 require 'buffterm'
 require 'vendterm'
@@ -30,11 +31,11 @@ local dispSystem
 
 local termUpdate, termDraw = nil, nil
 
-local lastDownI
+local lastDownY
 local knapsackRunning
 
 local isSlow
-local lastDownZ
+local lastDownKbZ
 
 local w = {}
 
@@ -43,13 +44,13 @@ function love.conf(t)
 end
 
 local buffTermInteraction = function (term)
-    lastDownI = true
+    lastDownY = true
     buffTermReset(term)
     termUpdate, termDraw = buffTermUpdate, buffTermDraw
 end
 
 local vendTermInteraction = function (term)
-    lastDownI = true
+    lastDownY = true
     vendTermReset(term)
     termUpdate, termDraw = vendTermUpdate, vendTermDraw
 end
@@ -140,9 +141,9 @@ function love.update()
         return
     end
 
-    local downZ = love.keyboard.isDown('z')
-    if downZ and not lastDownZ then isSlow = not isSlow end
-    lastDownZ = downZ
+    local downKbZ = love.keyboard.isDown('z')
+    if downKbZ and not lastDownKbZ then isSlow = not isSlow end
+    lastDownKbZ = downKbZ
 
     T = T + love.timer.getDelta() * (isSlow and 1.0 / 16 or 1)
 
@@ -157,7 +158,7 @@ function love.update()
     end
 
     if gameOver then
-        if love.keyboard.isDown('k') then
+        if input.B() then
             ecs.reset()
             gameOver = false
             reinitializeGameCore()
@@ -177,12 +178,12 @@ function love.update()
         return
     end
 
-    local downI = love.keyboard.isDown('i')
-    if downI and not lastDownI then
+    local downY = input.Y()
+    if downY and not lastDownY then
         knapsackReset()
         knapsackRunning = true
     end
-    lastDownI = downI
+    lastDownY = downY
 
     local camX, camY = dispSys.cam[1], dispSys.cam[2]
     local camDX, camDY =

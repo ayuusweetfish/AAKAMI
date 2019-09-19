@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
 require 'ui_utils'
@@ -6,10 +7,10 @@ require 'ui_utils'
 local player
 
 local term      -- Current terminal entity
-local lastDownI -- Is key <I> pressed last frame
-local lastDownU -- Is key <U> pressed last frame
-local lastDownLa, lastDownRa
-local lastDownUa, lastDownDa
+local lastDownY
+local lastDownX
+local lastDownL, lastDownR
+local lastDownU, lastDownD
 local T         -- Total time
 
 local cardNames
@@ -21,9 +22,9 @@ knapsackReset = function (_term)
     player = ecs.components.player[1].player
 
     term = _term
-    lastDownI = nil
-    lastDownLa, lastDownRa = nil, nil
-    lastDownUa, lastDownDa = nil, nil
+    lastDownY = nil
+    lastDownL, lastDownR = nil, nil
+    lastDownU, lastDownD = nil, nil
     T = 0
 
     cardNames = {}
@@ -43,15 +44,15 @@ end
 knapsackUpdate = function ()
     T = T + love.timer.getDelta()
 
-    local downI = love.keyboard.isDown('i')
-    if downI and lastDownI == false then
+    local downY = input.Y()
+    if downY and lastDownY == false then
         -- Exit
         return false
     end
-    lastDownI = downI
+    lastDownY = downY
 
-    local downU = love.keyboard.isDown('u')
-    if downU and lastDownU == false and total > 0 then
+    local downX = input.X()
+    if downX and lastDownX == false and total > 0 then
         -- Equip/unequip
         local selName = cardNames[selIndex + 1]
         local selPlayerBuff = player.buff[selName]
@@ -63,11 +64,11 @@ knapsackUpdate = function ()
             memUsed = newMemUsed
         end
     end
-    lastDownU = downU
+    lastDownX = downX
 
     if total > 0 then
-        selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa =
-            moveLRUD(total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
+        selIndex, lastDownL, lastDownR, lastDownU, lastDownD =
+            moveLRUD(total, selIndex, lastDownL, lastDownR, lastDownU, lastDownD)
     end
 
     return true
