@@ -27,7 +27,9 @@ end
 
 frontCovDraw = function ()
     if cutscene == 1 then
-        -- TODO: Front cover
+        spritesheet.draw(
+            'illustration' .. tonumber(math.floor(T / 0.25) % 24 + 1),
+            0, 0)
     elseif cutscene == 2 then
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle('fill', 0, 0, W, H)

@@ -100,6 +100,9 @@ function love.load()
     spritesheet.cropFromTileset('tileset3', 11, 32, 32, 'elevator0')
     spritesheet.cropFromTileset('tileset3', 13, 32, 32, 'elevator1')
     spritesheet.cropFromTileset('tileset3', 15, 32, 32, 'elevator2')
+    for i = 1, 24 do
+        spritesheet.loadImage('images/illust/illustration' .. tonumber(i) .. '.png')
+    end
     spritesheet.loadImage('images/gamepad1.png')
     spritesheet.loadImage('images/gamepad2.png')
     spritesheet.loadImage('images/gamepad3.png')
@@ -202,7 +205,7 @@ function love.draw()
     if IS_DESKTOP then
         love.graphics.setCanvas(canvas)
     end
-    love.graphics.clear(1, 1, 1)
+    love.graphics.clear(0, 0, 0)
     ecs.update(2)
     love.graphics.setColor(1, 1, 1)
     spritesheet.flush()
