@@ -170,17 +170,19 @@ local drawCen = function (name, x, y, sx, sy)
     end
 end
 
-local text = function (s, x, y, size)
+local text = function (s, x, y, w, size)
     x = x + 3
     y = y + 8
     size = size or 1
     local x0 = x
     local ch = { s:byte(1, #s) }
     for _, c in ipairs(ch) do
-        if c == 10 then
+        -- TODO: Take work breaks into account
+        if c == 10 or (w and x >= x0 + w) then
             x = x0
             y = y + 9 * size
-        else
+        end
+        if c >= 32 and c < 128 then
             drawCen('font#' .. tonumber(c - 31), x, y, size)
             x = x + 6 * size
         end

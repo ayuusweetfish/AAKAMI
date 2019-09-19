@@ -105,12 +105,12 @@ knapsackDraw = function ()
         -- Card description
         spritesheet.text(
             string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
-            W * 0.15, H * 0.64)
-        spritesheet.text(selCard.desc, W * 0.15, H * 0.7)
+            W * 0.15, H * 0.585)
+        spritesheet.text(selCard.desc, W * 0.15, H * 0.65, W * 0.7)
     end
 
-    spritesheet.draw('gamepad4', W * 0.7, H * 0.83)
-    spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.83)
+    spritesheet.draw('gamepad4', W * 0.7, H * 0.82)
+    spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.82)
     spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
     spritesheet.text('Back', W * 0.7 + 20, H * 0.9)
 

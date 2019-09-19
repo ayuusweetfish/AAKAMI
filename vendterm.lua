@@ -173,27 +173,27 @@ end
 local mainDraw = function ()
     love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
     love.graphics.rectangle('fill',
-        W * (0.15 + 0.35 * selCol), H * (0.2 + 0.35 * selRow),
-        W * 0.35, H * 0.35)
+        W * (0.15 + 0.35 * selCol), H * (0.2 + 0.3 * selRow),
+        W * 0.35, H * 0.3)
 
     love.graphics.setColor(1, 1, 1)
-    spritesheet.text('HEAL', W * 0.2, H * 0.25)
-    spritesheet.text('SOLIDIFY', W * 0.55, H * 0.25)
-    spritesheet.text('ADD MEM', W * 0.2, H * 0.6)
-    spritesheet.text('UPGRADE/SELL\nCARDS', W * 0.55, H * 0.6)
+    spritesheet.text('HEAL', W * 0.2, H * 0.225)
+    spritesheet.text('SOLIDIFY', W * 0.55, H * 0.225)
+    spritesheet.text('ADD MEM', W * 0.2, H * 0.525)
+    spritesheet.text('UPGRADE/SELL\nCARDS', W * 0.55, H * 0.525)
 
     spritesheet.text(
         string.format('+1\n%d coins', vend.heal),
-        W * 0.2, H * 0.35)
+        W * 0.2, H * 0.325)
     spritesheet.text(
         string.format('%d -> %d\n%d coins',
             playerEntity.health.max, playerEntity.health.max + 1,
             vend.healthMax(playerEntity.health.max)),
-        W * 0.55, H * 0.35)
+        W * 0.55, H * 0.325)
     spritesheet.text(
         string.format('%d -> %d\n%d coins',
             player.memory, player.memory + 1, vend.memory(player.memory)),
-        W * 0.2, H * 0.7)
+        W * 0.2, H * 0.625)
 end
 
 local cardsDraw = function ()
@@ -205,19 +205,19 @@ local cardsDraw = function ()
     local selMem = selCard and selCard.memory[selPlayerBuff.level] or nil
 
     if isMenu then
-        drawOneCard(selCard, W * 0.25, H * 0.4)
+        drawOneCard(selCard, W * 0.25, H * 0.35)
 
         spritesheet.text(
-            string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
-            W * 0.45, H * 0.25, 1)
+            string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
+            W * 0.45, H * 0.2)
 
         love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
         love.graphics.rectangle('fill',
-            W * 0.1, H * (0.6 + menuItem * 0.15),
+            W * 0.1, H * (0.525 + menuItem * 0.15),
             W * 0.8, H * 0.15)
 
         love.graphics.setColor(1, 1, 1)
-        spritesheet.text('UPGRADE', W * 0.1 + 4, H * 0.6 + 2)
+        spritesheet.text('UPGRADE', W * 0.1 + 4, H * 0.525 + 2)
         local upgradeText
         if selPlayerBuff.level < #selCard.args then
             upgradeText = string.format('%d coins | val: %d -> %d | mem: %d -> %d',
@@ -229,11 +229,11 @@ local cardsDraw = function ()
         else
             upgradeText = 'Maximum'
         end
-        spritesheet.text(upgradeText, W * 0.1 + 4, H * 0.6 + 17)
-        spritesheet.text('SELL', W * 0.1 + 4, H * 0.75 + 2)
+        spritesheet.text(upgradeText, W * 0.1 + 4, H * 0.525 + 17)
+        spritesheet.text('SELL', W * 0.1 + 4, H * 0.675 + 2)
         spritesheet.text(
             tonumber(selCard.sellrate) .. ' coins',
-            W * 0.1 + 4, H * 0.75 + 17)
+            W * 0.1 + 4, H * 0.675 + 17)
 
     else
         drawCardList(cardNames, player, selIndex, 0.25)
@@ -242,12 +242,10 @@ local cardsDraw = function ()
         if total ~= 0 then
             spritesheet.text(
                 string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
-                W * 0.15, H * 0.64)
+                W * 0.15, H * 0.585)
+            spritesheet.text(selCard.desc, W * 0.15, H * 0.65, W * 0.7)
         end
     end
-
-    love.graphics.setColor(1, 1, 1)
-    spritesheet.flush()
 end
 
 vendTermDraw = function ()
@@ -263,5 +261,11 @@ vendTermDraw = function ()
             playerEntity.health.val, playerEntity.health.max, player.memory, player.coin),
         W * 0.1, H * 0.1
     )
+
+    spritesheet.draw('gamepad4', W * 0.7, H * 0.82)
+    spritesheet.text('Select', W * 0.7 + 20, H * 0.82)
+    spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
+    spritesheet.text('Back', W * 0.7 + 20, H * 0.9)
+
     spritesheet.flush()
 end
