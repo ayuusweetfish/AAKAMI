@@ -46,7 +46,8 @@ patternUpdate.triplet = function (e, ePlayer, phase, dx, dy)
         -- Generate a bullet
         addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy.colour or e.enemy._curWaveColour)
         -- 180, 210, 240
-        e.enemy._nextShoot = (e.enemy._nextShoot - 150) % 90 + 180
+        local INTERVAL = 30
+        e.enemy._nextShoot = (e.enemy._nextShoot - 180 + INTERVAL) % (INTERVAL * 3) + 180
     end
 end
 
@@ -72,7 +73,8 @@ patternUpdate.penta = function (e, ePlayer, phase, dx, dy)
         e.enemy._curColour = (e.enemy._curColour + 1) % 2
         addBullet(e, dx * BULLET_VEL, dy * BULLET_VEL, e.enemy.colour or e.enemy._curColour)
         -- 180, 195, 210, 225, 240
-        e.enemy._nextShoot = (e.enemy._nextShoot - 165) % 75 + 180
+        local INTERVAL = 15
+        e.enemy._nextShoot = (e.enemy._nextShoot - 180 + INTERVAL) % (INTERVAL * 5) + 180
     end
 end
 
