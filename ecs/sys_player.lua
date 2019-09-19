@@ -28,6 +28,17 @@ local nearest = function (e, v, es)
     local cx, cy =
         e.dim[1] + e.dim[3] * 0.5,
         e.dim[2] + e.dim[4] * 0.5
+    local vx, vy = e.vel[1], e.vel[2]
+    local still
+    local vsq = vx * vx + vy * vy
+    if vsq <= 1e-5 then
+        vx, vy = v[1], v[2]
+        still = true
+    else
+        local vinv = 1 / math.sqrt(vsq)
+        vx, vy = vx * vinv, vy * vinv
+        v[1], v[2] = vx, vy
+    end
     -- Find the closest enemy
     local best, ret = R * R, nil
     for _, t in ipairs(es) do
@@ -41,7 +52,6 @@ local nearest = function (e, v, es)
     -- Reorient onto the nearest enemy and update the facing direction,
     -- if the player stands still and does not find an enemy in range
     if still and ret == nil then
-        local vx, vy = e.vel[1], e.vel[2]
         for _, t in ipairs(es) do
             local tx, ty =
                 t.dim[1] + t.dim[3] * 0.5,
@@ -66,7 +76,7 @@ return function () return {
 lastDownX = false,
 lastDownA = false,
 lastValidVel = {1, 0},
-lastBulletVel = {0, 0},
+lastBulletDir = {0, 0},
 shootDir = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
@@ -134,7 +144,7 @@ update = function (self, cs)
             }
             ecs.addEntity(bullet)
 
-            self.lastBulletVel[1], self.lastBulletVel[2] = dx, dy
+            self.lastBulletDir[1], self.lastBulletDir[2] = dx, dy
             p.sinceLastBullet = 0
         end
 
@@ -149,7 +159,7 @@ update = function (self, cs)
                 end
                 if not s:isPlaying() then s:play()
                 elseif s:tell() >= 5 then s:seek(2) end
-            elseif self.lastDownX then
+            elseif self.lastDownX and p.charge and p.charge > 0 then
                 -- Release
                 addBullet(dx, dy, p.charge * 0.25 * 0.1)
                 p.charge = 0
@@ -218,8 +228,8 @@ update = function (self, cs)
 
         -- Animation
         local faceX, faceY
-        if p.sinceLastBullet <= 90 then
-            faceX, faceY = self.lastBulletVel[1], self.lastBulletVel[2]
+        if p.sinceLastBullet <= 60 then
+            faceX, faceY = self.lastBulletDir[1], self.lastBulletDir[2]
         else
             faceX, faceY = self.shootDir[1], self.shootDir[2]
         end
