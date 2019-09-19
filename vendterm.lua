@@ -210,7 +210,7 @@ local cardsDraw = function ()
         spritesheet.text(
             string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
             W * 0.45, H * 0.2)
-        spritesheet.text(selCard.desc, W * 0.45, H * 0.275, W * 0.4)
+        spritesheet.text(selCard.desc, W * 0.45, H * 0.275, W * 0.425)
         spritesheet.text('mem: ' .. tostring(selMem), W * 0.45, H * 0.425)
 
         love.graphics.setColor(0.6, 0.7, 0.3, 0.8)

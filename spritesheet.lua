@@ -176,11 +176,28 @@ local text = function (s, x, y, w, size)
     size = size or 1
     local x0 = x
     local ch = { s:byte(1, #s) }
-    for _, c in ipairs(ch) do
-        -- TODO: Take work breaks into account
-        if c == 10 or (w and x >= x0 + w) then
+
+    -- Which character to break after
+    local calcLF = function (s, w, p)
+        if p + w - 1 >= #s then return #s end
+        if s:byte(p + w) == 32 then return p + w end
+        for q = p + w - 1, p + 1, -1 do
+            if s:byte(q) == 32 then return q end
+        end
+        return p
+    end
+
+    local nextLF = 0x7fffffff
+    if w then
+        w = math.floor(w / (6 * size))
+        nextLF = calcLF(s, w, 1)
+    end
+
+    for i, c in ipairs(ch) do
+        if c == 10 or i > nextLF then
             x = x0
             y = y + 9 * size
+            if w then nextLF = calcLF(s, w, i) end
         end
         if c >= 32 and c < 128 then
             drawCen('font#' .. tonumber(c - 31), x, y, size)
