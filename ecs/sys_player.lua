@@ -111,6 +111,9 @@ update = function (self, cs)
 
         -- Invincibility update
         p.invincibility = math.max(0, (p.invincibility or 0) - 1)
+        if p.invincibility > 0 then
+            e.sprite.visible = (p.invincibility % 20 < 10)
+        end
 
         -- Magazine?
         local hasMagazine = p.buff.magazine and p.buff.magazine.equipped
