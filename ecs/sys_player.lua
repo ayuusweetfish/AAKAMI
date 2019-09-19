@@ -159,7 +159,7 @@ update = function (self, cs)
                 end
                 if not s:isPlaying() then s:play()
                 elseif s:tell() >= 5 then s:seek(2) end
-            elseif self.lastDownX then
+            elseif self.lastDownX and p.charge and p.charge > 0 then
                 -- Release
                 addBullet(dx, dy, p.charge * 0.25 * 0.1)
                 p.charge = 0
