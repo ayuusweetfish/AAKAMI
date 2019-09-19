@@ -97,6 +97,9 @@ function love.load()
     spritesheet.cropFromTileset('tileset3', 90, 32, 32, 'vendterm')
     spritesheet.cropFromTileset('tileset3', 184, 16, 32, 'doorv')
     spritesheet.cropFromTileset('tileset3', 230, 32, 32, 'doorh')
+    spritesheet.cropFromTileset('tileset3', 11, 32, 32, 'elevator0')
+    spritesheet.cropFromTileset('tileset3', 13, 32, 32, 'elevator1')
+    spritesheet.cropFromTileset('tileset3', 15, 32, 32, 'elevator2')
     spritesheet.loadImage('images/gamepad1.png')
     spritesheet.loadImage('images/gamepad2.png')
     spritesheet.loadImage('images/gamepad3.png')
@@ -170,7 +173,7 @@ function love.update()
     end
     ecs_update_count = new_count
 
-    if playerEntity.health.val <= 0 then
+    if playerEntity.health.val <= 0 or player.win then
         -- Game over!
         gameOver = true
         return
@@ -209,7 +212,7 @@ function love.draw()
         love.graphics.setColor(0.2, 0.2, 0.2, 0.8)
         love.graphics.rectangle('fill', 0, 0, W, H)
         love.graphics.setColor(1, 1, 1)
-        spritesheet.text('GAME OVER', W * 0.25, H * 0.35, 2)
+        spritesheet.text(player.win and 'YOU WIN!' or 'GAME OVER', W * 0.25, H * 0.35, 2)
         spritesheet.draw('gamepad2', W * 0.7, H * 0.9)
         spritesheet.text('Restart', W * 0.7 + 20, H * 0.9)
     elseif termDraw ~= nil then termDraw()

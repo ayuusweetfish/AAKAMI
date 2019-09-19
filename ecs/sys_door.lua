@@ -10,17 +10,34 @@ update = function (self, cs)
 
     for _, e in pairs(cs.door) do
         local near = rectIntscAround(p.dim, e.dim, 8)
-        local b = e.door.bubble
-        if (e.door.id == 0 or k[e.door.id]) and near then
-            e.colli.tag = 0
-            e.colli.block = false
-            e.sprite.visible = false
-            if b ~= nil then b.sprite.visible = false end
+
+        if e.door.fin then
+            if e.door.since then
+                e.door.since = e.door.since + 1
+                if e.door.since >= 270 then
+                    p.player.win = true
+                elseif e.door.since >= 90 then
+                    e.sprite.name = 'tileset3#elevator2'
+                elseif e.door.since >= 30 then
+                    e.sprite.name = 'tileset3#elevator1'
+                end
+            elseif near then
+                e.door.since = 0
+            end
+
         else
-            e.colli.tag = 3
-            e.colli.block = true
-            e.sprite.visible = true
-            if b ~= nil then b.sprite.visible = near end
+            local b = e.door.bubble
+            if (e.door.id == 0 or k[e.door.id]) and near then
+                e.colli.tag = 0
+                e.colli.block = false
+                e.sprite.visible = false
+                if b ~= nil then b.sprite.visible = false end
+            else
+                e.colli.tag = 3
+                e.colli.block = true
+                e.sprite.visible = true
+                if b ~= nil then b.sprite.visible = near end
+            end
         end
     end
 

@@ -96,8 +96,8 @@ return function (L, buffTermInteraction, vendTermInteraction)
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
         if o.name == 'Spawn' then
-            playerEntity.dim[1] = o.x
-            playerEntity.dim[2] = o.y
+            playerEntity.dim[1] = 800--o.x
+            playerEntity.dim[2] = 528--o.y
         elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')
@@ -151,6 +151,13 @@ return function (L, buffTermInteraction, vendTermInteraction)
             ecs.addEntity({
                 dim = { o.x + 16, o.y + 16, o.width, o.height },
                 elitearea = {}
+            })
+        elseif o.name == 'Elevator' then
+            ecs.addEntity({
+                dim = { o.x + 8, o.y, 16, 16 },
+                sprite = { name = 'tileset3#elevator0', ox = 8, oy = 16 },
+                colli = { block = true, tag = 3 },
+                door = { fin = true }
             })
         end
     end
