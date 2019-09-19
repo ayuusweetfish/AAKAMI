@@ -66,6 +66,7 @@ return function () return {
 lastDownX = false,
 lastDownA = false,
 lastValidVel = {1, 0},
+lastBulletVel = {0, 0},
 shootDir = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
@@ -132,6 +133,9 @@ update = function (self, cs)
                 }
             }
             ecs.addEntity(bullet)
+
+            self.lastBulletVel[1], self.lastBulletVel[2] = dx, dy
+            p.sinceLastBullet = 0
         end
 
         -- Charging
@@ -174,12 +178,12 @@ update = function (self, cs)
             if p.energy >= cost then
                 p.energy = p.energy - cost
 
-                addBullet(dx, dy, damage)
                 if p.buff.fork and p.buff.fork.equipped then
                     local alpha = math.atan2(dy, dx)
                     addBullet(math.cos(alpha + math.pi / 6), math.sin(alpha + math.pi / 6), damage)
                     addBullet(math.cos(alpha - math.pi / 6), math.sin(alpha - math.pi / 6), damage)
                 end
+                addBullet(dx, dy, damage)
 
                 p.fsm:trans(
                     p.fsm.curState == 1 and 'akaShoot' or 'ookamiShoot',
@@ -192,6 +196,7 @@ update = function (self, cs)
         if hasMachGun then
             p.sinceLastShoot = sinceLastShoot
         end
+        p.sinceLastBullet = (p.sinceLastBullet or 1000) + 1
 
         local downA = input.A()
         if downA and not self.lastDownA then
@@ -212,13 +217,19 @@ update = function (self, cs)
         end
 
         -- Animation
+        local faceX, faceY
+        if p.sinceLastBullet <= 90 then
+            faceX, faceY = self.lastBulletVel[1], self.lastBulletVel[2]
+        else
+            faceX, faceY = self.shootDir[1], self.shootDir[2]
+        end
 
         local sprite
         local t = p.fsm.curTrans
         local frame = math.floor((t and p.fsm.curTransStep / 10 or p.fsm.age / 15))
 
         local char = (p.fsm.curState == 1 and 'aka' or 'ookami')
-        local isBack = (self.shootDir[2] < 0)
+        local isBack = (faceY < 0)
 
         if t == 'akaShift' then
             sprite = 'aka2ookami' .. tostring(frame % 4 + 1)
@@ -229,11 +240,11 @@ update = function (self, cs)
             if still then
                 state = 'attacking'
                 local x = math.abs(self.shootDir[1]) * 0.3
-                dir = (self.shootDir[2] < -x and 'up' or
-                    (self.shootDir[2] > x and 'down' or 'left'))
+                dir = (faceY < -x and 'up' or
+                    (faceY > x and 'down' or 'left'))
             else
                 state = 'runattack'
-                dir = (self.shootDir[2] < 0 and 'up' or 'down')
+                dir = (faceY < 0 and 'up' or 'down')
             end
             local len = (not still and dir == 'left') and 8 or 4
             -- Hack!
@@ -253,7 +264,7 @@ update = function (self, cs)
                 .. state .. tostring(frame % 4 + 1)
         end
 
-        e.sprite.flipX = (self.shootDir[1] >= 0)
+        e.sprite.flipX = (faceX >= 0)
 
         e.sprite.name = sprite
         e.sprite.ox = 11
