@@ -1,11 +1,12 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 local buff = require 'mech/buff'
 
 moveLRUD = function (total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
-    local downL = love.keyboard.isDown('left')
-    local downR = love.keyboard.isDown('right')
-    local downU = love.keyboard.isDown('up')
-    local downD = love.keyboard.isDown('down')
+    local downL = input.L()
+    local downR = input.R()
+    local downU = input.U()
+    local downD = input.D()
     if downL and lastDownLa == false then
         local last = selIndex
         selIndex = selIndex - 3

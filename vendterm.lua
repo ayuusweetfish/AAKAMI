@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
 local vend = require 'mech/vend'
@@ -6,10 +7,10 @@ local vend = require 'mech/vend'
 local player, playerEntity
 
 local term      -- Current terminal entity
-local lastDownI -- Is key <I> pressed last frame
-local lastDownU -- Is key <U> pressed last frame
-local lastDownLa, lastDownRa
-local lastDownUa, lastDownDa
+local lastDownY
+local lastDownX
+local lastDownL, lastDownR
+local lastDownU, lastDownD
 local T         -- Total time
 
 local selRow, selCol = 0, 0 -- Persist
@@ -37,10 +38,10 @@ vendTermReset = function (_term)
     player = playerEntity.player
 
     term = _term
-    lastDownI = nil
-    lastDownU = nil
-    lastDownLa, lastDownRa = nil, nil
-    lastDownUa, lastDownDa = nil, nil
+    lastDownY = nil
+    lastDownX = nil
+    lastDownL, lastDownR = nil, nil
+    lastDownU, lastDownD = nil, nil
     T = 0
     inCardsPanel = false
 
@@ -49,15 +50,15 @@ vendTermReset = function (_term)
 end
 
 local mainUpdate = function ()
-    local downI = love.keyboard.isDown('i')
-    if downI and lastDownI == false then
+    local downY = input.Y()
+    if downY and lastDownY == false then
         -- Exit
         return false
     end
-    lastDownI = downI
+    lastDownY = downY
 
-    local downU = love.keyboard.isDown('u')
-    if downU and lastDownU == false then
+    local downX = input.X()
+    if downX and lastDownX == false then
         local selIndex = selRow * 2 + selCol
         if selIndex == 0 then
             local price = vend.heal
@@ -82,36 +83,36 @@ local mainUpdate = function ()
             inCardsPanel = true
         end
     end
-    lastDownU = downU
+    lastDownX = downX
 
-    local downL = love.keyboard.isDown('left')
-    local downR = love.keyboard.isDown('right')
-    local downU = love.keyboard.isDown('up')
-    local downD = love.keyboard.isDown('down')
-    if downL and lastDownLa == false then selCol = 1 - selCol end
-    if downR and lastDownRa == false then selCol = 1 - selCol end
-    if downU and lastDownUa == false then selRow = 1 - selRow end
-    if downD and lastDownDa == false then selRow = 1 - selRow end
-    lastDownLa = downL
-    lastDownRa = downR
-    lastDownUa = downU
-    lastDownDa = downD
+    local downL = input.L()
+    local downR = input.R()
+    local downU = input.U()
+    local downD = input.D()
+    if downL and lastDownL == false then selCol = 1 - selCol end
+    if downR and lastDownR == false then selCol = 1 - selCol end
+    if downU and lastDownU == false then selRow = 1 - selRow end
+    if downD and lastDownD == false then selRow = 1 - selRow end
+    lastDownL = downL
+    lastDownR = downR
+    lastDownU = downU
+    lastDownD = downD
 
     return true
 end
 
 local cardsUpdate = function ()
-    local downI = love.keyboard.isDown('i')
-    if downI and lastDownI == false then
-        lastDownI = downI
+    local downY = input.Y()
+    if downY and lastDownY == false then
+        lastDownY = downY
         if isMenu then isMenu = false else return false end
     end
-    lastDownI = downI
+    lastDownY = downY
 
-    local downU = love.keyboard.isDown('u')
+    local downX = input.X()
 
     if isMenu then
-        if downU and lastDownU == false then
+        if downX and lastDownX == false then
             local selName = cardNames[selIndex + 1]
             local selPlayerBuff = player.buff[selName]
             local selCard = buff[selName]
@@ -134,30 +135,30 @@ local cardsUpdate = function ()
             end
         end
 
-        local downL = love.keyboard.isDown('left')
-        local downR = love.keyboard.isDown('right')
-        local downU = love.keyboard.isDown('up')    -- Shadowed!
-        local downD = love.keyboard.isDown('down')
-        if downL and lastDownLa == false then menuItem = 1 - menuItem end
-        if downR and lastDownRa == false then menuItem = 1 - menuItem end
-        if downU and lastDownUa == false then menuItem = 1 - menuItem end
-        if downD and lastDownDa == false then menuItem = 1 - menuItem end
-        lastDownLa = downL
-        lastDownRa = downR
-        lastDownUa = downU
-        lastDownDa = downD
+        local downL = input.L()
+        local downR = input.R()
+        local downU = input.U()
+        local downD = input.D()
+        if downL and lastDownL == false then menuItem = 1 - menuItem end
+        if downR and lastDownR == false then menuItem = 1 - menuItem end
+        if downU and lastDownU == false then menuItem = 1 - menuItem end
+        if downD and lastDownD == false then menuItem = 1 - menuItem end
+        lastDownL = downL
+        lastDownR = downR
+        lastDownU = downU
+        lastDownD = downD
     else
-        if downU and lastDownU == false and total > 0 then
+        if downX and lastDownX == false and total > 0 then
             isMenu, menuItem = true, 0
         end
 
         if total ~= 0 then
-            selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa =
-                moveLRUD(total, selIndex, lastDownLa, lastDownRa, lastDownUa, lastDownDa)
+            selIndex, lastDownL, lastDownR, lastDownU, lastDownD =
+                moveLRUD(total, selIndex, lastDownL, lastDownR, lastDownU, lastDownD)
         end
     end
 
-    lastDownU = downU
+    lastDownX = downX
 
     return true
 end

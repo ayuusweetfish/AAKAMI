@@ -1,3 +1,4 @@
+local input = require 'input'
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
 local buff = require 'mech/buff'
@@ -10,8 +11,8 @@ local PLAYER_DECEL = 384
 
 local keys = function (a, b)
     local result = 0
-    if love.keyboard.isDown(a) then result = result + 1 end
-    if love.keyboard.isDown(b) then result = result - 1 end
+    if a then result = result + 1 end
+    if b then result = result - 1 end
     return result
 end
 
@@ -84,8 +85,8 @@ end
 
 return function () return {
 
-lastUDown = false,
-lastJDown = false,
+lastDownX = false,
+lastDownA = false,
 lastValidVel = {1, 0},
 shootDir = {1, 0},
 update = function (self, cs)
@@ -115,15 +116,15 @@ update = function (self, cs)
         p.energyMax = (hasMagazine and 150 or 100)
         p.energy = math.min(p.energy, p.energyMax)
 
-        local horz = keys('right', 'left')
-        local vert = keys('down', 'up')
+        local horz = keys(input.R(), input.L())
+        local vert = keys(input.D(), input.U())
         if horz ~= 0 and vert ~= 0 then
             horz = horz / 1.414213562
             vert = vert / 1.414213562
         end
         updateVel(e.vel, horz * PLAYER_VEL, vert * PLAYER_VEL)
 
-        local UDown = love.keyboard.isDown('u')
+        local downX = input.X()
         local sinceLastShoot
         local hasMachGun = (p.buff.machgun and p.buff.machgun.equipped)
         if hasMachGun then
@@ -159,20 +160,20 @@ update = function (self, cs)
 
         -- Charging
         if p.buff.stockpile and p.buff.stockpile.equipped then
-            if UDown then
+            if downX then
                 local cost = 0.25
                 if p.energy >= cost then
                     p.energy = p.energy - cost
                     p.charge = (p.charge or 0) + 1
                 end
-            elseif self.lastUDown then
+            elseif self.lastDownX then
                 -- Release
                 addBullet(dx, dy, p.charge * 0.25 * 0.1)
                 p.charge = 0
             end
 
         -- Normal attack
-        elseif UDown and (not self.lastUDown or (hasMachGun and sinceLastShoot >= 30)) then
+        elseif downX and (not self.lastDownX or (hasMachGun and sinceLastShoot >= 30)) then
             -- Turn
             self.shootDir[1], self.shootDir[2] = dx, dy
             -- Try to shoot
@@ -204,19 +205,19 @@ update = function (self, cs)
                 )
             end
         end
-        self.lastUDown = UDown
+        self.lastDownX = downX
         if hasMachGun then
             p.sinceLastShoot = sinceLastShoot
         end
 
-        local JDown = love.keyboard.isDown('j')
-        if JDown and not self.lastJDown then
+        local downA = input.A()
+        if downA and not self.lastDownA then
             -- SHIFT!
             p.fsm:trans(
                 p.fsm.curState == 1 and 'akaShift' or 'ookamiShift'
             )
         end
-        self.lastJDown = JDown
+        self.lastDownA = downA
 
         p.fsm:step()
 

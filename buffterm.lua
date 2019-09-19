@@ -1,11 +1,12 @@
 local spritesheet = require 'spritesheet'
+local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
 
 local player
 
 local term      -- Current terminal entity
-local lastDownI -- Is key <I> pressed last frame
+local lastDownY
 local lastDownL, lastDownR
 local T         -- Total time
 local selIndex
@@ -16,7 +17,7 @@ buffTermReset = function (_term)
     player = ecs.components.player[1].player
 
     term = _term
-    lastDownI = nil
+    lastDownY = nil
     lastDownL, lastDownR = nil, nil
     T = 0
     selIndex = 1
@@ -44,18 +45,18 @@ end
 buffTermUpdate = function ()
     T = T + love.timer.getDelta()
 
-    local downI = love.keyboard.isDown('i')
-    if downI and lastDownI == false then
+    local downY = input.Y()
+    if downY and lastDownY == false then
         -- Card get!
         player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
 
         term.sprite.name = 'tileset3#offterm'
         return false
     end
-    lastDownI = downI
+    lastDownY = downY
 
-    local downL = love.keyboard.isDown('left') or love.keyboard.isDown('up')
-    local downR = love.keyboard.isDown('right') or love.keyboard.isDown('down')
+    local downL = input.L() or input.U()
+    local downR = input.R() or input.D()
     if downL and lastDownL == false then selIndex = (selIndex + 1) % 3 + 1 end
     if downR and lastDownR == false then selIndex = selIndex % 3 + 1 end
     lastDownL = downL

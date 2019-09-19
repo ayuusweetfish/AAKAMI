@@ -31,6 +31,22 @@ end,
 -- X / square
 X = function ()
     return love.keyboard.isDown('u') or (j and j:isGamepadDown('x') or false)
-end
+end,
+
+L = function ()
+    return love.keyboard.isDown('left') or (j and j:isGamepadDown('dpleft') or false)
+end,
+
+R = function ()
+    return love.keyboard.isDown('right') or (j and j:isGamepadDown('dpright') or false)
+end,
+
+U = function ()
+    return love.keyboard.isDown('up') or (j and j:isGamepadDown('dpup') or false)
+end,
+
+D = function ()
+    return love.keyboard.isDown('down') or (j and j:isGamepadDown('dpdown') or false)
+end,
 
 }
