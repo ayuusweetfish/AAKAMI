@@ -1,0 +1,45 @@
+local spritesheet = require 'spritesheet'
+
+local lastDownK = false
+local cutscene = 1
+local T = 0
+
+frontCovUpdate = function ()
+    if love.keyboard.isDown('escape') then
+        love.event.quit()
+    end
+
+    T = T + love.timer.getDelta()
+
+    local downK = love.keyboard.isDown('k')
+    if downK and not lastDownK then
+        -- Trigger
+        cutscene = cutscene + 1
+        T = 0
+        if cutscene == 3 then
+            -- Game start!!
+            return false
+        end
+    end
+    lastDownK = downK
+
+    return true
+end
+
+frontCovDraw = function ()
+    if cutscene == 1 then
+        -- TODO: Front cover
+    elseif cutscene == 2 then
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle('fill', 0, 0, W, H)
+        love.graphics.setColor(1, 1, 1)
+        spritesheet.draw('gamepad4', W * 0.4, H * 0.35)
+        spritesheet.text('Attack', W * 0.4 + 20, H * 0.35)
+        spritesheet.draw('gamepad3', W * 0.4, H * 0.45)
+        spritesheet.text('SHIFT!', W * 0.4 + 20, H * 0.45)
+    end
+
+    if T >= 2 then
+        spritesheet.drawCen('gamepad2', W * 0.85, H * 0.8)
+    end
+end

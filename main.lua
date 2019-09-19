@@ -3,6 +3,7 @@ local ecs = require 'ecs/ecs'
 require 'buffterm'
 require 'vendterm'
 require 'knapsack'
+require 'frontcov'
 
 local levelLoad = require 'levels/load'
 
@@ -17,8 +18,10 @@ local sidelen = 16
 local shader
 local canvas
 
-local T = 0
-local ecs_update_count = 0
+local frontCovRunning = true
+
+local T
+local ecs_update_count
 
 local playerEntity, player
 local gameOver
@@ -70,6 +73,18 @@ local reinitializeGameCore = function ()
     ecs.addSystem(1, require('ecs/sys_door')())
     ecs.addSystem(1, require('ecs/sys_area')())
     dispSys = ecs.addSystem(2, require('ecs/sys_disp')(spritesheet))
+
+    T = 0
+    ecs_update_count = 0
+end
+
+local initializeGameplay = function ()
+    -- Audio
+    local source = love.audio.newSource('audio/Beverage Battle.ogg', 'static')
+    source:setLooping(true)
+    love.audio.play(source)
+
+    reinitializeGameCore()
 end
 
 function love.load()
@@ -108,17 +123,14 @@ function love.load()
     shader = love.graphics.newShader(fshadersrc, vshadersrc)
 
     canvas = love.graphics.newCanvas(W, H)
-
-    -- Audio
-    local source = love.audio.newSource('audio/Beverage Battle.ogg', 'static')
-    source:setLooping(true)
-    love.audio.play(source)
-
-    reinitializeGameCore()
 end
 
 function love.update()
-    if termUpdate ~= nil then
+    if frontCovRunning then
+        frontCovRunning = frontCovUpdate()
+        if not frontCovRunning then initializeGameplay() end
+        return
+    elseif termUpdate ~= nil then
         if not termUpdate() then termUpdate, termDraw = nil, nil end
         return
     elseif knapsackRunning then
@@ -191,7 +203,8 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
     spritesheet.flush()
 
-    if gameOver then
+    if frontCovRunning then frontCovDraw()
+    elseif gameOver then
         love.graphics.setColor(0.2, 0.2, 0.2, 0.8)
         love.graphics.rectangle('fill', 0, 0, W, H)
         love.graphics.setColor(1, 1, 1)
