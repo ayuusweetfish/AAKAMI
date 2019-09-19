@@ -76,7 +76,7 @@ return function () return {
 lastDownX = false,
 lastDownA = false,
 lastValidVel = {1, 0},
-lastBulletVel = {0, 0},
+lastBulletDir = {0, 0},
 shootDir = {1, 0},
 update = function (self, cs)
     for _, e in pairs(cs.player) do
@@ -144,7 +144,7 @@ update = function (self, cs)
             }
             ecs.addEntity(bullet)
 
-            self.lastBulletVel[1], self.lastBulletVel[2] = dx, dy
+            self.lastBulletDir[1], self.lastBulletDir[2] = dx, dy
             p.sinceLastBullet = 0
         end
 
@@ -229,7 +229,7 @@ update = function (self, cs)
         -- Animation
         local faceX, faceY
         if p.sinceLastBullet <= 60 then
-            faceX, faceY = self.lastBulletVel[1], self.lastBulletVel[2]
+            faceX, faceY = self.lastBulletDir[1], self.lastBulletDir[2]
         else
             faceX, faceY = self.shootDir[1], self.shootDir[2]
         end
