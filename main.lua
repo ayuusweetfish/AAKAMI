@@ -153,9 +153,7 @@ function love.update()
         w[t] = nil
     end
 
-    if love.keyboard.isDown('escape') then
-        love.event.quit()
-    end
+    if input.back() then love.event.quit() end
 
     if gameOver then
         if input.B() then

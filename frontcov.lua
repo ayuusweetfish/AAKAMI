@@ -6,9 +6,7 @@ local cutscene = 1
 local T = 0
 
 frontCovUpdate = function ()
-    if love.keyboard.isDown('escape') then
-        love.event.quit()
-    end
+    if input.back() then love.event.quit() end
 
     T = T + love.timer.getDelta()
 

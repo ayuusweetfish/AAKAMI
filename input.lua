@@ -49,4 +49,8 @@ D = function ()
     return love.keyboard.isDown('down') or (j and j:isGamepadDown('dpdown') or false)
 end,
 
+back = function ()
+    return love.keyboard.isDown('escape') or (j and j:isGamepadDown('back') or false)
+end
+
 }
