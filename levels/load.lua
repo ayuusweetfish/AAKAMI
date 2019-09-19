@@ -96,8 +96,8 @@ return function (L, buffTermInteraction, vendTermInteraction)
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
         if o.name == 'Spawn' then
-            playerEntity.dim[1] = 800--o.x
-            playerEntity.dim[2] = 528--o.y
+            playerEntity.dim[1] = o.x
+            playerEntity.dim[2] = o.y
         elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')

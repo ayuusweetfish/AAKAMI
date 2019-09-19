@@ -170,11 +170,13 @@ local drawCen = function (name, x, y, sx, sy)
 end
 
 local text = function (s, x, y, size)
-    y = y + 4
+    x = x + 3
+    y = y + 8
+    size = size or 1
     local ch = { s:byte(1, #s) }
     for _, c in ipairs(ch) do
-        draw('font#' .. tonumber(c - 31), x, y)
-        x = x + 6
+        drawCen('font#' .. tonumber(c - 31), x, y, size)
+        x = x + 6 * size
     end
 end
 
