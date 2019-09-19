@@ -54,6 +54,6 @@ end
 
 drawOneCard = function (card, x, y, enlarge)
     local scale = (enlarge and 3 or 2)
-    spritesheet.drawCen('quq11', x, y, scale)
-    spritesheet.drawCen(card.icon, x, y, scale)
+    spritesheet.drawCen('floppy', x, y, scale)
+    spritesheet.drawCen(card.icon, x, y + 4, scale)
 end

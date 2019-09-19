@@ -89,6 +89,7 @@ local initializeGameplay = function ()
 end
 
 function love.load()
+    spritesheet.loadImage('images/floppy.png')
     spritesheet.loadCrunch('images/char.bin')
     spritesheet.loadCrunch('images/quq.bin')
     spritesheet.initializeTileset('tileset3', 16)
