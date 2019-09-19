@@ -11,7 +11,7 @@ love.joystickremoved = updateJoystick
 
 updateJoystick()
 
-return {
+local input = {
 
 -- Y / triangle
 Y = function ()
@@ -54,3 +54,29 @@ back = function ()
 end
 
 }
+
+input.direction = function ()
+    if j then
+        local x, y = j:getGamepadAxis('leftx'), j:getGamepadAxis('lefty')
+        local dsq = x * x + y * y
+        if dsq < 0.01 * 0.01 then return 0, 0
+        elseif dsq > 1 then
+            local d = math.sqrt(dsq)
+            x, y = x / d, y / d
+        end
+        return x, y
+    else
+        local x, y = 0, 0
+        if input.L() then x = x - 1 end
+        if input.R() then x = x + 1 end
+        if input.U() then y = y - 1 end
+        if input.D() then y = y + 1 end
+        if x ~= 0 and y ~= 0 then
+            x = x / 1.414213562
+            y = y / 1.414213562
+        end
+        return x, y
+    end
+end
+
+return input

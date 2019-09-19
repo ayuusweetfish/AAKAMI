@@ -10,13 +10,6 @@ local PLAYER_BULLET_VEL = 160
 local PLAYER_ACCEL = 768
 local PLAYER_DECEL = 384
 
-local keys = function (a, b)
-    local result = 0
-    if a then result = result + 1 end
-    if b then result = result - 1 end
-    return result
-end
-
 local updateVel = function (orig, tx, ty)
     local DV = (tx == 0 and ty == 0 and PLAYER_DECEL or PLAYER_ACCEL) * DT
     local dx, dy = tx - orig[1], ty - orig[2]
@@ -120,12 +113,7 @@ update = function (self, cs)
         p.energyMax = (hasMagazine and 150 or 100)
         p.energy = math.min(p.energy, p.energyMax)
 
-        local horz = keys(input.R(), input.L())
-        local vert = keys(input.D(), input.U())
-        if horz ~= 0 and vert ~= 0 then
-            horz = horz / 1.414213562
-            vert = vert / 1.414213562
-        end
+        local horz, vert = input.direction()
         updateVel(e.vel, horz * PLAYER_VEL, vert * PLAYER_VEL)
 
         local downX = input.X()
