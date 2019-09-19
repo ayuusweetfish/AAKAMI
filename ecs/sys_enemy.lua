@@ -2,8 +2,8 @@ local ecs = require 'ecs/ecs'
 require 'ecs/utils'
 local fsm = require 'fsm'
 
-local PERIOD = 360
-local BULLET_VEL = 120
+local PERIOD = 600
+local BULLET_VEL = 60
 local BULLET_ACCEL = 960
 
 local patternUpdate = {}

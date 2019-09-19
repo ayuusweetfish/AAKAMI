@@ -5,8 +5,8 @@ require 'ecs/utils'
 local buff = require 'mech/buff'
 local fsm = require 'fsm'
 
-local PLAYER_VEL = 96
-local PLAYER_BULLET_VEL = 160
+local PLAYER_VEL = 60
+local PLAYER_BULLET_VEL = 100
 local PLAYER_ACCEL = 768
 local PLAYER_DECEL = 384
 
