@@ -124,7 +124,7 @@ update = function (self, cs)
     local ePlayer = cs.player[1]
     if ePlayer == nil then return end
 
-    for _, e in pairs(cs.enemy) do
+    for _, e in pairs(cs.enemy or {}) do
         local n = e.enemy
         local a = animations[n.name]
 

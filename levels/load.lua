@@ -74,30 +74,29 @@ return function (L, buffTermInteraction, vendTermInteraction)
         colli = { passive = true, tag = 2 }
     })
 
-    -- Enemy
+    -- Map bounds
     ecs.addEntity({
-        dim = { 16 * 9, 16 * 5.5, 48, 48 },
-        vel = { 0, 0 },
-        sprite = { name = '' },
-        enemy = { name = 'boss', pattern = 'donut', boss = true },
-        health = { val = 8, max = 8 },
-        colli = { passive = true, tag = 4 }
+        dim = { 16, 0, L.width * 16, 16 },
+        colli = { block = true, tag = 0xffffffff }
     })
-
     ecs.addEntity({
-        dim = { 16 * 11, 16 * 5.5, 16, 16 },
-        vel = { 0, 0 },
-        sprite = { name = '' },
-        enemy = { name = 'yeshu', pattern = 'donut' },
-        health = { val = 8, max = 8 },
-        colli = { passive = true, tag = 4 }
+        dim = { 16, 16 + L.height * 16, L.width * 16, 16 },
+        colli = { block = true, tag = 0xffffffff }
+    })
+    ecs.addEntity({
+        dim = { 0, 16, 16, L.height * 16 },
+        colli = { block = true, tag = 0xffffffff }
+    })
+    ecs.addEntity({
+        dim = { 16 + L.width * 16, 16, 16, L.height * 16 },
+        colli = { block = true, tag = 0xffffffff }
     })
 
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
         if o.name == 'Spawn' then
-            playerEntity.dim[1] = o.x
-            playerEntity.dim[2] = o.y
+            playerEntity.dim[1] = 912--o.x
+            playerEntity.dim[2] = 976--o.y
         elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')

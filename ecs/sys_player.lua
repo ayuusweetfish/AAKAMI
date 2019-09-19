@@ -30,6 +30,7 @@ local updateVel = function (orig, tx, ty)
 end
 
 local nearest = function (e, v, es)
+    if es == nil then return nil end
     local K = 0.3   -- 'Compression' factor
     local R = 128   -- Visibile range
     local cx, cy =
