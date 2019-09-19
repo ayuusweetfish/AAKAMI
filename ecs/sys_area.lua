@@ -66,7 +66,7 @@ update = function (self, cs)
     for _, e in pairs(cs.enemyarea) do
         if rectIntsc(p.dim, e.dim) then
             local sinceLastSpawn = (e.enemyarea.sinceLastSpawn or 0) + 1
-            if sinceLastSpawn >= 270 then
+            if sinceLastSpawn >= 120*7.2 then
                 sinceLastSpawn = 0
                 spawnEnemy(p.dim, e.dim)
             end
