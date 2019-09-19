@@ -104,7 +104,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
                 dim = { o.x - 8, o.y, 18, 16 },
                 sprite = {
                     name = (isBuff and 'tileset3#buffterm' or 'tileset3#vendterm'),
-                    ox = 7, oy = 16, z = -1
+                    ox = 7, oy = 16
                 },
                 colli = { block = true },
                 term = {
