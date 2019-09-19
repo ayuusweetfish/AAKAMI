@@ -56,15 +56,16 @@ return function (L, buffTermInteraction, vendTermInteraction)
     end
 
     -- Player
+    local playerBuff = {}
+    for k, _ in pairs(require('mech/buff')) do
+        playerBuff[k] = { level = 1, equipped = false }
+    end
     local playerEntity = ecs.addEntity({
         dim = { 0, 0, 10, 12 },
         vel = { 0, 0 },
         sprite = { name = 'aka_waiting1' },
         player = {
-            -- XXX: Get rid of this
-            buff = {
-                stockpile = { level = 1, equipped = false }
-            },
+            buff = playerBuff,
             coin = 500,
             colour = 0,
             memory = 4,
@@ -95,8 +96,8 @@ return function (L, buffTermInteraction, vendTermInteraction)
     -- Objects
     for _, o in pairs(L.layers[5].objects) do
         if o.name == 'Spawn' then
-            playerEntity.dim[1] = o.x
-            playerEntity.dim[2] = o.y
+            playerEntity.dim[1] = 80--o.x
+            playerEntity.dim[2] = 400--o.y
         elseif o.name == 'Buff' or o.name == 'Shop' then
             -- A terminal
             local isBuff = (o.name == 'Buff')

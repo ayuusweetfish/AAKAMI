@@ -37,7 +37,7 @@ drawCardList = function (cardNames, player, selIndex, offsetY)
     local row, col = selIndex % 3, math.floor(selIndex / 3)
     love.graphics.setColor(0.6, 0.7, 0.3, 0.8)
     love.graphics.rectangle('fill',
-        W * (col + 1) / 6 - 16, H * (0.3 + 0.15 * row) - 16,
+        W * (col + 1) / 6 - 16, H * (0.25 + 0.15 * row) - 16,
         32, 32)
 
     love.graphics.setColor(1, 1, 1)

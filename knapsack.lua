@@ -79,36 +79,38 @@ knapsackDraw = function ()
     love.graphics.rectangle('fill', 0, 0, W, H)
 
     -- Card list
-    drawCardList(cardNames, player, selIndex, 0.3)
+    drawCardList(cardNames, player, selIndex, 0.25)
 
     -- Memory bar
     -- TODO: Draw a bar!
     spritesheet.text(
         string.format('Memory: %d/%d',
             memUsed, player.memory),
-        W * 0.1, H * 0.1
+        W * 0.1, H * 0.08
     )
     local equipped = false
     if total > 0 then
         local selName = cardNames[selIndex + 1]
         local selPlayerBuff = player.buff[selName]
-        local selMem = buff[selName].memory[selPlayerBuff.level]
+        local selCard = buff[selName]
+        local selMem = selCard.memory[selPlayerBuff.level]
         equipped = selPlayerBuff.equipped
         spritesheet.text(
             string.format('-> %d/%d',
                 memUsed, player.memory,
                 memUsed + selMem * (equipped and -1 or 1), player.memory),
-            W * 0.4, H * 0.1
+            W * 0.4, H * 0.08
         )
 
         -- Card description
         spritesheet.text(
-            string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
-            W * 0.15, H * 0.7, 1)
+            string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
+            W * 0.15, H * 0.64)
+        spritesheet.text(selCard.desc, W * 0.15, H * 0.7)
     end
 
-    spritesheet.draw('gamepad4', W * 0.7, H * 0.8)
-    spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.8)
+    spritesheet.draw('gamepad4', W * 0.7, H * 0.83)
+    spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.83)
     spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
     spritesheet.text('Back', W * 0.7 + 20, H * 0.9)
 

@@ -236,13 +236,13 @@ local cardsDraw = function ()
             W * 0.1 + 4, H * 0.75 + 17)
 
     else
-        drawCardList(cardNames, player, selIndex, 0.3)
+        drawCardList(cardNames, player, selIndex, 0.25)
 
         -- Card description
         if total ~= 0 then
             spritesheet.text(
-                string.format('%s (Lv. %d)', selName, selPlayerBuff.level),
-                W * 0.15, H * 0.7, 1)
+                string.format('%s (Lv. %d)', selCard.name, selPlayerBuff.level),
+                W * 0.15, H * 0.64)
         end
     end
 
