@@ -1,3 +1,4 @@
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
@@ -160,16 +161,21 @@ update = function (self, cs)
 
         -- Charging
         if p.buff.stockpile and p.buff.stockpile.equipped then
+            local s = audio.get('charge')
             if downX then
                 local cost = 0.25
                 if p.energy >= cost then
                     p.energy = p.energy - cost
                     p.charge = (p.charge or 0) + 1
                 end
+                if not s:isPlaying() then s:play()
+                elseif s:tell() >= 5 then s:seek(2) end
             elseif self.lastDownX then
                 -- Release
                 addBullet(dx, dy, p.charge * 0.25 * 0.1)
                 p.charge = 0
+                s:stop()
+                audio.play('gunshot' .. tostring(math.random(4)))
             end
 
         -- Normal attack
@@ -203,6 +209,7 @@ update = function (self, cs)
                     p.fsm.curState == 1 and 'akaShoot' or 'ookamiShoot',
                     true
                 )
+                audio.play('gunshot' .. tostring(math.random(4)))
             end
         end
         self.lastDownX = downX

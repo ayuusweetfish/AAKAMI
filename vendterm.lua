@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
@@ -65,6 +66,7 @@ local mainUpdate = function ()
             if player.coin >= price and playerEntity.health.val < playerEntity.health.max then
                 player.coin = player.coin - price
                 playerEntity.health.val = playerEntity.health.val + 1
+                audio.play('confirm')
             end
         elseif selIndex == 1 then
             local price = vend.healthMax(playerEntity.health.max)
@@ -72,15 +74,18 @@ local mainUpdate = function ()
                 player.coin = player.coin - price
                 playerEntity.health.max = playerEntity.health.max + 1
                 playerEntity.health.val = playerEntity.health.val + 1
+                audio.play('confirm')
             end
         elseif selIndex == 2 then
             local price = vend.memory(player.memory)
             if player.coin >= price then
                 player.coin = player.coin - price
                 player.memory = player.memory + 1
+                audio.play('confirm')
             end
         elseif selIndex == 3 then
             inCardsPanel = true
+            audio.play('menu')
         end
     end
     lastDownX = downX
@@ -124,6 +129,7 @@ local cardsUpdate = function ()
                 then
                     player.coin = player.coin - selCard.upgrade[selPlayerBuff.level]
                     selPlayerBuff.level = selPlayerBuff.level + 1
+                    audio.play('confirm')
                 end
             else
                 -- Sell
@@ -131,6 +137,7 @@ local cardsUpdate = function ()
                 player.coin = player.coin + selCard.sellrate
                 refreshCards()
                 if selIndex >= total then selIndex = math.max(0, total - 1) end
+                audio.play('confirm')
                 isMenu = false
             end
         end
@@ -150,6 +157,7 @@ local cardsUpdate = function ()
     else
         if downX and lastDownX == false and total > 0 then
             isMenu, menuItem = true, 0
+            audio.play('menu')
         end
 
         if total ~= 0 then

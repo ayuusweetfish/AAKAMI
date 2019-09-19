@@ -1,3 +1,4 @@
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
@@ -22,6 +23,8 @@ update = function (self, cs)
                     e.term.once = -1
                 end
                 called = true
+                audio.play('turnonterminal')
+                audio.get('Beverage Battle'):setVolume(0.2)
             end
         else
             -- Hide the bubble

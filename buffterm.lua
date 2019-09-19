@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
@@ -49,6 +50,8 @@ buffTermUpdate = function ()
     if downY and lastDownY == false then
         -- Card get!
         player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
+
+        audio.play('confirm')
 
         term.sprite.name = 'tileset3#offterm'
         return false

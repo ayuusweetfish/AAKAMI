@@ -1,3 +1,4 @@
+local audio = require 'audio'
 local ecs = require 'ecs/ecs'
 require 'ecs/utils'
 
@@ -45,6 +46,7 @@ update = function (self, cs)
         if rectIntsc(p.dim, e.dim) then
             k[e.key.id] = true
             e._removal = true
+            audio.play('pickupcoin')
         end
     end
 end

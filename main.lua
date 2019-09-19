@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 require 'buffterm'
@@ -81,9 +82,8 @@ end
 
 local initializeGameplay = function ()
     -- Audio
-    local source = love.audio.newSource('audio/Beverage Battle.ogg', 'static')
-    source:setLooping(true)
-    love.audio.play(source)
+    audio.get('Beverage Battle'):setVolume(0.6)
+    audio.play('Beverage Battle')
 
     reinitializeGameCore()
 end
@@ -113,6 +113,20 @@ function love.load()
     spritesheet.loadImage('images/font.png')
     spritesheet.initializeTileset('font', 6, 8)
 
+    audio.loadAudio('audio/Beverage Battle.ogg', true)
+    audio.loadAudio('audio/absorb.ogg')
+    audio.loadAudio('audio/charge.ogg')
+    audio.loadAudio('audio/confirm.ogg')
+    audio.loadAudio('audio/menu.ogg')
+    audio.loadAudio('audio/pickupcoin.ogg')
+    audio.loadAudio('audio/playerbeenshot.ogg')
+    audio.loadAudio('audio/release.ogg')
+    audio.loadAudio('audio/turnonterminal.ogg')
+    audio.loadAudio('audio/gunshot1/1.ogg', false, 'gunshot1')
+    audio.loadAudio('audio/gunshot1/2.ogg', false, 'gunshot2')
+    audio.loadAudio('audio/gunshot1/3.ogg', false, 'gunshot3')
+    audio.loadAudio('audio/gunshot1/4.ogg', false, 'gunshot4')
+
     love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -140,7 +154,10 @@ function love.update()
         if not frontCovRunning then initializeGameplay() end
         return
     elseif termUpdate ~= nil then
-        if not termUpdate() then termUpdate, termDraw = nil, nil end
+        if not termUpdate() then
+            termUpdate, termDraw = nil, nil
+            audio.get('Beverage Battle'):setVolume(0.6)
+        end
         return
     elseif knapsackRunning then
         knapsackRunning = knapsackUpdate()

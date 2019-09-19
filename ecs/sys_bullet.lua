@@ -1,3 +1,5 @@
+local audio = require 'audio'
+
 return function () return {
 
 update = function (self, cs)
@@ -20,6 +22,7 @@ update = function (self, cs)
                             (p.colour == 1 and p.buff.bstarve and p.buff.bstarve.equipped)
                         ) and 15 or 10
                         p.energy = math.min(p.energy + increment, p.energyMax)
+                        audio.play('absorb')
                     else
                         -- Penetrate?
                         if e1.bullet.penetrate then
@@ -44,6 +47,7 @@ update = function (self, cs)
                             e2.health.val = e2.health.val - damage
                             if p then
                                 p.invincibility = 120   -- One second of invincibility
+                                audio.play('playerbeenshot')
                             end
                         end
                         -- Play hit animation

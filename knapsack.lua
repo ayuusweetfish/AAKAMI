@@ -1,4 +1,5 @@
 local spritesheet = require 'spritesheet'
+local audio = require 'audio'
 local input = require 'input'
 local ecs = require 'ecs/ecs'
 local buff = require 'mech/buff'
@@ -62,7 +63,9 @@ knapsackUpdate = function ()
         if newMemUsed <= player.memory then
             selPlayerBuff.equipped = not selPlayerBuff.equipped
             memUsed = newMemUsed
+            audio.play('menu')
         end
+        -- TODO: Unavailable sound effect?
     end
     lastDownX = downX
 
