@@ -176,6 +176,7 @@ update = function (self, cs)
                 p.charge = 0
                 s:stop()
                 audio.play('gunshot' .. tostring(math.random(4)))
+                audio.play('release')
             end
 
         -- Normal attack
