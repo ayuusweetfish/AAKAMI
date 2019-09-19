@@ -27,6 +27,11 @@ update = function (self, cs)
             end
 
         else
+            local enemyInside = false
+            cs.dim:colliding(e, function (e2)
+                if e2.enemy then enemyInside = true end
+            end)
+
             local b = e.door.bubble
             if (e.door.id == 0 or k[e.door.id]) and near then
                 e.colli.tag = 0
@@ -34,9 +39,11 @@ update = function (self, cs)
                 e.sprite.visible = false
                 if b ~= nil then b.sprite.visible = false end
             else
-                e.colli.tag = 3
-                e.colli.block = true
-                e.sprite.visible = true
+                if not enemyInside then
+                    e.colli.tag = 3
+                    e.colli.block = true
+                    e.sprite.visible = true
+                end
                 if b ~= nil then b.sprite.visible = near end
             end
         end

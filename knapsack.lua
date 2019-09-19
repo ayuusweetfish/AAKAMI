@@ -100,7 +100,6 @@ knapsackDraw = function ()
         equipped = selPlayerBuff.equipped
         spritesheet.text(
             string.format('-> %d/%d',
-                memUsed, player.memory,
                 memUsed + selMem * (equipped and -1 or 1), player.memory),
             W * 0.4, H * 0.08
         )
