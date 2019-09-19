@@ -53,26 +53,29 @@ end
 local loadCrunch = function (path)
     local wd, name = splitPath(path)
 
-    local f = io.open(love.filesystem.getSource() .. '/' .. path, 'rb')
+    local f, err = love.filesystem.read(path)
     if f == nil then
-        print('> < Cannot load sprite sheet metadata ' .. path)
+        print('> < Cannot load sprite sheet metadata ' .. path .. ' (' .. err .. ')')
         return nil
     end
 
+    local p = 1
+
     local read_int16 = function ()
-        local l, h = f:read(2):byte(1, 2)
+        local l, h = f:byte(p, p + 1)
+        p = p + 2
         local x = h * 256 + l
         if x >= 32768 then x = x - 65536 end
         return x
     end
     local read_str = function ()
-        local s = {}
+        local q = p
         repeat
-            local ch = f:read(1)
-            if ch:byte(1) == 0 then break end
-            s[#s + 1] = ch
+            local ch = f:byte(p)
+            p = p + 1
+            if ch == 0 then break end
         until false
-        return table.concat(s)
+        return f:sub(q, p - 2)
     end
 
     local texCount = read_int16()
@@ -102,8 +105,6 @@ local loadCrunch = function (path)
             lookup[name] = spr
         end
     end
-
-    f:close()
 end
 
 local initializeTileset = function (name, sideLenX, sideLenY)
