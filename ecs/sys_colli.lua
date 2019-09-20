@@ -72,7 +72,7 @@ update = function (self, cs)
         return x, y
     end
 
-    for _, e1 in pairs(es) do if e1.colli.passive then
+    for _, e1 in pairs(cs.colliPassive) do
         local x, y = check(e1)
         if x == 1e10 then
             print('> <')
@@ -82,7 +82,7 @@ update = function (self, cs)
             if x * e1.vel[1] < 0 then e1.vel[1] = 0 end
             if y * e1.vel[2] < 0 then e1.vel[2] = 0 end
         end
-    end end
+    end
 end
 
 } end

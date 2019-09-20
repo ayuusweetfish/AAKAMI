@@ -33,7 +33,8 @@ local spawnEnemy = function (p, a)
             pattern = patterns[math.random(3)]
         },
         health = { val = 4, max = 4 },
-        colli = { passive = true, tag = 4 }
+        colli = { tag = 4 },
+        colliPassive = true
     })
 end
 
@@ -54,7 +55,8 @@ local spawnElite = function (a)
             pattern = patterns[math.random(2)]
         },
         health = { val = 10, max = 10 },
-        colli = { passive = true, tag = 4 }
+        colli = { tag = 4 },
+        colliPassive = true
     })
 end
 

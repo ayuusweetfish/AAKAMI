@@ -72,7 +72,8 @@ return function (L, buffTermInteraction, vendTermInteraction)
             energy = 100, energyMax = 100
         },
         health = { val = 5, max = 5 },
-        colli = { passive = true, tag = 2 }
+        colli = { tag = 2 },
+        colliPassive = true
     })
 
     -- Map bounds
