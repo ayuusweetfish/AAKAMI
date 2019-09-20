@@ -5,8 +5,6 @@ return function () return {
 
 update = function (self, cs)
     for _, e1 in pairs(cs.bullet or {}) do
-        e1.sprite.oy = 28
-
         if e1.bullet.age then e1.bullet.age = e1.bullet.age + 1 end
         local penetrated = false
 
