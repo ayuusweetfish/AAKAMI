@@ -27,12 +27,23 @@ cam = {0, 0},
 update = function (self, cs)
     local es_z0, es_zp = {}, {}
 
-    for _, e in ipairs(cs.sprite) do if e.sprite.visible ~= false then
-        local z = e.sprite.z
-        if z == nil then es_z0[#es_z0 + 1] = e
-        elseif z < 0 then draw(self, e)
-        else es_zp[#es_zp + 1] = e end
-    end end
+    local cx, cy = self.cam[1], self.cam[2]
+
+    for _, e in ipairs(cs.sprite) do
+        local s = e.sprite
+        local d = e.dim
+        if s.visible ~= false and
+            d[1] >= cx - d[3] and
+            d[1] <= cx + W + d[3] and
+            d[2] >= cy - d[4] and
+            d[2] <= cy + H + d[4]
+        then
+            local z = s.z
+            if z == nil then es_z0[#es_z0 + 1] = e
+            elseif z < 0 then draw(self, e)
+            else es_zp[#es_zp + 1] = e end
+        end
+    end
 
     table.sort(es_z0, function (lhs, rhs)
         return lhs.dim[2] < rhs.dim[2]

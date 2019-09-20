@@ -11,7 +11,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
     for x = 1, levelW do
     for y = 1, levelH do
         ecs.addEntity({
-            dim = { x * 16, y * 16 },
+            dim = { x * 16, y * 16, 16, 16 },
             sprite = {
                 name = 'tileset3#' .. floorData[(y - 1) * levelW + x],
                 z = -1

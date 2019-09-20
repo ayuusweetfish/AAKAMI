@@ -1,4 +1,5 @@
 local audio = require 'audio'
+local ecs = require 'ecs/ecs'
 
 return function () return {
 
@@ -68,7 +69,9 @@ update = function (self, cs)
                 end
 
                 -- Vanish
-                e1._removal = not penetrated
+                if not penetrated then
+                    ecs.markEntityForRemoval(e1)
+                end
                 return true
             end
         end)

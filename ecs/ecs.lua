@@ -1,6 +1,7 @@
 local entities = {}
 local components = {}   -- List of entities with a certain component
 local systems = { [1] = {}, [2] = {} }
+local removal = {}      -- List of entities to be removed after current frame
 
 DT = 1.0 / 120
 
@@ -23,6 +24,10 @@ local addEntity = function (e)
     e._lookup = lookup
 
     return e
+end
+
+local markEntityForRemoval = function (e)
+    removal[#removal + 1] = e
 end
 
 local removeEntity = function (e)
@@ -51,11 +56,10 @@ local update = function (pass)
     for _, s in pairs(systems[pass]) do
         s:update(components)
     end
-    local removed = {}
-    for _, e in ipairs(entities) do
-        if e._removal then removed[#removed + 1] = e end
+    for i, e in ipairs(removal) do
+        removeEntity(e)
+        removal[i] = nil
     end
-    for _, e in ipairs(removed) do removeEntity(e) end
 end
 
 local reset = function ()
@@ -76,6 +80,7 @@ return {
     systems = systems,
 
     addEntity = addEntity,
+    markEntityForRemoval = markEntityForRemoval,
     removeEntity = removeEntity,
     addSystem = addSystem,
     update = update,
