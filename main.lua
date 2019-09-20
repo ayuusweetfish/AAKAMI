@@ -109,8 +109,7 @@ function love.load()
     spritesheet.loadImage('images/gamepad3.png')
     spritesheet.loadImage('images/gamepad4.png')
     spritesheet.loadImage('images/requirekey.png')
-    spritesheet.loadImage('images/life1.png')
-    spritesheet.loadImage('images/life2.png')
+    spritesheet.loadImage('images/heart_empty.png')
     spritesheet.loadImage('images/font.png')
     spritesheet.initializeTileset('font', 6, 8)
 
@@ -242,7 +241,7 @@ function love.draw()
         -- HUD
         for i = 1, playerEntity.health.max do
             spritesheet.draw(
-                i <= playerEntity.health.val and 'life1' or 'life2',
+                i <= playerEntity.health.val and 'heart' or 'heart_empty',
                 i * 20 - 8, 12)
         end
         local x, y = 12, 32
