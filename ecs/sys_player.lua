@@ -134,7 +134,7 @@ update = function (self, cs)
                     4, 4
                 },
                 vel = { dx * PLAYER_BULLET_VEL, dy * PLAYER_BULLET_VEL },
-                sprite = { name = 'quq9' },
+                sprite = { name = 'yellow_bullet', ox = 2, oy = 2 },
                 bullet = {
                     mask = 5,
                     age = ((p.buff.incise and p.buff.incise.equipped) and 0 or nil),
