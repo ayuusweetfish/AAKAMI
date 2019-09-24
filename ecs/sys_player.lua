@@ -23,6 +23,11 @@ local updateVel = function (orig, tx, ty)
     end
 end
 
+local updatePreserveNonzero = function (orig, x, y)
+    if x < -1e-5 or x > 1e-5 then orig[1] = x end
+    if y < -1e-5 or y > 1e-5 then orig[2] = y end
+end
+
 local nearest = function (e, v, es)
     local R = 128   -- Visibile range
     local cx, cy =
@@ -171,7 +176,7 @@ update = function (self, cs)
         -- Normal attack
         elseif downX and (not self.lastDownX or (hasMachGun and sinceLastShoot >= 30)) then
             -- Turn
-            self.shootDir[1], self.shootDir[2] = dx, dy
+            updatePreserveNonzero(self.shootDir, dx, dy)
             -- Try to shoot
             local damage = 1
             local cost = 10
@@ -223,7 +228,7 @@ update = function (self, cs)
 
         local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
         if not still then
-            self.shootDir[1], self.shootDir[2] = e.vel[1], e.vel[2]
+            updatePreserveNonzero(self.shootDir, e.vel[1], e.vel[2])
         end
 
         -- Animation
