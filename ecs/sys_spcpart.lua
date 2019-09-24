@@ -52,9 +52,10 @@ update = function (self, cs)
     if refresh then self.count = 0 end
 
     for _, e in ipairs(cs.colli) do
+        local d = e.dim
         local x1, x2, y1, y2 =
-            rsh(e.dim[1], BLOCK), rsh(e.dim[1] + e.dim[3], BLOCK),
-            rsh(e.dim[2], BLOCK), rsh(e.dim[2] + e.dim[4], BLOCK)
+            rsh(d[1], BLOCK), rsh(d[1] + d[3], BLOCK),
+            rsh(d[2], BLOCK), rsh(d[2] + d[4], BLOCK)
         local prev = e.colli.prev
         local locs = e.colli.locs   -- Already in which blocks
         if locs == nil or refresh then locs = {} end

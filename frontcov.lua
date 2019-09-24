@@ -34,12 +34,15 @@ frontCovDraw = function ()
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle('fill', 0, 0, W, H)
         love.graphics.setColor(1, 1, 1)
-        spritesheet.draw('gamepad4', W * 0.4, H * 0.35)
-        spritesheet.text('Attack', W * 0.4 + 20, H * 0.35)
-        spritesheet.draw('gamepad3', W * 0.4, H * 0.45)
-        spritesheet.text('SHIFT!', W * 0.4 + 20, H * 0.45)
-        spritesheet.draw('gamepad1', W * 0.4, H * 0.55)
-        spritesheet.text('Knapsack', W * 0.4 + 20, H * 0.55)
+        local a = input.A() and 2 or 0
+        local x = input.X() and 2 or 0
+        local y = input.Y() and 2 or 0
+        spritesheet.draw('gamepad4', W * 0.4, H * 0.35 + x)
+        spritesheet.text('Attack', W * 0.4 + 20, H * 0.35 + x)
+        spritesheet.draw('gamepad3', W * 0.4, H * 0.45 + a)
+        spritesheet.text('SHIFT!', W * 0.4 + 20, H * 0.45 + a)
+        spritesheet.draw('gamepad1', W * 0.4, H * 0.55 + y)
+        spritesheet.text('Knapsack', W * 0.4 + 20, H * 0.55 + y)
     end
 
     if T >= 2 then
