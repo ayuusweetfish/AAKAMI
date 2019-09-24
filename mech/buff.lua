@@ -1,7 +1,7 @@
 local buffs = {
 
 penetrate = { 
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Penetrate',
     desc = 'Enable your bullets to go through enemies',
     memory =  { 1, 2, 2 },
@@ -12,7 +12,7 @@ penetrate = {
 },
 
 stockpile = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Stockpile',
     desc = 'Charge your bullets to increase damage',
     memory = { 1, 1, 2, 2 },
@@ -26,7 +26,7 @@ stockpile = {
 --[[
 energyfield = {
     prereq = 'stockpile',
-    icon = 'quq10',
+    icon = 'qmark',
     memory = { 2 },
     sellrate = 40,
     upgrade = {},
@@ -37,7 +37,7 @@ energyfield = {
 
 --[[
 rebound = {
-    icon = 'quq10',
+    icon = 'qmark',
     memory = { 1 },
     sellrate = 30,
     upgrade = {},
@@ -47,7 +47,7 @@ rebound = {
 ]]
 
 dodge = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Dodge',
     desc = 'Gain 10% chance to avoid bullet damage',
     memory = { 2, 2, 3 },
@@ -58,7 +58,7 @@ dodge = {
 },
 
 rstarve = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Red Starve',
     desc = 'Gain 50% more energy from red bullets',
     memory = { 2 },
@@ -69,7 +69,7 @@ rstarve = {
 },
 
 bstarve = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Blue Starve',
     desc = 'Gain 50% more energy from blue bullets',
     memory = { 2 },
@@ -80,7 +80,7 @@ bstarve = {
 },
 
 incise = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Incise',
     desc = 'Deal 50% more damage to enemies far away',
     memory = { 2 },
@@ -91,7 +91,7 @@ incise = {
 },
 
 fork = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Fork',
     desc = 'Shoot 3 bullets in one shot',
     memory = { 2 },
@@ -102,7 +102,7 @@ fork = {
 },
 
 magazine = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Magazine',
     desc = 'Increase maximum energy by 50%',
     memory = { 2 },
@@ -114,7 +114,7 @@ magazine = {
 
 --[[
 cannon = {
-    icon = 'quq10',
+    icon = 'qmark',
     memory = { 2 },
     sellrate = 0,
     updade = {},
@@ -124,7 +124,7 @@ cannon = {
 ]]
 
 rage = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Rage',
     desc = 'Double the damage of the first bullet after slaying each enemy',
     memory = { 2 },
@@ -135,9 +135,9 @@ rage = {
 },
 
 machgun = {
-    icon = 'quq10',
+    icon = 'qmark',
     name = 'Machine Gun',
-    desc = 'gkd',
+    desc = 'Shoot denser bullets with lower damage and energy cost',
     memory = { 2 },
     sellrate = 0,
     updade = {},

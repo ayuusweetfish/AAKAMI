@@ -89,9 +89,7 @@ local initializeGameplay = function ()
 end
 
 function love.load()
-    spritesheet.loadImage('images/floppy.png')
-    spritesheet.loadCrunch('images/char.bin')
-    spritesheet.loadCrunch('images/quq.bin')
+    spritesheet.loadCrunch('images/sprites.bin')
     spritesheet.initializeTileset('tileset3', 16)
     spritesheet.cropFromTileset('tileset3', 86, 32, 32, 'offterm')
     spritesheet.cropFromTileset('tileset3', 88, 32, 32, 'buffterm')
@@ -104,13 +102,6 @@ function love.load()
     for i = 1, 24 do
         spritesheet.loadImage('images/illust/illustration' .. tonumber(i) .. '.png')
     end
-    spritesheet.loadImage('images/gamepad1.png')
-    spritesheet.loadImage('images/gamepad2.png')
-    spritesheet.loadImage('images/gamepad3.png')
-    spritesheet.loadImage('images/gamepad4.png')
-    spritesheet.loadImage('images/requirekey.png')
-    spritesheet.loadImage('images/heart_empty.png')
-    spritesheet.loadImage('images/font.png')
     spritesheet.initializeTileset('font', 6, 8)
 
     audio.loadAudio('audio/Beverage Battle.ogg', true)

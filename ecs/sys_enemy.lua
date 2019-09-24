@@ -25,7 +25,6 @@ local addBullet = function (e, vx, vy, colour)
     ecs.addEntity(bullet)
     --if math.random(2) == 1 then
     --    bullet.follow = { target = ePlayer, vel = BULLET_VEL, accel = BULLET_ACCEL * DT }
-    --else bullet.sprite.name = 'quq8'
     --end
 
     -- Play animation

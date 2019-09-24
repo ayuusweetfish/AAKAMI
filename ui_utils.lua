@@ -47,7 +47,7 @@ drawCardList = function (cardNames, player, selIndex, offsetY)
         local x, y = W * (col + 1) / 6, H * (offsetY + 0.125 * row)
         spritesheet.drawCen(buff[name].icon, x, y)
         if player.buff[name].equipped then
-            spritesheet.drawCen('quq8', x, y)
+            spritesheet.drawCen('tick', x + 8, y + 8)
         end
     end
 end
