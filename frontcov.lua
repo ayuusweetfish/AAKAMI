@@ -44,6 +44,7 @@ frontCovDraw = function ()
         spritesheet.draw('gamepad1', W * 0.4, H * 0.55 + y)
         spritesheet.text('Knapsack', W * 0.4 + 20, H * 0.55 + y)
     end
+    spritesheet.flush()
 
     if T >= 2 then
         spritesheet.drawCen('gamepad2', W * 0.85, H * 0.8)
