@@ -103,6 +103,11 @@ function love.load()
         spritesheet.loadImage('images/illust/illustration' .. tonumber(i) .. '.png')
     end
     spritesheet.initializeTileset('font', 6, 8)
+    spritesheet.loadImage('images/memory1.png')
+    spritesheet.loadImage('images/memory2.png')
+    spritesheet.loadImage('images/memory3.png')
+    spritesheet.loadImage('images/memory4.png')
+    spritesheet.loadImage('images/memory5.png')
 
     audio.loadAudio('audio/Beverage Battle.ogg', true)
     audio.loadAudio('audio/absorb.ogg')
@@ -233,9 +238,9 @@ function love.draw()
         for i = 1, playerEntity.health.max do
             spritesheet.draw(
                 i <= playerEntity.health.val and 'heart' or 'heart_empty',
-                i * 20 - 8, 12)
+                i * 20 - 10, 8)
         end
-        local x, y = 12, 32
+        local x, y = 10, 27
         local w = player.energyMax + 2
         local w1 = player.energy + 2
         local h = 12

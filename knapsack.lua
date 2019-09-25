@@ -85,24 +85,18 @@ knapsackDraw = function ()
     drawCardList(cardNames, player, selIndex, 0.25)
 
     -- Memory bar
-    -- TODO: Draw a bar!
-    spritesheet.text(
-        string.format('Memory: %d/%d',
-            memUsed, player.memory),
-        W * 0.1, H * 0.08
-    )
-    local equipped = false
+    local changeRangeL, changeRangeR = -1, -1
+
     if total > 0 then
         local selName = cardNames[selIndex + 1]
         local selPlayerBuff = player.buff[selName]
         local selCard = buff[selName]
         local selMem = selCard.memory[selPlayerBuff.level]
-        equipped = selPlayerBuff.equipped
-        spritesheet.text(
-            string.format('-> %d/%d',
-                memUsed + selMem * (equipped and -1 or 1), player.memory),
-            W * 0.4, H * 0.08
-        )
+        if selPlayerBuff.equipped then
+            changeRangeL, changeRangeR = memUsed - selMem + 1, memUsed
+        else
+            changeRangeL, changeRangeR = memUsed + 1, memUsed + selMem
+        end
 
         -- Card description
         spritesheet.text(
@@ -111,6 +105,25 @@ knapsackDraw = function ()
         spritesheet.text(selCard.desc, W * 0.15, H * 0.65, W * 0.7)
     end
 
+    for i = 1, player.memory do
+        local num = (i <= memUsed and 1 or 2)
+        if i >= changeRangeL and i <= changeRangeR then num = num + 2 end
+        spritesheet.draw(
+            'memory' .. tostring(num),
+            W * 0.1 + 15 * (i - 1), H * 0.08
+        )
+    end
+    if changeRangeR then
+        for i = player.memory + 1, changeRangeR do
+            spritesheet.draw(
+                'memory5',
+                W * 0.1 + 15 * (i - 1), H * 0.08
+            )
+        end
+    end
+
+    -- Key hints
+    local equipped = false
     spritesheet.draw('gamepad4', W * 0.7, H * 0.82)
     spritesheet.text(equipped and 'Unequip' or 'Equip', W * 0.7 + 20, H * 0.82)
     spritesheet.draw('gamepad1', W * 0.7, H * 0.9)

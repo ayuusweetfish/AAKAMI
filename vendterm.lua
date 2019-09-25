@@ -20,6 +20,7 @@ local inCardsPanel
 local cardNames
 local total
 local selIndex = 0  -- Persists
+local memUsed = 0
 
 local isMenu, menuItem  -- Is in sell/upgrade menu
 
@@ -45,6 +46,13 @@ vendTermReset = function (_term)
     lastDownU, lastDownD = nil, nil
     T = 0
     inCardsPanel = false
+
+    memUsed = 0
+    for k, v in pairs(player.buff) do
+        if v.equipped then
+            memUsed = memUsed + buff[k].memory[v.level]
+        end
+    end
 
     refreshCards()
     isMenu, menuItem = false, 0
@@ -267,10 +275,22 @@ vendTermDraw = function ()
 
     love.graphics.setColor(1, 1, 1)
     spritesheet.text(
-        string.format('Health: %d/%d  Memory: %d  Coins: %d',
-            playerEntity.health.val, playerEntity.health.max, player.memory, player.coin),
-        W * 0.1, H * 0.1
+        string.format('Coins: %d', player.coin),
+        W * 0.8, H * 0.1
     )
+    -- HUD
+    for i = 1, playerEntity.health.max do
+        spritesheet.draw(
+            i <= playerEntity.health.val and 'heart' or 'heart_empty',
+            i * 20 - 10, 8)
+    end
+    for i = 1, player.memory do
+        local num = (i <= memUsed and 1 or 2)
+        spritesheet.draw(
+            'memory' .. tostring(num),
+            i * 15 - 5, 27
+        )
+    end
 
     spritesheet.draw('gamepad4', W * 0.7, H * 0.82)
     spritesheet.text('Select', W * 0.7 + 20, H * 0.82)
