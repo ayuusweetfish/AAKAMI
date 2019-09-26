@@ -103,11 +103,6 @@ function love.load()
         spritesheet.loadImage('images/illust/illustration' .. tonumber(i) .. '.png')
     end
     spritesheet.initializeTileset('font', 6, 8)
-    spritesheet.loadImage('images/memory1.png')
-    spritesheet.loadImage('images/memory2.png')
-    spritesheet.loadImage('images/memory3.png')
-    spritesheet.loadImage('images/memory4.png')
-    spritesheet.loadImage('images/memory5.png')
 
     audio.loadAudio('audio/Beverage Battle.ogg', true)
     audio.loadAudio('audio/absorb.ogg')
