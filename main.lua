@@ -189,7 +189,7 @@ function love.update()
     end
     ecs_update_count = new_count
 
-    if playerEntity.health.val <= 0 or player.win then
+    if player.failed or player.win then
         -- Game over!
         gameOver = true
         return

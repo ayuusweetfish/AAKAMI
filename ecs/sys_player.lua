@@ -84,24 +84,32 @@ lastValidVel = {1, 0},
 lastBulletDir = {0, 0},
 shootDir = {1, 0},
 update = function (self, cs)
-    for _, e in pairs(cs.player) do
-        local p = e.player
+    local e = cs.player[1]
+    local p = e.player
 
-        -- State machine
-        if p.fsm == nil then
-            -- 1: aka
-            -- 2: ookami
-            -- 3: death
-            p.fsm = fsm.create({
-                akaShoot = {1, 40},
-                akaHit = {1, 40},
-                akaShift = {2, 40},
-                ookamiShoot = {2, 40},
-                ookamiHit = {2, 40},
-                ookamiShift = {1, 40}
-            })
-        end
+    -- State machine
+    if p.fsm == nil then
+        -- 1: aka
+        -- 2: ookami
+        -- 3: aka death
+        -- 4: ookami death
+        p.fsm = fsm.create({
+            akaShoot = {1, 40},
+            akaHit = {1, 40},
+            akaShift = {2, 40},
+            akaDeath = {3, 60},
+            ookamiShoot = {2, 40},
+            ookamiHit = {2, 40},
+            ookamiShift = {1, 40},
+            ookamiDeath = {4, 60}
+        })
+    end
 
+    if p.fsm.curState >= 3 then
+        e.vel[1], e.vel[2] = 0, 0
+        if p.fsm.curTrans == nil then p.failed = true end 
+
+    else
         -- Invincibility update
         p.invincibility = math.max(0, (p.invincibility or 0) - 1)
         if p.invincibility > 0 then
@@ -221,70 +229,75 @@ update = function (self, cs)
             )
         end
         self.lastDownA = downA
-
-        p.fsm:step()
-
-        p.colour = p.fsm.curState - 1
-
-        local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
-        if not still then
-            updatePreserveNonzero(self.shootDir, e.vel[1], e.vel[2])
-        end
-
-        -- Animation
-        local faceX, faceY
-        if p.sinceLastBullet <= 60 then
-            faceX, faceY = self.lastBulletDir[1], self.lastBulletDir[2]
-        else
-            faceX, faceY = self.shootDir[1], self.shootDir[2]
-        end
-
-        local sprite
-        local t = p.fsm.curTrans
-        local frame = math.floor((t and p.fsm.curTransStep / 10 or p.fsm.age / 15))
-
-        local char = (p.fsm.curState == 1 and 'aka' or 'ookami')
-        local isBack = (faceY < 0)
-
-        if t == 'akaShift' then
-            sprite = 'aka2ookami' .. tostring(frame % 4 + 1)
-        elseif t == 'ookamiShift' then
-            sprite = 'ookami2aka' .. tostring(frame % 4 + 1)
-        elseif t == 'akaShoot' or t == 'ookamiShoot' then
-            local state, dir
-            if still then
-                state = 'attacking'
-                local x = math.abs(self.shootDir[1]) * 0.3
-                dir = (faceY < -x and 'up' or
-                    (faceY > x and 'down' or 'left'))
-            else
-                state = 'runattack'
-                dir = (faceY < 0 and 'up' or 'down')
-            end
-            local len = (not still and dir == 'left') and 8 or 4
-            -- Hack!
-            sprite = char .. (isBack and '_back_' or '_')
-                ..  state .. '_' .. dir .. tostring(frame % len + 1)
-        elseif t == 'akaHit' or t == 'ookamiHit' then
-            sprite = char .. (isBack and '_back' or '')
-                .. '_beattacked' .. tostring(math.floor(frame % 4 / 2) + 1)
-        else
-            local state = (still and 'waiting' or 'running')
-
-            -- Hack!
-            if char == 'ookami' and state == 'waiting' then state = '' end
-
-            sprite = char .. (isBack and '_back' or '')
-                .. (state == '' and '' or '_')
-                .. state .. tostring(frame % 4 + 1)
-        end
-
-        e.sprite.flipX = (faceX >= 0)
-
-        e.sprite.name = sprite
-        e.sprite.ox = 11
-        e.sprite.oy = 14
     end
+
+    p.fsm:step()
+
+    p.colour = p.fsm.curState - 1
+
+    local still = (e.vel[1] * e.vel[1] + e.vel[2] * e.vel[2] <= 1e-5)
+    if not still then
+        updatePreserveNonzero(self.shootDir, e.vel[1], e.vel[2])
+    end
+
+    -- Animation
+    local faceX, faceY
+    if p.sinceLastBullet <= 60 then
+        faceX, faceY = self.lastBulletDir[1], self.lastBulletDir[2]
+    else
+        faceX, faceY = self.shootDir[1], self.shootDir[2]
+    end
+
+    local sprite
+    local t = p.fsm.curTrans
+    local frame = math.floor((t and p.fsm.curTransStep / 10 or p.fsm.age / 15))
+
+    local char = (p.fsm.curState == 1 and 'aka' or 'ookami')
+    local isBack = (faceY < 0)
+
+    if t == 'akaShift' then
+        sprite = 'aka2ookami' .. tostring(frame % 4 + 1)
+    elseif t == 'ookamiShift' then
+        sprite = 'ookami2aka' .. tostring(frame % 4 + 1)
+    elseif t == 'akaShoot' or t == 'ookamiShoot' then
+        local state, dir
+        if still then
+            state = 'attacking'
+            local x = math.abs(self.shootDir[1]) * 0.3
+            dir = (faceY < -x and 'up' or
+                (faceY > x and 'down' or 'left'))
+        else
+            state = 'runattack'
+            dir = (faceY < 0 and 'up' or 'down')
+        end
+        local len = (not still and dir == 'left') and 8 or 4
+        -- Hack!
+        sprite = char .. (isBack and '_back_' or '_')
+            ..  state .. '_' .. dir .. tostring(frame % len + 1)
+    elseif t == 'akaHit' or t == 'ookamiHit' then
+        sprite = char .. (isBack and '_back' or '')
+            .. '_beattacked' .. tostring(math.floor(frame % 4 / 2) + 1)
+    elseif t == 'akaDeath' or t == 'ookamiDeath' then
+        char = t:sub(1, -6)
+        sprite = char .. '_dead' .. tostring(math.min(3, math.floor(frame / 2) + 1))
+    elseif p.fsm.curState >= 3 then
+        sprite = (p.fsm.curState == 3 and 'aka_dead3' or 'ookami_dead3')
+    else
+        local state = (still and 'waiting' or 'running')
+
+        -- Hack!
+        if char == 'ookami' and state == 'waiting' then state = '' end
+
+        sprite = char .. (isBack and '_back' or '')
+            .. (state == '' and '' or '_')
+            .. state .. tostring(frame % 4 + 1)
+    end
+
+    e.sprite.flipX = (faceX >= 0)
+
+    e.sprite.name = sprite
+    e.sprite.ox = 11
+    e.sprite.oy = 14
 end
 
 } end
