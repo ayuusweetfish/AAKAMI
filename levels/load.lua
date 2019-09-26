@@ -71,7 +71,7 @@ return function (L, buffTermInteraction, vendTermInteraction)
             memory = 4,
             energy = 100, energyMax = 100
         },
-        health = { val = 1, max = 1 },
+        health = { val = 5, max = 5 },
         colli = { tag = 2 },
         colliPassive = true
     })

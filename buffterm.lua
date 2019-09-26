@@ -14,6 +14,12 @@ local selIndex
 local cardNames
 local cards
 
+-- Persists, used to display introduction to the knapsack
+-- 0: first-time visit
+-- 1: first-time visit, picked card, showing knapsack introduction
+-- 2: other cases
+local knapsackIntro = 0
+
 buffTermReset = function (_term)
     player = ecs.components.player[1].player
 
@@ -48,13 +54,20 @@ buffTermUpdate = function ()
 
     local downY = input.Y()
     if downY and lastDownY == false then
-        -- Card get!
-        player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
-
         audio.play('confirm')
 
-        term.sprite.name = 'tileset3#offterm'
-        return false
+        if knapsackIntro ~= 1 then
+            -- Card get!
+            player.buff[cardNames[selIndex]] = { level = 1, equipped = false }
+            term.sprite.name = 'tileset3#offterm'
+        end
+        
+        if knapsackIntro == 0 then
+            knapsackIntro = 1
+        else
+            knapsackIntro = 2
+            return false
+        end
     end
     lastDownY = downY
 
@@ -73,14 +86,19 @@ buffTermDraw = function ()
     love.graphics.rectangle('fill', 0, 0, W, H)
     love.graphics.setColor(1, 1, 1)
 
-    spritesheet.text('TAKE ONE!', W * 0.125, H * 0.1, W, 2)
-    for i = 1, 3 do
-        drawOneCard(
-            cards[i], W * (i * 0.3 - 0.1), H * 0.4,
-            i == selIndex)
+    if knapsackIntro == 1 then
+        spritesheet.drawCen('gamepad1', W * 0.25, H * 0.45)
+        spritesheet.text('Open your knapsack to equip!', W * 0.3, H * 0.45 - 8)
+    else
+        spritesheet.text('TAKE ONE!', W * 0.125, H * 0.1, W, 2)
+        for i = 1, 3 do
+            drawOneCard(
+                cards[i], W * (i * 0.3 - 0.1), H * 0.4,
+                i == selIndex)
+        end
+        spritesheet.text(cards[selIndex].name, W * 0.15, H * 0.625)
+        spritesheet.text(cards[selIndex].desc, W * 0.15, H * 0.7, W * 0.7)
     end
-    spritesheet.text(cards[selIndex].name, W * 0.15, H * 0.625)
-    spritesheet.text(cards[selIndex].desc, W * 0.15, H * 0.7, W * 0.7)
 
     spritesheet.draw('gamepad1', W * 0.7, H * 0.9)
     spritesheet.text('Confirm', W * 0.7 + 20, H * 0.9)
