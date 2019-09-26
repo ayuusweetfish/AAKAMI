@@ -192,24 +192,26 @@ local mainDraw = function ()
         W * (0.15 + 0.35 * selCol), H * (0.2 + 0.3 * selRow),
         W * 0.35, H * 0.3)
 
-    love.graphics.setColor(1, 1, 1)
+    spritesheet.drawCen('heart', W * 0.325, H * 0.35)
+    spritesheet.drawCen('heart_empty', W * 0.675, H * 0.35)
+    spritesheet.drawCen('memory2', W * 0.325, H * 0.65)
+    spritesheet.drawCen('floppy', W * 0.675, H * 0.675)
     spritesheet.text('HEAL', W * 0.2, H * 0.225)
-    spritesheet.text('SOLIDIFY', W * 0.55, H * 0.225)
-    spritesheet.text('ADD MEM', W * 0.2, H * 0.525)
-    spritesheet.text('UPGRADE/SELL\nCARDS', W * 0.55, H * 0.525)
+    spritesheet.text('GROW', W * 0.55, H * 0.225)
+    spritesheet.text('EXTEND', W * 0.2, H * 0.525)
+    spritesheet.text('UPGRADE/SELL', W * 0.55, H * 0.525)
 
     spritesheet.text(
-        string.format('+1\n%d coins', vend.heal),
-        W * 0.2, H * 0.325)
+        string.format('%d coins', vend.heal),
+        W * 0.2, H * 0.4)
     spritesheet.text(
-        string.format('%d -> %d\n%d coins',
-            playerEntity.health.max, playerEntity.health.max + 1,
+        string.format('%d coins',
             vend.healthMax(playerEntity.health.max)),
-        W * 0.55, H * 0.325)
+        W * 0.55, H * 0.4)
     spritesheet.text(
-        string.format('%d -> %d\n%d coins',
-            player.memory, player.memory + 1, vend.memory(player.memory)),
-        W * 0.2, H * 0.625)
+        string.format('%d coins',
+            vend.memory(player.memory)),
+        W * 0.2, H * 0.7)
 end
 
 local cardsDraw = function ()
