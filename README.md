@@ -1,7 +1,18 @@
 # AAKAMI
 
-BOOOM! The 3rd GameShell Game Jam · Team: 未来网吧
+BOOOM! The 3rd GameShell Game Jam · **Theme: “SHIFT”** · Team: 未来网吧
 
-**Theme: “SHIFT”**
+[itch.io page](https://xiashj96.itch.io/aakami)
 
-文档 → https://shimo.im/folder/QvHKxQXXRwTpHWGq
+![](images/illust/illustration1.png)
+
+## Controls Correspondence
+
+| Keyboard | Gamepad | Function |
+|:--:|:--:|:--:|
+| **U** | **X**/**□** | Shoot |
+| **J** | **A**/**✕** | SHIFT! |
+| **I** | **Y**/**△** | Interact |
+| **K** | **B**/**○** | Start/Restart |
+| **↑↓←→** | **D-pad** | Move |
+| **Space** | — | Change window size |
