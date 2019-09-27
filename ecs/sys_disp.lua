@@ -20,6 +20,14 @@ local draw = function (self, e)
     end
 end
 
+local drawTile = function (self, sprite, x, y)
+    self.spritesheet.draw(
+        sprite,
+        x * 16 - math.floor(self.cam[1]),
+        y * 16 - math.floor(self.cam[2])
+    )
+end
+
 return function (spritesheet) return {
 
 spritesheet = spritesheet,
@@ -29,6 +37,42 @@ update = function (self, cs)
 
     local cx, cy = self.cam[1], self.cam[2]
 
+    -- Floor
+    local f = cs.floor
+    local g = f._grid
+    local w = f._width
+
+    if g == nil then
+        -- Preprocess once
+        -- Assume that the floor terrain does not change
+        g = {}
+        f._grid = g
+
+        -- Width = maximum X coordinate
+        w = 0
+        for _, e in ipairs(cs.floor) do w = math.max(w, e.floor.x) end
+        f._width = w
+
+        for _, e in ipairs(cs.floor) do
+            local i = (e.floor.y - 1) * w + e.floor.x
+            g[i] = e.floor
+        end
+    end
+
+    local x1 = math.floor((self.cam[1]) / 16)
+    local y1 = math.ceil((self.cam[2]) / 16) - 2
+    local x2 = math.floor((self.cam[1] + W) / 16)
+    local y2 = math.ceil((self.cam[2] + H) / 16) - 2
+    for x = x1, x2 do
+    for y = y1, y2 do
+        local tile = g[y * w + x]
+        if tile then
+            drawTile(self, tile.sprite, tile.x, tile.y)
+        end
+    end
+    end
+
+    -- Objects with sprite component
     for _, e in ipairs(cs.sprite) do
         local s = e.sprite
         local d = e.dim
