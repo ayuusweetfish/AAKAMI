@@ -38,8 +38,6 @@ local knapsackRunning
 local isSlow
 local lastDownKbZ
 
-local w = {}
-
 function love.conf(t)
     t.window.physics = false
 end
@@ -160,12 +158,6 @@ function love.update()
     lastDownKbZ = downKbZ
 
     T = T + love.timer.getDelta() * (isSlow and 1.0 / 16 or 1)
-
-    local t = math.floor(T / 1)
-    if w[t] ~= nil then
-        --ecs.removeEntity(w[t])
-        w[t] = nil
-    end
 
     if input.back() then love.event.quit() end
 
