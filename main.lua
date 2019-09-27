@@ -9,11 +9,11 @@ require 'frontcov'
 
 local levelLoad = require 'levels/load'
 
-local IS_DESKTOP = true
+local IS_DESKTOP = false
 
 W = 320
 H = 240
-local SCALE = IS_DESKTOP and 3 or 1
+local SCALE
 
 local sidelen = 16
 
@@ -35,14 +35,21 @@ local termUpdate, termDraw = nil, nil
 local lastDownY
 local knapsackRunning
 
+local lastDownSelect
+
 local isSlow
 local lastDownKbZ
-
-local w = {}
 
 function love.conf(t)
     t.window.physics = false
 end
+
+local updateScaleWithMode = function ()
+    SCALE = IS_DESKTOP and 3 or 1
+    love.window.setMode(W * SCALE, H * SCALE)
+end
+
+updateScaleWithMode()
 
 local buffTermInteraction = function (term)
     lastDownY = true
@@ -118,7 +125,6 @@ function love.load()
     audio.loadAudio('audio/gunshot1/3.ogg', false, 'gunshot3')
     audio.loadAudio('audio/gunshot1/4.ogg', false, 'gunshot4')
 
-    love.window.setMode(W * SCALE, H * SCALE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
     local fshadersrc = [[
@@ -140,6 +146,13 @@ function love.load()
 end
 
 function love.update()
+    local downSelect = input.selekt()
+    if downSelect and not lastDownSelect then
+        IS_DESKTOP = not IS_DESKTOP
+        updateScaleWithMode()
+    end
+    lastDownSelect = downSelect
+
     if frontCovRunning then
         frontCovRunning = frontCovUpdate()
         if not frontCovRunning then initializeGameplay() end
@@ -160,12 +173,6 @@ function love.update()
     lastDownKbZ = downKbZ
 
     T = T + love.timer.getDelta() * (isSlow and 1.0 / 16 or 1)
-
-    local t = math.floor(T / 1)
-    if w[t] ~= nil then
-        --ecs.removeEntity(w[t])
-        w[t] = nil
-    end
 
     if input.back() then love.event.quit() end
 
@@ -263,7 +270,7 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
     spritesheet.flush()
 
-    love.graphics.print(tostring(love.timer.getFPS()))
+    --love.graphics.print(tostring(love.timer.getFPS()))
 
     if IS_DESKTOP then
         love.graphics.setCanvas(nil)

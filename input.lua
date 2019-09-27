@@ -51,7 +51,11 @@ end,
 
 back = function ()
     return love.keyboard.isDown('escape') or (j and j:isGamepadDown('back') or false)
-end
+end,
+
+selekt = function ()
+    return love.keyboard.isDown('space') or (j and j:isGamepadDown('guide') or false)
+end,
 
 }
 

@@ -129,6 +129,12 @@ update = function (self, cs)
     if ePlayer == nil then return end
 
     for _, e in pairs(cs.enemy or {}) do
+        local dx0 = e.dim[1] - ePlayer.dim[1]
+        local dy0 = e.dim[2] - ePlayer.dim[2]
+        if dx0 * dx0 + dy0 * dy0 > 160 * 160 then
+            goto _continue
+        end
+
         local n = e.enemy
         local a = animations[n.name]
 
@@ -262,6 +268,7 @@ update = function (self, cs)
 
         e.sprite.name = sprite
 
+::_continue::
     end
 end
 

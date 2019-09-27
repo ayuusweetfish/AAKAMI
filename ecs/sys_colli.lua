@@ -72,7 +72,7 @@ update = function (self, cs)
         return x, y
     end
 
-    for _, e1 in pairs(cs.colliPassive) do
+    for _, e1 in ipairs(cs.colliPassive) do
         local x, y = check(e1)
         if x == 1e10 then
             print('> <')
