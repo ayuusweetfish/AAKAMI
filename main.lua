@@ -9,7 +9,7 @@ require 'frontcov'
 
 local levelLoad = require 'levels/load'
 
-local IS_DESKTOP = false
+local IS_DESKTOP = true
 
 W = 320
 H = 240
@@ -50,6 +50,7 @@ local updateScaleWithMode = function ()
 end
 
 updateScaleWithMode()
+love.window.setTitle('AAKAMI')
 
 local buffTermInteraction = function (term)
     lastDownY = true

@@ -40,7 +40,6 @@ update = function (self, cs)
                         local damage = (e1.bullet.damage or 1)
                         -- Incise?
                         if e1.bullet.age and e1.bullet.age >= 90 then damage = damage * 1.5 end
-                        print(damage)
                         -- Invincible?
                         if not p or p.invincibility == 0 then
                             e2.health.val = e2.health.val - damage

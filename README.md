@@ -14,5 +14,5 @@ BOOOM! The 3rd GameShell Game Jam · **Theme: “SHIFT”** · Team: 未来网�
 | **J** | **A**/**✕** | SHIFT! |
 | **I** | **Y**/**△** | Interact |
 | **K** | **B**/**○** | Start/Restart |
-| **↑↓←→** | **D-pad** | Move |
+| **↑↓←→/WSAD** | **D-pad** | Move |
 | **Space** | — | Change window size |

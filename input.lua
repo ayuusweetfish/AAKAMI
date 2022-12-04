@@ -34,19 +34,19 @@ X = function ()
 end,
 
 L = function ()
-    return love.keyboard.isDown('left') or (j and j:isGamepadDown('dpleft') or false)
+    return love.keyboard.isDown('left') or love.keyboard.isDown('a') or (j and j:isGamepadDown('dpleft') or false)
 end,
 
 R = function ()
-    return love.keyboard.isDown('right') or (j and j:isGamepadDown('dpright') or false)
+    return love.keyboard.isDown('right') or love.keyboard.isDown('d') or (j and j:isGamepadDown('dpright') or false)
 end,
 
 U = function ()
-    return love.keyboard.isDown('up') or (j and j:isGamepadDown('dpup') or false)
+    return love.keyboard.isDown('up') or love.keyboard.isDown('w') or (j and j:isGamepadDown('dpup') or false)
 end,
 
 D = function ()
-    return love.keyboard.isDown('down') or (j and j:isGamepadDown('dpdown') or false)
+    return love.keyboard.isDown('down') or love.keyboard.isDown('s') or (j and j:isGamepadDown('dpdown') or false)
 end,
 
 back = function ()
