@@ -90,7 +90,8 @@ end
 
 local initializeGameplay = function ()
     -- Audio
-    audio.get('Beverage Battle'):setVolume(0.6)
+    love.audio.setVolume(0.5)
+    audio.get('Beverage Battle'):setVolume(0.3)
     audio.play('Beverage Battle')
 
     reinitializeGameCore()
