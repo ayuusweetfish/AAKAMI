@@ -15,6 +15,7 @@ end
 
 local play = function (name)
     local src = lookup[name]
+    src:stop()
     src:seek(0)
     src:play()
 end
