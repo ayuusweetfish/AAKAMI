@@ -1,22 +1,24 @@
 local draw = function (self, e)
     local s = e.sprite
     local o = s.overlay
-::redraw::
-    local fx = s.flipX
-    local fy = s.flipY
-    local ox = (s.ox or 0)
-    local oy = (s.oy or 0)
-    ox = (fx and e.dim[3] + ox or -ox)
-    oy = (fy and e.dim[4] + oy or -oy)
-    self.spritesheet.draw(
-        s.name,
-        math.floor(e.dim[1] + 0.5) - math.floor(self.cam[1]) + ox,
-        math.floor(e.dim[2] + 0.5) - math.floor(self.cam[2]) + oy,
-        fx, fy
-    )
-    if o and s ~= o then
-        s = o
-        goto redraw
+    while true do
+        local fx = s.flipX
+        local fy = s.flipY
+        local ox = (s.ox or 0)
+        local oy = (s.oy or 0)
+        ox = (fx and e.dim[3] + ox or -ox)
+        oy = (fy and e.dim[4] + oy or -oy)
+        self.spritesheet.draw(
+            s.name,
+            math.floor(e.dim[1] + 0.5) - math.floor(self.cam[1]) + ox,
+            math.floor(e.dim[2] + 0.5) - math.floor(self.cam[2]) + oy,
+            fx, fy
+        )
+        if o and s ~= o then
+            s = o
+        else
+            break
+        end
     end
 end
 

@@ -17,13 +17,12 @@ local _colliding = function (self, e, dim, cb)
         if block then
             for _, t in ipairs(block) do
                 if e ~= t and rectIntsc(dim, t.dim) then
-                    if cb(t) then goto fin end
+                    if cb(t) then return end
                 end
             end
         end
     end
     end
-::fin::
 end
 
 local colliding = function (self, e, cb)

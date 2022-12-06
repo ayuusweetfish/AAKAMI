@@ -1,3 +1,4 @@
+require 'bit'
 local spritesheet = require 'spritesheet'
 local audio = require 'audio'
 local input = require 'input'
